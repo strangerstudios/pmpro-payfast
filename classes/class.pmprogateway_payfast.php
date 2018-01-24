@@ -5,18 +5,15 @@
  * @copyright  2009-2014 PayFast (Pty) Ltd
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
-    require_once(PMPRO_DIR . "/classes/gateways/class.pmprogateway.php");
-	
+    
+    // Require the default PMPro Gateway Class.
+    require_once( PMPRO_DIR . "/classes/gateways/class.pmprogateway.php" );
+
 	//load classes init method
-	add_action('init', array('PMProGateway_PayFast', 'init'));
-    class PMProGateway_PayFast
-    {
+	add_action( 'init', array( 'PMProGateway_PayFast', 'init' ) );
+    class PMProGateway_PayFast {
 
-        const SANDBOX_MERCHANT_KEY = '46f0cd694581a';
-        const SANDBOX_MERCHANT_ID = '10000100';
-
-	    function __construct($gateway = NULL)
-		{
+	    function __construct($gateway = NULL) {
 		   $this->gateway = $gateway;
 		   return $this->gateway;
 		}
@@ -26,10 +23,9 @@
          *
          * @since 1.8
          */
-        static function init()
-        {
-            //make sure PayPal Express is a gateway option
-            add_filter('pmpro_gateways', array('PMProGateway_PayFast', 'pmpro_gateways'));
+        static function init() {
+            //make sure PayFast is a gateway option
+            add_filter( 'pmpro_gateways', array( 'PMProGateway_PayFast', 'pmpro_gateways' ) );
 
             //add fields to payment settings
             add_filter('pmpro_payment_options', array('PMProGateway_PayFast', 'pmpro_payment_options'));
@@ -40,12 +36,26 @@
 	        add_filter('pmpro_include_payment_information_fields', '__return_false');
 
             add_filter('pmpro_required_billing_fields', '__return_empty_array');
-            add_filter('pmpro_checkout_default_submit_button', array('PMProGateway_PayFast', 'pmpro_checkout_default_submit_button'));
+            add_filter('pmpro_checkout_before_submit_button', array('PMProGateway_PayFast', 'pmpro_checkout_before_submit_button'));
             add_filter('pmpro_checkout_before_change_membership_level', array('PMProGateway_PayFast', 'pmpro_checkout_before_change_membership_level'), 10, 2);
 			
 			//itn handler
 			add_action('wp_ajax_nopriv_pmpro_payfast_itn_handler', array('PMProGateway_PayFast', 'wp_ajax_pmpro_payfast_itn_handler'));
 			add_action('wp_ajax_pmpro_payfast_itn_handler', array('PMProGateway_PayFast', 'wp_ajax_pmpro_payfast_itn_handler'));
+
+            add_filter( 'pmpro_gateways_with_pending_status', array( 'PMProGateway_PayFast', 'pmpro_gateways_with_pending_status' ) );
+        }
+
+
+        /**
+         * Add PayFast to the list of allowed gateways.
+         *
+         * @return array
+         */
+        static function pmpro_gateways_with_pending_status( $gateways ) {
+            $gateways[] = 'payfast';
+
+            return $gateways;
         }
 
         /**
@@ -53,8 +63,7 @@
          *
          * @since 1.8
          */
-        static function pmpro_gateways( $gateways )
-        {           
+        static function pmpro_gateways( $gateways ) {           
 			if( empty( $gateways['payfast'] ) )
                 $gateways['payfast'] = __('PayFast', 'pmpro');
 
@@ -66,8 +75,7 @@
          *
          * @since 1.8
          */
-        static function getGatewayOptions()
-        {
+        static function getGatewayOptions() {
             $options = array(
                 'payfast_debug',
                 'payfast_merchant_id',
@@ -87,8 +95,7 @@
          *
          * @since 1.8
          */
-        static function pmpro_payment_options( $options )
-        {
+        static function pmpro_payment_options( $options ) {
             //get stripe options
             $payfast_options = self::getGatewayOptions();
 
@@ -106,10 +113,9 @@
         static function pmpro_payment_option_fields( $values, $gateway )
         {
         ?>
-
             <tr class="gateway gateway_payfast" <?php if( $gateway != "payfast" ) { ?>style="display: none;"<?php } ?>>
                  <th scope="row" valign="top">
-                     <label for="payfast_merchant_id"><?php _e('PayFast Merchant ID', 'pmpro');?>:</label>
+                     <label for="payfast_merchant_id"><?php _e('PayFast Merchant ID', 'pmpro'); ?>:</label>
                  </th>
                  <td>
                      <input id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr($values['payfast_merchant_id']); ?>" />
@@ -156,34 +162,47 @@
          *
          * @since 1.8
          */
-        static function pmpro_required_billing_fields($fields)
-        {
-            return array();
+        static function pmpro_required_billing_fields( $fields ) {
+
+            unset($fields['bfirstname']);
+			unset($fields['blastname']);
+			unset($fields['baddress1']);
+			unset($fields['bcity']);
+			unset($fields['bstate']);
+			unset($fields['bzipcode']);
+			unset($fields['bphone']);
+			unset($fields['bemail']);
+			unset($fields['bcountry']);
+			unset($fields['CardType']);
+			unset($fields['AccountNumber']);
+			unset($fields['ExpirationMonth']);
+			unset($fields['ExpirationYear']);
+			unset($fields['CVV']);
+
+			return $fields;
         }
 
         /**
-         * Swap in our submit buttons.
-         *
+         * Show information before PMPro's checkout button.
+         * @todo: Add a filter to show/hide this notice.
          * @since 1.8
          */
-        static function pmpro_checkout_default_submit_button($show)
-        {
+        static function pmpro_checkout_before_submit_button() {
             global $gateway, $pmpro_requirebilling;
 
-            //show our submit buttons
+            // show PayFast information before checkout button.
             ?>
+            <div id="pmpro_payfast_before_checkout" style="text-align:center;">
+	            <span id="pmpro_payfast_checkout" <?php if( ( $gateway != "paypalexpress" && $gateway != "payfast" ) || !$pmpro_requirebilling ) { ?>style="display: none;"<?php } ?>>
+	                <input type="hidden" name="submit-checkout" value="1" />
+	               
+	               <?php  echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.' ); ?>
 
-            <span id="pmpro_payfast_checkout" <?php if(($gateway != "paypalexpress" && $gateway != "payfast") || !$pmpro_requirebilling) { ?>style="display: none;"<?php } ?>>
-                <input type="hidden" name="submit-checkout" value="1" />
-                <p><strong>Check Out with</strong></p>
-                <p><input type="image" style="border:1px solid #eee;padding:5px;border-radius:5px;" value="<?php _e('Check Out with PayFast', 'pmpro');?> &raquo;" src="https://www.payfast.co.za/images/logo/PayFast_Logo_75.png" /></p>
-                <strong>NOTE:</strong> if changing a subscription it may take a minute or two to reflect. Please also log in to your PayFast account to ensure the old subscription is cancelled.
-            </span>
+	                <p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" width="100px" /></p>
+	            </span>
+	        </div>
 
             <?php
-
-            //don't show the default
-            return false;
         }
 
         /**
@@ -206,16 +225,17 @@
             if( !empty( $discount_code_id ) )
                 $wpdb->query( "INSERT INTO $wpdb->pmpro_discount_codes_uses (code_id, user_id, order_id, timestamp) VALUES('" . $discount_code_id . "', '" . $user_id . "', '" . $morder->id . "', now())" );
 
-            //do_action("pmpro_before_send_to_payfast", $user_id, $morder);
+            do_action( "pmpro_before_send_to_payfast", $user_id, $morder );
 
             $morder->Gateway->sendToPayFast( $morder );
         }
 
+
 		/**
 		 * Send traffic to wp-admin/admin-ajax.php?action=pmpro_payfast_itn_handler to the itn handler
 		 */
-		function wp_ajax_pmpro_payfast_itn_handler() {
-			require_once(PMPRO_PAYFAST_DIR . "/services/payfast_itn_handler.php");	
+		static function wp_ajax_pmpro_payfast_itn_handler() {
+			require_once( PMPRO_PAYFAST_DIR . "services/payfast_itn_handler.php" );	
 			exit;
 		}		
 		
@@ -254,41 +274,38 @@
             $order->subtotal = $amount;
             $amount = round( ( float )$amount + ( float )$amount_tax, 2 );
 
+            //merchant details
+            $merchant_id = pmpro_getOption( 'payfast_merchant_id' );
+            $merchant_key = pmpro_getOption( 'payfast_merchant_key' );
+
             //build PayFast Redirect
             $environment = pmpro_getOption( "gateway_environment" );
-            if( "sandbox" === $environment || "beta-sandbox" === $environment )
-            {
-                $merchant_id = self::SANDBOX_MERCHANT_ID;
-                $merchant_key = self::SANDBOX_MERCHANT_KEY;
-                $payfast_url ="https://sandbox.payfast.co.za/eng/process";
-            }
-            else
-            {
-                $merchant_id = pmpro_getOption( "payfast_merchant_id" );
-                $merchant_key = pmpro_getOption( "payfast_merchant_key" );
+            if( "sandbox" === $environment || "beta-sandbox" === $environment ) {
+                $payfast_url = "https://sandbox.payfast.co.za/eng/process";
+            }else{
                 $payfast_url = "https://www.payfast.co.za/eng/process";
             }
 
             $data = array(
                 'merchant_id'   => $merchant_id,
                 'merchant_key'  => $merchant_key,
-                'return_url'    => pmpro_url( "confirmation", "?level=" . $order->membership_level->id ),
-                'cancel_url'    => pmpro_url( "levels" ),
-                'notify_url'    => admin_url('admin-ajax.php') . "?action=pmpro_payfast_itn_handler",
+                'return_url'    => pmpro_url( 'confirmation', '?level=' . $order->membership_level->id ),
+                'cancel_url'    => pmpro_url( 'levels' ),
+                'notify_url'    => admin_url( 'admin-ajax.php' ) . '?action=pmpro_payfast_itn_handler',
                 'name_first'    => $order->FirstName,
                 'name_last'     => $order->LastName,
                 'email_address' => $order->Email,
                 'm_payment_id'  => $order->code,
                 'amount'        => $initial_payment,
-                'item_name'     => substr($order->membership_level->name . " at " . get_bloginfo("name"), 0, 99),
+                'item_name'     => substr( $order->membership_level->name . ' at ' . get_bloginfo( 'name' ), 0, 99 ),
                 'custom_int1'   => $order->user_id,
                 );
 
-            $cycles = $order->TotalBillingCycles;
+            $data = apply_filters( 'pmpro_payfast_data', $data );
 
+            $cycles = $order->membership_level->billing_limit;
+            
             //convert PMPro cycle_number and period into a PayFast frequency
-			
-			
 			switch ( $order->BillingPeriod )
             {
                 case 'Day':
@@ -366,6 +383,8 @@
             }
 
             $pfOutput = "";
+            $pffOutput = "";
+
             foreach( $data  as $key => $val )
             {
                 $pffOutput .= $key .'='. urlencode( trim( $val ) ) .'&';
@@ -375,29 +394,32 @@
             // Remove last ampersand
 	        $passPhrase = pmpro_getOption( 'payfast_passphrase' );
 
-            if( empty( $passPhrase ) || "sandbox" === $environment || "beta-sandbox" === $environment )
-            {
+            // Add passphrase to URL.
+            if( empty( $passPhrase ) ) {
                 $pfOutput = substr( $pffOutput, 0, -1 );
-            }
-            else
-            {
-                $pfOutput = $pffOutput."passphrase=".urlencode( $passPhrase );
+            } else {
+                $pfOutput = $pffOutput."passphrase=".urlencode( trim( $passPhrase ) );
             }
 
+
+            // Create signature.
             $signature = md5( $pfOutput );
 
-            $payfast_url .= '?'.$pffOutput.'&signature='.$signature.'&user_agent=Paid Membership Pro 1.8.6';
+            /**
+             * @todo: Check the user_agent and generate a better user agent for description.
+             */
+            $payfast_url .= '?'.$pffOutput.'&signature='.$signature.'&user_agent=Paid Memberships Pro ' . PMPRO_VERSION;
 
-            wp_redirect($payfast_url);
+            wp_redirect( $payfast_url );
             exit;
         }
 		
-        function subscribe( &$order )
-        {
+        function subscribe( &$order ) {
             global $pmpro_currency;
 
-            if(empty( $order->code ) )
+            if( empty( $order->code ) ){
                 $order->code = $order->getRandomCode();
+            }
 
             //filter order before subscription. use with care.
             $order = apply_filters( "pmpro_subscribe_order", $order, $this );
@@ -416,10 +438,10 @@
             $order->payment_transaction_id = $order->code;
             $order->subscription_transaction_id = $order->code;
 
-                //update order
-                $order->saveOrder();
+            //update order
+            $order->saveOrder();
 
-                return true;
+            return true;
         }
 
         function cancel(&$order)
@@ -437,7 +459,7 @@
                 $passphrase = pmpro_getOption('payfast_passphrase');
 
                 $hashArray['version'] = 'v1';
-                $hashArray['merchant-id'] = pmpro_getOption('payfast_merchant_id');
+                $hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
                 $hashArray['passphrase'] = $passphrase;
                 $hashArray['timestamp'] = date('Y-m-d') . 'T' . date('H:i:s');
 

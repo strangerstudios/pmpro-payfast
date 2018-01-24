@@ -5,7 +5,8 @@
  * @copyright  2009-2014 PayFast (Pty) Ltd
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
-    //in case the file is loaded directly
+
+     //in case the file is loaded directly
     if(!defined("WP_USE_THEMES"))
     {
         global $isapage;
@@ -14,6 +15,8 @@
         define('WP_USE_THEMES', false);
         require_once(dirname(__FILE__) . '/../../../../wp-load.php');
     }
+
+
 	
 	//Bail if PMPro or the PayFast add on is not active
 	if(!defined('PMPRO_DIR') || !defined('PMPRO_PAYFAST_DIR')) {
@@ -22,7 +25,7 @@
 	}
 
     define( 'PF_SOFTWARE_NAME', 'Paid Membership Pro' );
-    define( 'PF_SOFTWARE_VER',  '');
+    define( 'PF_SOFTWARE_VER',  '1.9.4.2');
     define( 'PF_MODULE_NAME', 'PayFast-PaidMembershipPro' );
     define( 'PF_MODULE_VER', '1.1.0' );
 
@@ -76,13 +79,11 @@
         ' Transaction Notification when the payment status changes to'.
         ' "Completed", or "Failed"' );
 
-    //uncomment to log requests in logs/ipn.txt
-    //define('PMPRO_IPN_DEBUG', true);
-
+    define( 'PMPRO_IPN_DEBUG', 'log' ); //this is called inside wp-config rather.
+    
     //some globals
     global $wpdb, $gateway_environment, $logstr;
     $logstr = "";   //will put debug info here and write to ipnlog.txt
-
 
     // Variable Initialization
     $pfError = false;
@@ -93,9 +94,9 @@
     $pfOrderId = '';
     $pfParamString = '';
 
-
-
     ipnlog(  'PayFast ITN call received' );
+
+
 
     //// Notify PayFast that information has been received
     if( !$pfError && !$pfDone )
@@ -104,6 +105,7 @@
         flush();
     }
 
+    
     //// Get data sent by PayFast
     if( !$pfError && !$pfDone )
     {
@@ -228,7 +230,7 @@
 
                 pmpro_ipnExit();
             }
-
+ 
             //PayFast Standard Subscription Payment
             if ( strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '+ 2 days' ) && !empty( $pfData['token'] ) )
             {
@@ -349,13 +351,15 @@
 	$morder->getMembershipLevel();
 	$morder->getUser();
 
-	if ( empty( $pfData['token'] ) )
+    ipnlog( 'check token' );
+
+	if ( ! empty( $pfData['token'] ) )
 	{
 		switch ($pfData['payment_status']) {
 			case 'COMPLETE':
 				$morder = new MemberOrder( $pfData['m_payment_id'] );
 				$morder->getMembershipLevel();
-				$morder->getUser();
+                $morder->getUser();
 
 				//update membership
 				if ( pmpro_itnChangeMembershipLevel( $transaction_id, $morder ) )
@@ -415,17 +419,17 @@
 
             //log?
             if( PF_DEBUG )
-            {
+            {   
+
                 echo $logstr;
-                $loghandle = fopen(dirname(__FILE__) . "/../logs/payfast_itn.txt", "a+");
-                fwrite($loghandle, $logstr);
-                fclose($loghandle);
+                $loghandle = fopen( PMPRO_PAYFAST_DIR . "/logs/payfast_itn.txt", "a+" );
+                fwrite( $loghandle, $logstr );
+                fclose( $loghandle );
             }
         }
 
         exit;
     }
-
 
     /*
         Change the membership level. We also update the membership order to include filtered valus.
@@ -435,7 +439,6 @@
         global $wpdb;
         //filter for level
         $morder->membership_level = apply_filters("pmpro_ipnhandler_level", $morder->membership_level, $morder->user_id);
-
         //fix expiration date
         if(!empty($morder->membership_level->expiration_number))
         {
@@ -538,7 +541,7 @@
 
 
             // cancel order previous PayFast subscription if applicable
-            $oldSub = $wpdb->get_var("SELECT paypal_token FROM $wpdb->pmpro_membership_orders WHERE user_id = '" . $_POST['custom_int1'] . "' AND status = 'cancelled' ORDER BY timestamp DESC LIMIT 1");
+          //  $oldSub = $wpdb->get_var("SELECT paypal_token FROM $wpdb->pmpro_membership_orders WHERE user_id = '" . $_POST['custom_int1'] . "' AND status = 'cancelled' ORDER BY timestamp DESC LIMIT 1");
 
 //            if ( !empty( $oldSub ) && !empty( $_POST['token'] ) )
 //            {
@@ -676,11 +679,6 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order )
         return true;
     }
 }
-
-
-
-
-
     /**
      * pfGetData
      *
@@ -690,7 +688,6 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order )
     {
         // Posted variables from ITN
         $pfData = $_POST;
-
         // Strip any slashes in data
         foreach( $pfData as $key => $val )
             $pfData[$key] = stripslashes( $val );
@@ -732,13 +729,14 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order )
         }
         else
         {
-            $tempParamString = $pfParamString."&passphrase=".urlencode( $passPhrase );
+            $tempParamString = $pfParamString."&passphrase=".urlencode( trim( $passPhrase ) );
         }
 
         $signature = md5( $tempParamString );
 
         $result = ( $pfData['signature'] == $signature );
 
+        ipnlog( 'Signature Sent: ' . $signature );
         ipnlog(  'Signature = '. ( $result ? 'valid' : 'invalid' ) );
 
         return( $result );
