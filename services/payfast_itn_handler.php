@@ -353,8 +353,8 @@
 
     ipnlog( 'check token' );
 
-	if ( ! empty( $pfData['token'] ) )
-	{
+	// if ( ! empty( $pfData['token'] ) )
+	// {
 		switch ($pfData['payment_status']) {
 			case 'COMPLETE':
 				$morder = new MemberOrder( $pfData['m_payment_id'] );
@@ -386,7 +386,7 @@
 				ipnlog( "ERROR: Unknown error for order (" . $morder->code . ")." );
 				break;
 		}
-	}
+	// }
 
     // If an error occurred
     if( $pfError )
