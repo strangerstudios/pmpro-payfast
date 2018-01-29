@@ -199,6 +199,11 @@
             if( empty( $morder ) )
                 return;
 
+            // bail if the current gateway is not set to PayFast.
+            if( 'payfast' != $morder->gateway ) {
+                return;
+            }
+
             $morder->user_id = $user_id;
             $morder->saveOrder();
 
