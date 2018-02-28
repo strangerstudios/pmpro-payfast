@@ -449,59 +449,58 @@ class PMProGateway_PayFast {
 		return true;
 	}
 
-	function cancel(&$order)
-	{
-		//payfast profile stuff
-		$nvpStr = "";
-		$nvpStr .= "&PROFILEID=" . urlencode($order->subscription_transaction_id) . "&ACTION=Cancel&NOTE=" . urlencode("User requested cancel.");
+    function cancel( &$order ) {
 
-		//    $this->httpParsedResponseAr = $this->PPHttpPost('ManageRecurringPaymentsProfileStatus', $nvpStr);
-		if ( !empty( $order->subscription_transaction_id ) && $order->subscription_transaction_id == $order->payment_transaction_id )
-		{
-			?>'<script type="text/javascript">alert("If cancelling a subscription, please login/create a PayFast account and ensure the subscription is cancelled"); </script>'<?php
-			$hashArray = array();
-			$guid = $order->paypal_token;
-			$passphrase = pmpro_getOption('payfast_passphrase');
+        // Check to see if the order has a token and try to cancel it at the gateway. Only recurring subscriptions should have a token.
+        if ( !empty( $order->paypal_token ) && !empty( $order->subscription_transaction_id ) ) {   
 
-			$hashArray['version'] = 'v1';
-			$hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
-			$hashArray['passphrase'] = $passphrase;
-			$hashArray['timestamp'] = date('Y-m-d') . 'T' . date('H:i:s');
+            $token = $order->paypal_token;
 
-			$orderedPrehash = $hashArray;
+            $hashArray = array();
+            $passphrase = pmpro_getOption('payfast_passphrase');
 
-			ksort($orderedPrehash);
+            $hashArray['version'] = 'v1';
+            $hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
+            $hashArray['passphrase'] = $passphrase;
+            $hashArray['timestamp'] = date('Y-m-d') . 'T' . date('H:i:s');
 
-			$signature = md5(http_build_query($orderedPrehash));
+            $orderedPrehash = $hashArray;
 
-			$domain = "https://api.payfast.co.za";
+            ksort($orderedPrehash);
 
-			// configure curl
-			$url = $domain . '/subscriptions/' . $guid . '/cancel';
+            $signature = md5(http_build_query($orderedPrehash));
 
-			$ch = curl_init($url);
-			$useragent = 'PayFast Sample PHP Recurring Billing Integration';
+            $domain = "https://api.payfast.co.za";
 
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_HEADER, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			// curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($payload));
-			curl_setopt($ch, CURLOPT_VERBOSE, 1);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'version: v1',
-				'merchant-id: ' . pmpro_getOption('payfast_merchant_id'),
-				'signature: ' . $signature,
-				'timestamp: ' . $hashArray['timestamp']
-			));
+            $url = $domain . '/subscriptions/' . $token . '/cancel';
 
-			$response = curl_exec($ch);
+            $environment = pmpro_getOption( "gateway_environment" );
+            
+            if( "sandbox" === $environment || "beta-sandbox" === $environment ) {
+                $url = $url . '?testing=true';
+            }
 
-			curl_close($ch);
+            $response = wp_remote_post( $url, 
+                array( 
+                    'method' => 'PUT',
+                    'timeout' => 60,
+                    'headers' => array( 
+                        'version' => 'v1',
+                        'merchant-id' => $hashArray['merchant-id'],
+                        'signature' => $signature,
+                        'timestamp' => $hashArray['timestamp'], 
+                    ), 
+                ) 
+            );
 
-			$order->updateStatus( "cancelled" );
-			return true;
-		}
-	}
-}
+            $body = wp_remote_retrieve_response_message( $response );
+
+            if( 'OK' == $body || 200 == $body ) {
+             // any message we want here for cancelling?
+            }
+
+            $order->updateStatus( "cancelled" );
+            return true;
+        }
+    }
+} //end of class
