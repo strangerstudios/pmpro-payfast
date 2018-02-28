@@ -493,14 +493,21 @@ class PMProGateway_PayFast {
                 ) 
             );
 
-            $body = wp_remote_retrieve_response_message( $response );
+            $response_code = wp_remote_retrieve_response_code( $response );
+            $response_message = wp_remote_retrieve_response_message( $response );
 
-            if( 'OK' == $body || 200 == $body ) {
-             // any message we want here for cancelling?
+            if( 200 == $response_code ) {
+            	$order->updateStatus( 'cancelled' );
+            	return true;
+            } else {
+            	$order->status = 'error';
+            	$order->errorcode = $response_code;
+            	$order->error = $response_message;
+            	$order->shorterror = $response_message;
+
+            	return false;
             }
 
-            $order->updateStatus( "cancelled" );
-            return true;
         }
     }
 } //end of class
