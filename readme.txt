@@ -30,6 +30,11 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
+= I need to test PayFast in sandbox mode. =
+
+To test PayFast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
+
+
 == Changelog ==
 
 = .1 =
