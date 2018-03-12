@@ -313,16 +313,6 @@ class PMProGateway_PayFast {
 		//convert PMPro cycle_number and period into a PayFast frequency
 		switch ( $order->BillingPeriod )
 		{
-			case 'Day':
-				$frequency = 'daily';
-
-				break;
-
-			case 'Week':
-				$frequency = 'weekly';
-
-				break;
-
 			case 'Month':
 				$frequency = '3';
 
