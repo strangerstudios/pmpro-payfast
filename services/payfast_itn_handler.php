@@ -190,7 +190,7 @@
                     //we're ignoring this. we will get a payment notice from IPN and process that
                     ipnlog( "Going to wait for the first payment to go through." );
                 }
-                pmpro_ipnExit();
+               // pmpro_ipnExit();
             }
  
             //PayFast Standard Subscription Payment
