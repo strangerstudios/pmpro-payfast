@@ -171,11 +171,11 @@
     //// Check data against internal order
     if( !$pfError && !$pfDone && $pfData['payment_status'] == 'COMPLETE' )
     {
-        if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '+ 2 days' ) )
+        if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '- 2 days' ) )
         {
             $checkTotal = $morder->total;
         }
-        if ( !empty( $pfData['token'] ) && strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '+ 2 days' ) )
+        if ( !empty( $pfData['token'] ) && strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '- 2 days' ) )
         {
             $checkTotal = $morder->subtotal;
         }
@@ -196,7 +196,7 @@
         {
             $txn_id = $pfData['m_payment_id'];
             $subscr_id = $pfData['token'];
-            if ( strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '+ 2 days' ) )
+            if ( strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '- 2 days' ) )
             {
                 //if there is no amount1, this membership has a trial, and we need to update membership/etc
                 $amount = $pfData['amount_gross'];
@@ -232,7 +232,7 @@
             }
  
             //PayFast Standard Subscription Payment
-            if ( strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '+ 2 days' ) && !empty( $pfData['token'] ) )
+            if ( strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '- 2 days' ) && !empty( $pfData['token'] ) )
             {
                 $last_subscr_order = new MemberOrder();
 
