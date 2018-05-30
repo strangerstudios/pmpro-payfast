@@ -137,24 +137,27 @@
             $pfErrMsg = PF_ERR_BAD_ACCESS;
         }
     }
-    //// Check data against internal order
-    if( !$pfError && !$pfDone && $pfData['payment_status'] == 'COMPLETE' )
-    {
-        if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '+ 2 days' ) )
-        {
-            $checkTotal = $morder->total;
-        }
-        if ( !empty( $pfData['token'] ) && strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '+ 2 days' ) )
-        {
-            $checkTotal = $morder->subtotal;
-        }
-        // if( !pmpro_pfAmountsEqual( $pfData['amount_gross'], $checkTotal) )
-        // {
-        //     ipnlog(  'Amount Returned: '.$pfData['amount_gross']."\n Amount in Cart:".$checkTotal );
-        //     $pfError = true;
-        //     $pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
-        // }
-    }
+    //// Check data against internal order - Temporarily disabling this as it doesn't work with levels with different amounts.
+    // if( !$pfError && !$pfDone && $pfData['payment_status'] == 'COMPLETE' )
+    // {
+    //     if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '+ 2 days' ) )
+    //     {
+    //         $checkTotal = $morder->total;
+    //     }
+    //     if ( !empty( $pfData['token'] ) && strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '+ 2 days' ) )
+    //     {
+    //         $checkTotal = $morder->subtotal;
+    //     }
+
+    //     if( !pmpro_pfAmountsEqual( $pfData['amount_gross'], $checkTotal) )
+    //     {
+    //         ipnlog(  'Amount Returned: '.$pfData['amount_gross']."\n Amount in Cart:".$checkTotal );
+    //         $pfError = true;
+    //         $pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
+    //     }
+
+    // }
+
     //// Check status and update order
     if( !$pfError && !$pfDone )
     {
@@ -616,7 +619,7 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order )
         }
         // Remove the last '&' from the parameter string
         $pfParamString = substr( $pfParamString, 0, -1 );
-        $environment = pmpro_getOption("gateway_environment");
+      
         if( is_null( $passPhrase ) )
         {
             $tempParamString = $pfParamString;
