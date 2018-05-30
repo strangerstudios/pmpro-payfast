@@ -24,6 +24,7 @@
     define( 'PF_MODULE_NAME', 'PayFast-PaidMembershipPro' );
     define( 'PF_MODULE_VER', '1.1.0' );
     define( 'PF_DEBUG', pmpro_getOption("payfast_debug") );
+	
     // Features
     // - PHP
     $pfFeatures = 'PHP '. phpversion() .';';
@@ -139,25 +140,19 @@
     }
 
     //// Check data against internal order - Temporarily disabling this as it doesn't work with levels with different amounts.
-    // if( !$pfError && !$pfDone && $pfData['payment_status'] == 'COMPLETE' )
-    // {
-    //     if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '- 2 days' ) )
-    //     {
-    //         $checkTotal = $morder->total;
-    //     }
-    //     if ( !empty( $pfData['token'] ) && strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '- 2 days' ) )
-    //     {
-    //         $checkTotal = $morder->subtotal;
-    //     }
-
-    //     if( !pmpro_pfAmountsEqual( $pfData['amount_gross'], $checkTotal) )
-    //     {
-    //         ipnlog(  'Amount Returned: '.$pfData['amount_gross']."\n Amount in Cart:".$checkTotal );
-    //         $pfError = true;
-    //         $pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
-    //     }
-
-    // }
+    if( !$pfError && !$pfDone && $pfData['payment_status'] == 'COMPLETE' )
+    {		
+        // Only check initial orders.		
+		if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ). '- 2 days' ) )
+        {
+			if( !pmpro_pfAmountsEqual( $pfData['amount_gross'], $morder->total) )
+			{
+				ipnlog(  'Amount Returned: '.$pfData['amount_gross']."\n Amount in Cart:".$checkTotal );
+				$pfError = true;
+				$pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
+			}
+        }
+    }
 
     //// Check status and update order
     if( !$pfError && !$pfDone )
@@ -166,80 +161,42 @@
         {
             $txn_id = $pfData['m_payment_id'];
             $subscr_id = $pfData['token'];
-            if ( strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d' ). '- 2 days' ) )
+            // custom_str1 is the date of the initial order in gmt			
+			if ( strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ). '- 2 days' ) )
             {
-                //if there is no amount1, this membership has a trial, and we need to update membership/etc
+                // Initial payment.
+				// If there is no amount1, this membership has a trial, and we need to update membership/etc
                 $amount = $pfData['amount_gross'];
-                if ( true )
-                {
-                    //trial, get the order
-                    $morder = new MemberOrder( $pfData['m_payment_id'] );
-                    $morder->paypal_token = $pfData['token'];
-                    $morder->getMembershipLevel();
-                    $morder->getUser();
-                    //no txn_id on these, so let's use the subscr_id
-                    $txn_id = $pfData['m_payment_id'];
-                    //update membership
-                    if ( pmpro_itnChangeMembershipLevel( $txn_id, $morder ) )
-                    {
-                        ipnlog( "Checkout processed (" . $morder->code . ") success!" );
-                    }
-                    else
-                    {
-                        ipnlog( "ERROR: Couldn't change level for order (" . $morder->code . ")." );
-                    }
-                }
-                else
-                {
-                    //we're ignoring this. we will get a payment notice from IPN and process that
-                    ipnlog( "Going to wait for the first payment to go through." );
-                }
+               
+				//trial, get the order
+				$morder = new MemberOrder( $pfData['m_payment_id'] );
+				$morder->paypal_token = $pfData['token'];
+				$morder->getMembershipLevel();
+				$morder->getUser();
+				//no txn_id on these, so let's use the subscr_id
+				$txn_id = $pfData['m_payment_id'];
+				//update membership
+				if ( pmpro_itnChangeMembershipLevel( $txn_id, $morder ) ) {
+					ipnlog( "Checkout processed (" . $morder->code . ") success!" );
+				} else {
+					ipnlog( "ERROR: Couldn't change level for order (" . $morder->code . ")." );
+				}
+					
                 pmpro_ipnExit();
-            }
- 
-            //PayFast Standard Subscription Payment
-            if ( strtotime( gmdate( 'Y-m-d' ) ) > strtotime( $pfData['custom_str1'] . '- 2 days' ) && !empty( $pfData['token'] ) )
-            {
-                $last_subscr_order = new MemberOrder();
-                if ($last_subscr_order->getLastMemberOrderBySubscriptionTransactionID($pfData['m_payment_id']))
-                {
+            } else {
+				// Subscription Payment				
+				$last_subscr_order = new MemberOrder();
+                if ($last_subscr_order->getLastMemberOrderBySubscriptionTransactionID($pfData['m_payment_id'])) {
                     $last_subscr_order->paypal_token = $pfData['token'];
-                    //subscription payment, completed or failure?
-                    if ($pfData['payment_status'] == "COMPLETE")
-                    {
-                        pmpro_ipnSaveOrder($pfData['pf_payment_id'], $last_subscr_order);
-                    }
-                    else
-                    {
-                        pmpro_ipnFailedPayment($last_subscr_order);
-                    }
-                }
-                else
-                {
+                    pmpro_ipnSaveOrder($pfData['pf_payment_id'], $last_subscr_order);                    
+                } else {
                     ipnlog("ERROR: Couldn't find last order for this recurring payment (" . $pfData['m_payment_id'] . ").");
                 }
                 pmpro_ipnExit();
-            }
-            else
-            {
-                    //subscription payment, completed or failure?
-                    if ( $pfData['payment_status'] == "COMPLETE" )
-                    {
-                        pmpro_ipnSaveOrder($pfData['m_payment_id'], $last_subscr_order);
-                        ipnlog( 'subscription payment for subscription id: ' . print_r($last_subscr_order,true) );
-                    }
-                    elseif ( $_POST['payment_status'] == "subscription_failed" )
-                    {
-                        pmpro_ipnFailedPayment($last_subscr_order);
-                    }
-                    else
-                    {
-                        ipnlog('Payment status is ' . $_POST['payment_status'] . '.');
-                    }
-                    pmpro_ipnExit();
-            }
+			}
         }
     }
+	
 	if ( $pfData['payment_status'] == 'CANCELLED' )
 	{
 		//find last order
@@ -361,7 +318,7 @@
                 echo $logstr;
                 $loghandle = fopen( PMPRO_PAYFAST_DIR . "/logs/payfast_itn.txt", "a+" );
                 fwrite( $loghandle, $logstr );
-                fclose( $loghandle );
+                fclose( $loghandle );				
             }
         }
         exit;

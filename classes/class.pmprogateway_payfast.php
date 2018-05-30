@@ -345,9 +345,9 @@ class PMProGateway_PayFast {
 		if ( !empty( $frequency ) && !empty( $recurringDiscount ) )
 		{
 		//    $data['m_subscription_id'] = /*$order->getRandomCode()*/$order->code;
-			$data['custom_str1'] = gmdate( 'Y-m-d' );
+			$data['custom_str1'] = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
 			$data['subscription_type'] = 1;
-			$data['billing_date'] = gmdate( 'Y-m-d' );
+			$data['billing_date'] = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
 			$data['recurring_amount'] = $amount;
 			$data['frequency'] = $frequency;
 			$data['cycles'] = $cycles == 0 ? 0 : $cycles + 1;
