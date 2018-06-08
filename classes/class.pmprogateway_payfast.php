@@ -190,10 +190,31 @@ class PMProGateway_PayFast {
 	static function pmpro_checkout_before_submit_button() {
 		global $gateway, $pmpro_requirebilling;
 
-		// show PayFast information before checkout button.
-		?>
+		// Bail if gateway isn't PayFast.
+		if ( $gateway != "payfast" ) {
+			return;
+		}
+
+		// see if Pay By Check Add On is active, if it's selected let's hide the PayFast information.
+		if ( defined( 'PMPROPBC_VER' ) ) {
+			?>
+			<script type="text/javascript">
+				jQuery(document).ready(function() { 
+					jQuery('input:radio[name=gateway]').on( 'click', function() { 
+		 				var val = jQuery(this).val();
+
+		 				if ( val === 'check' ) {
+		 					jQuery( '#pmpro_payfast_before_checkout' ).hide();
+		 				} else {
+		 					jQuery( '#pmpro_payfast_before_checkout' ).show();
+		 				}
+					});
+				});	
+			</script>
+		<?php } ?>
+
 		<div id="pmpro_payfast_before_checkout" style="text-align:center;">
-			<span id="pmpro_payfast_checkout" <?php if( ( $gateway != "paypalexpress" && $gateway != "payfast" ) || !$pmpro_requirebilling ) { ?>style="display: none;"<?php } ?>>
+			<span id="pmpro_payfast_checkout" <?php if( $gateway != "payfast" || !$pmpro_requirebilling ) { ?>style="display: none;"<?php } ?>>
 				<input type="hidden" name="submit-checkout" value="1" />
 			   
 			   <?php  echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.' ); ?>
