@@ -463,7 +463,15 @@ class PMProGateway_PayFast {
     function cancel( &$order ) {
 
         // Check to see if the order has a token and try to cancel it at the gateway. Only recurring subscriptions should have a token.
-        if ( !empty( $order->paypal_token ) && !empty( $order->subscription_transaction_id ) ) {   
+        if ( !empty( $order->paypal_token ) && !empty( $order->subscription_transaction_id ) ) {  
+
+        	// cancel order status immediately.
+        	$order->updateStatus( 'cancelled' );
+ 	
+ 			// check if we are getting an ITN notification which means it's already cancelled within PayFast.
+ 			if ( !empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) {
+                return true;
+            }
 
             $token = $order->paypal_token;
 
@@ -508,10 +516,9 @@ class PMProGateway_PayFast {
             $response_message = wp_remote_retrieve_response_message( $response );
 
             if( 200 == $response_code ) {
-            	$order->updateStatus( 'cancelled' );
             	return true;
             } else {
-            	$order->status = 'error';
+            	$order->updateStatus( 'error' );
             	$order->errorcode = $response_code;
             	$order->error = $response_message;
             	$order->shorterror = $response_message;
