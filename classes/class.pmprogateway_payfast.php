@@ -119,7 +119,7 @@ class PMProGateway_PayFast {
 			?>
 			style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
+				 <label for="payfast_merchant_id"><?php esc_html_e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <input id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( $values['payfast_merchant_id'] ); ?>" />
@@ -131,7 +131,7 @@ class PMProGateway_PayFast {
 				?>
 				style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
+				 <label for="payfast_merchant_key"><?php esc_html_e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <input id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( $values['payfast_merchant_key'] ); ?>" />
@@ -143,7 +143,7 @@ class PMProGateway_PayFast {
 				?>
 				style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
+				 <label for="payfast_debug"><?php esc_html_e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <select name="payfast_debug">
@@ -151,12 +151,12 @@ class PMProGateway_PayFast {
 					 <?php
 						if ( isset( $values['payfast_debug'] ) && $values['payfast_debug'] ) {
 							?>
-							selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?></option>
+							selected="selected"<?php } ?>><?php esc_html_e( 'On', 'pmpro-payfast' ); ?></option>
 					 <option value="0" 
 					 <?php
 						if ( isset( $values['payfast_debug'] ) && ! $values['payfast_debug'] ) {
 							?>
-							selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?></option>
+							selected="selected"<?php } ?>><?php esc_html_e( 'Off', 'pmpro-payfast' ); ?></option>
 				 </select>
 			 </td>
 		 </tr>
@@ -166,10 +166,10 @@ class PMProGateway_PayFast {
 			?>
 			style="display: none;"<?php } ?>>
 			<th scope="row" valign="top">
-				<label for="payfast_passphrase"><?php _e( 'PayFast Signature', 'pmpro-payfast' ); ?>:</label>
+				<label for="payfast_passphrase"><?php esc_html_e( 'PayFast Signature', 'pmpro-payfast' ); ?>:</label>
 			</th>
 			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'Do not set a password unless you have set it in your PayFast settings on www.PayFast.co.za', 'pmpro-payfast' ); ?></small>
+				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php esc_html_e( 'Do not set a password unless you have set it in your PayFast settings on www.PayFast.co.za', 'pmpro-payfast' ); ?></small>
 			</td>
 		</tr>
 		<script>
@@ -246,7 +246,7 @@ class PMProGateway_PayFast {
 				style="display: none;"<?php } ?>>
 				<input type="hidden" name="submit-checkout" value="1" />
 			   
-			   <?php echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
+			   <?php echo '<strong>' . esc_html__( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . esc_html__( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
 
 				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" width="100px" /></p>
 			</span>
@@ -278,7 +278,16 @@ class PMProGateway_PayFast {
 
 		// save discount code use
 		if ( ! empty( $discount_code_id ) ) {
-			$wpdb->query( "INSERT INTO $wpdb->pmpro_discount_codes_uses (code_id, user_id, order_id, timestamp) VALUES('" . $discount_code_id . "', '" . $user_id . "', '" . $morder->id . "', now())" );
+			$wpdb->query(
+				$wpdb->prepare(
+					"INSERT INTO $wpdb->pmpro_discount_codes_uses 
+					(code_id, user_id, order_id, timestamp) 
+					VALUES( %d , %d, %d, now())",
+					$discount_code_id,
+					$user_id,
+					$morder->id
+				)
+			);
 		}
 
 		do_action( 'pmpro_before_send_to_payfast', $user_id, $morder );

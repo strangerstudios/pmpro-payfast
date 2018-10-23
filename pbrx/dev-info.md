@@ -2,22 +2,44 @@
 
 ## Dev Info
 itn - 211 - prepare
+
+```php
+ipnlog( esc_html__( 'Cancelled membership for user with id = ' . $last_subscr_order->user_id . '. Subscription transaction id = ' . $pfData['m_payment_id'] . '.', 'pmpro-payfast' ) );
+```
 250 prepare
 
 278 date
 
+350
+```sql
+$wpdb->query( 
+    $wpdb->prepare( 
+        "INSERT INTO $wpdb->pmpro_discount_codes_uses 
+        (code_id, user_id, order_id, timestamp) 
+        VALUES( %d, %d, %d, %s )",
+        $discount_code_id,
+        $morder->user_id,
+        $morder->id,
+        current_time( 'mysql' )
+    )
+);
+```
+### class.pmprogateway_payfast.php
 
+  * renaming? convention is class-pmpro-gateway-payfast.php
+
+  * 490  function cancel( &$order ) {
 
 ### pmpro-payfast.php phpcs after initial phpcbf for spacing
 
 --------------------------------------------------------------------------------
 FOUND 8 ERRORS AND 1 WARNING AFFECTING 6 LINES
 --------------------------------------------------------------------------------
-  2 | ERROR   | [ ] You must use "/**" style comments for a file comment
+  2 | ERROR   | [ ] You must use `/**` style comments for a file comment
   2 | ERROR   | [ ] Empty line required before block comment
  13 | ERROR   | [ ] Inline comments must end in full-stops, exclamation marks,
     |         |     or question marks
- 14 | ERROR   | [ ] You must use "/**" style comments for a function comment
+ 14 | ERROR   | [ ] You must use `/**` style comments for a function comment
  16 | ERROR   | [ ] Inline comments must end in full-stops, exclamation marks,
     |         |     or question marks
  47 | ERROR   | [ ] All output should be run through an escaping function (see
