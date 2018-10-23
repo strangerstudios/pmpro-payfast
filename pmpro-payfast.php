@@ -6,21 +6,33 @@ Description: Adds PayFast as a gateway option for Paid Memberships Pro.
 Version: .1
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
+Text Domain: pmpro-payfast
+Domain Path: /languages
 */
 
-define( "PMPRO_PAYFAST_DIR", plugin_dir_path( __FILE__ ) );
+define( 'PMPRO_PAYFAST_DIR', plugin_dir_path( __FILE__ ) );
 
-//load payment gateway class after all plugins are loaded to make sure PMPro stuff is available
-function pmpro_payfast_plugins_loaded() {	
+/**
+ * Load plugin textdomain.
+ *
+ * @since 0.1
+ */
+function pmpro_payfast_load_text_domain() {
+	load_plugin_textdomain( 'pmpro-payfast', false, basename( __DIR__ ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'pmpro_payfast_load_text_domain' );
 
-	//make sure PMPro is loaded
-	if( !defined( 'PMPRO_DIR' ) ) {
+// load payment gateway class after all plugins are loaded to make sure PMPro stuff is available
+function pmpro_payfast_plugins_loaded() {
+
+	// make sure PMPro is loaded
+	if ( ! defined( 'PMPRO_DIR' ) ) {
 		return;
 	}
-	
-	require_once( PMPRO_PAYFAST_DIR . "/classes/class.pmprogateway_payfast.php" );
+
+	require_once( PMPRO_PAYFAST_DIR . '/classes/class.pmprogateway_payfast.php' );
 }
-add_action('plugins_loaded', 'pmpro_payfast_plugins_loaded');
+add_action( 'plugins_loaded', 'pmpro_payfast_plugins_loaded' );
 
 /* Register activation hook. */
 register_activation_hook( __FILE__, 'pmpro_payfast_admin_notice_activation_hook' );
