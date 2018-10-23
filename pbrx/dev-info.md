@@ -1,6 +1,12 @@
 # PMPro PayFast Add On
 
 ## Dev Info
+itn - 211 - prepare
+250 prepare
+
+278 date
+
+
 
 ### pmpro-payfast.php phpcs after initial phpcbf for spacing
 

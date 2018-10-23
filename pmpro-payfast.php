@@ -54,7 +54,7 @@ function pmpro_payfast_admin_notice() {
 	// Check transient, if available display notice.
 	if ( get_transient( 'pmpro-payfast-admin-notice' ) ) { ?>
 		<div class="updated notice is-dismissible">
-			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the Payfast Gateway.', 'pmpro-payfast' ), get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ); ?></p>
+			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the Payfast Gateway.', 'pmpro-payfast' ), esc_url( get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ) ); ?></p>
 		</div>
 		<?php
 		// Delete transient, only display this notice once.
