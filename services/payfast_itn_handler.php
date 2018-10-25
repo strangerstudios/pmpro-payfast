@@ -215,9 +215,22 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 					// pmpro_changeMembershipLevel( 0, $last_subscr_order->user_id, 'cancelled' );
 					$last_subscr_order->updateStatus( 'cancelled' );
 					global $wpdb;
-					$query = "UPDATE $wpdb->pmpro_memberships_orders SET status = 'cancelled' WHERE subscription_transaction_id = " . $pfData['m_payment_id'];
+					$query = $wpdb->prepare(
+						"UPDATE $wpdb->pmpro_memberships_orders 
+						SET status = 'cancelled' 
+						WHERE subscription_transaction_id = %d",
+						$pfData['m_payment_id']
+					);
 					$wpdb->query( $query );
-					$sqlQuery = "UPDATE $wpdb->pmpro_memberships_users SET status = 'cancelled' WHERE user_id = '" . $last_subscr_order->user_id . "' AND membership_id = '" . $last_subscr_order->membership_id . "' AND status = 'active'";
+					$sqlQuery = $wpdb->prepare(
+						"UPDATE $wpdb->pmpro_memberships_users 
+						SET status = 'cancelled' 
+						WHERE user_id = %d
+						AND membership_id = %d
+						AND status = 'active'",
+						$last_subscr_order->user_id,
+						$last_subscr_order->membership_id
+					);
 					$wpdb->query( $sqlQuery );
 				}
 				ipnlog( __( 'Cancelled membership for user with id = ', 'pmpro-payfast' ) . $last_subscr_order->user_id . __( '. Subscription transaction id = ', 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( '.', 'pmpro-payfast' ) );
@@ -356,7 +369,17 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 		$morder->saveOrder();
 		// add discount code use
 		if ( ! empty( $discount_code ) && ! empty( $use_discount_code ) ) {
-			$wpdb->query( "INSERT INTO $wpdb->pmpro_discount_codes_uses (code_id, user_id, order_id, timestamp) VALUES('" . $discount_code_id . "', '" . $morder->user_id . "', '" . $morder->id . "', '" . current_time( 'mysql' ) . '' );
+			$wpdb->query(
+				$wpdb->prepare(
+					"INSERT INTO $wpdb->pmpro_discount_codes_uses 
+					(code_id, user_id, order_id, timestamp) 
+					VALUES( %d, %d, %d, %s )"
+					$discount_code_id,
+					$morder->user_id,
+					$morder->id,
+					current_time( 'mysql' )
+				)
+			);
 		}
 		// save first and last name fields
 		if ( ! empty( $_POST['first_name'] ) ) {
@@ -442,7 +465,15 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 	global $wpdb;
 	// check that txn_id has not been previously processed
-	$old_txn = $wpdb->get_var( "SELECT payment_transaction_id FROM $wpdb->pmpro_membership_orders WHERE payment_transaction_id = '" . $txn_id . "' LIMIT 1" );
+	$old_txn = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT payment_transaction_id 
+			FROM $wpdb->pmpro_membership_orders 
+			WHERE payment_transaction_id = %d 
+			LIMIT 1",
+			$txn_id
+		)
+	);
 	if ( empty( $old_txn ) ) {
 		// hook for successful subscription payments
 		// do_action("pmpro_subscription_payment_completed");
