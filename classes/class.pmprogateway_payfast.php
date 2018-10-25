@@ -9,7 +9,7 @@
  */
 
 // Require the default PMPro Gateway Class.
-require_once( PMPRO_DIR . '/classes/gateways/class.pmprogateway.php' );
+require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
 // load classes init method
 add_action( 'init', array( 'PMProGateway_PayFast', 'init' ) );
@@ -67,7 +67,7 @@ class PMProGateway_PayFast {
 	 */
 	static function pmpro_gateways( $gateways ) {
 		if ( empty( $gateways['payfast'] ) ) {
-			$gateways['payfast'] = __( 'PayFast', 'pmpro' );
+			$gateways['payfast'] = __( 'PayFast', 'pmpro-payfast' );
 		}
 
 		return $gateways;
@@ -115,62 +115,64 @@ class PMProGateway_PayFast {
 	 */
 	static function pmpro_payment_option_fields( $values, $gateway ) {      ?>
 		<tr class="gateway gateway_payfast" 
-		<?php
-		if ( $gateway != 'payfast' ) {
-			?>
+			<?php
+			if ( $gateway != 'payfast' ) {
+				?>
 			style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro' ); ?>:</label>
+				 <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <input id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( $values['payfast_merchant_id'] ); ?>" />
 			 </td>
 		 </tr>
 		 <tr class="gateway gateway_payfast" 
-		 <?php
-			if ( $gateway != 'payfast' ) {
-				?>
+			 <?php
+				if ( $gateway != 'payfast' ) {
+					?>
 				style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro' ); ?>:</label>
+				 <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <input id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( $values['payfast_merchant_key'] ); ?>" />
 			 </td>
 		 </tr>
 		 <tr class="gateway gateway_payfast" 
-		 <?php
-			if ( $gateway != 'payfast' ) {
-				?>
+			 <?php
+				if ( $gateway != 'payfast' ) {
+					?>
 				style="display: none;"<?php } ?>>
 			 <th scope="row" valign="top">
-				 <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro' ); ?>:</label>
+				 <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
 			 </th>
 			 <td>
 				 <select name="payfast_debug">
 					 <option value="1" 
-					 <?php
-						if ( isset( $values['payfast_debug'] ) && $values['payfast_debug'] ) {
-							?>
-							selected="selected"<?php } ?>><?php _e( 'On', 'pmpro' ); ?></option>
-					 <option value="0" 
-					 <?php
+				 <?php
+					if ( isset( $values['payfast_debug'] ) && $values['payfast_debug'] ) {
+						?>
+							selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
+					</option>
+					<option value="0" 
+						<?php
 						if ( isset( $values['payfast_debug'] ) && ! $values['payfast_debug'] ) {
 							?>
-							selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro' ); ?></option>
+							selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
+					</option>
 				 </select>
 			 </td>
 		 </tr>
 		<tr class="gateway gateway_payfast" 
-		<?php
-		if ( $gateway != 'payfast' ) {
-			?>
+			<?php
+			if ( $gateway != 'payfast' ) {
+				?>
 			style="display: none;"<?php } ?>>
 			<th scope="row" valign="top">
-				<label for="payfast_passphrase"><?php _e( 'PayFast Signature', 'pmpro' ); ?>:</label>
+				<label for="payfast_passphrase"><?php _e( 'PayFast Signature', 'pmpro-payfast' ); ?>:</label>
 			</th>
 			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'Do not set a password unless you have set it in your PayFast settings on www.PayFast.co.za' ); ?></small>
+				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'Do not set a password unless you have set it in your PayFast settings on www.PayFast.co.za', 'pmpro-payfast' ); ?></small>
 			</td>
 		</tr>
 		<script>
@@ -179,7 +181,7 @@ class PMProGateway_PayFast {
 				pmpro_changeGateway(jQuery('#gateway').val());
 			});
 		</script>
-		<?php
+			<?php
 	}
 
 	/**
@@ -237,7 +239,7 @@ class PMProGateway_PayFast {
 					});
 				});	
 			</script>
-		<?php } ?>
+			<?php } ?>
 
 		<div id="pmpro_payfast_before_checkout" style="text-align:center;">
 			<span id="pmpro_payfast_checkout" 
@@ -246,14 +248,11 @@ class PMProGateway_PayFast {
 				?>
 				style="display: none;"<?php } ?>>
 				<input type="hidden" name="submit-checkout" value="1" />
-			   
-			   <?php echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.' ); ?>
-
+				   <?php echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
 				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" width="100px" /></p>
 			</span>
 		</div>
-
-		<?php
+			<?php
 	}
 
 	/**
@@ -291,7 +290,7 @@ class PMProGateway_PayFast {
 	 * Send traffic to wp-admin/admin-ajax.php?action=pmpro_payfast_itn_handler to the itn handler
 	 */
 	static function wp_ajax_pmpro_payfast_itn_handler() {
-		require_once( PMPRO_PAYFAST_DIR . 'services/payfast_itn_handler.php' );
+		require_once PMPRO_PAYFAST_DIR . 'services/payfast_itn_handler.php';
 		exit;
 	}
 
