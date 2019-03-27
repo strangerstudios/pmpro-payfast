@@ -282,10 +282,11 @@ class PMProGateway_PayFast {
 				$wpdb->prepare(
 					"INSERT INTO $wpdb->pmpro_discount_codes_uses 
 					(code_id, user_id, order_id, timestamp) 
-					VALUES( %d , %d, %d, now())",
+					VALUES( %d , %d, %d, %s )",
 					$discount_code_id,
 					$user_id,
-					$morder->id
+					$morder->id,
+					current_time( 'mysql' )
 				)
 			);
 		}
@@ -310,8 +311,8 @@ class PMProGateway_PayFast {
 
 		// clean up a couple values
 		$order->payment_type = 'PayFast';
-		$order->CardType = '';
-		$order->cardtype = '';
+		$order->CardType     = '';
+		$order->cardtype     = '';
 
 		// just save, the user will go to PayFast to pay
 		$order->status = 'review';
@@ -327,18 +328,18 @@ class PMProGateway_PayFast {
 		 global $pmpro_currency;
 
 		// taxes on initial amount
-		$initial_payment = $order->InitialPayment;
+		$initial_payment     = $order->InitialPayment;
 		$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
-		$initial_payment = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
+		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
 
 		// taxes on the amount
-		$amount = $order->PaymentAmount;
-		$amount_tax = $order->getTaxForPrice( $amount );
+		$amount          = $order->PaymentAmount;
+		$amount_tax      = $order->getTaxForPrice( $amount );
 		$order->subtotal = $amount;
-		$amount = round( (float) $amount + (float) $amount_tax, 2 );
+		$amount          = round( (float) $amount + (float) $amount_tax, 2 );
 
 		// merchant details
-		$merchant_id = pmpro_getOption( 'payfast_merchant_id' );
+		$merchant_id  = pmpro_getOption( 'payfast_merchant_id' );
 		$merchant_key = pmpro_getOption( 'payfast_merchant_key' );
 
 		// build PayFast Redirect
@@ -397,12 +398,12 @@ class PMProGateway_PayFast {
 		// Add subscription data
 		if ( ! empty( $frequency ) && ! empty( $recurringDiscount ) ) {
 			// $data['m_subscription_id'] = /*$order->getRandomCode()*/$order->code;
-			$data['custom_str1'] = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+			$data['custom_str1']       = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
 			$data['subscription_type'] = 1;
-			$data['billing_date'] = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
-			$data['recurring_amount'] = $amount;
-			$data['frequency'] = $frequency;
-			$data['cycles'] = $cycles == 0 ? 0 : $cycles + 1;
+			$data['billing_date']      = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+			$data['recurring_amount']  = $amount;
+			$data['frequency']         = $frequency;
+			$data['cycles']            = $cycles == 0 ? 0 : $cycles + 1;
 
 			if ( empty( $order->code ) ) {
 				$order->code = $order->getRandomCode();
@@ -412,23 +413,23 @@ class PMProGateway_PayFast {
 			$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
 
 			// taxes on initial amount
-			$initial_payment = $order->InitialPayment;
+			$initial_payment     = $order->InitialPayment;
 			$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
-			$initial_payment = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
+			$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
 
 			// taxes on the amount
-			$amount = $order->PaymentAmount;
+			$amount     = $order->PaymentAmount;
 			$amount_tax = $order->getTaxForPrice( $amount );
 			// $amount = round((float)$amount + (float)$amount_tax, 2);
-			$order->status = 'pending';
-			$order->payment_transaction_id = $order->code;
+			$order->status                      = 'pending';
+			$order->payment_transaction_id      = $order->code;
 			$order->subscription_transaction_id = $order->code;
 
 			// update order
 			$order->saveOrder();
 		}
 
-		$pfOutput = '';
+		$pfOutput  = '';
 		$pffOutput = '';
 
 		foreach ( $data  as $key => $val ) {
@@ -468,16 +469,16 @@ class PMProGateway_PayFast {
 		$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
 
 		// taxes on initial amount
-		$initial_payment = $order->InitialPayment;
+		$initial_payment     = $order->InitialPayment;
 		$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
-		$initial_payment = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
+		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
 
 		// taxes on the amount
-		$amount = $order->PaymentAmount;
+		$amount     = $order->PaymentAmount;
 		$amount_tax = $order->getTaxForPrice( $amount );
 		// $amount = round((float)$amount + (float)$amount_tax, 2);
-		$order->status = 'success';
-		$order->payment_transaction_id = $order->code;
+		$order->status                      = 'success';
+		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
 
 		// update order
@@ -501,13 +502,13 @@ class PMProGateway_PayFast {
 
 			$token = $order->paypal_token;
 
-			$hashArray = array();
+			$hashArray  = array();
 			$passphrase = pmpro_getOption( 'payfast_passphrase' );
 
-			$hashArray['version'] = 'v1';
+			$hashArray['version']     = 'v1';
 			$hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
-			$hashArray['passphrase'] = $passphrase;
-			$hashArray['timestamp'] = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
+			$hashArray['passphrase']  = $passphrase;
+			$hashArray['timestamp']   = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
 
 			$orderedPrehash = $hashArray;
 
@@ -528,26 +529,26 @@ class PMProGateway_PayFast {
 			$response = wp_remote_post(
 				$url,
 				array(
-					'method' => 'PUT',
+					'method'  => 'PUT',
 					'timeout' => 60,
 					'headers' => array(
-						'version' => 'v1',
+						'version'     => 'v1',
 						'merchant-id' => $hashArray['merchant-id'],
-						'signature' => $signature,
-						'timestamp' => $hashArray['timestamp'],
+						'signature'   => $signature,
+						'timestamp'   => $hashArray['timestamp'],
 					),
 				)
 			);
 
-			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_code    = wp_remote_retrieve_response_code( $response );
 			$response_message = wp_remote_retrieve_response_message( $response );
 
 			if ( 200 == $response_code ) {
 				return true;
 			} else {
 				$order->updateStatus( 'error' );
-				$order->errorcode = $response_code;
-				$order->error = $response_message;
+				$order->errorcode  = $response_code;
+				$order->error      = $response_message;
 				$order->shorterror = $response_message;
 
 				return false;
