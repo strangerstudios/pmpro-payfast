@@ -12,18 +12,10 @@ Domain Path: /languages
 
 define( 'PMPRO_PAYFAST_DIR', plugin_dir_path( __FILE__ ) );
 
-/**
- * Load plugin textdomain.
- *
- * @since 0.1
- */
-function pmpro_payfast_load_text_domain() {
-	load_plugin_textdomain( 'pmpro-payfast', false, basename( __DIR__ ) . '/languages' );
-}
-add_action( 'plugins_loaded', 'pmpro_payfast_load_text_domain' );
-
 // load payment gateway class after all plugins are loaded to make sure PMPro stuff is available
 function pmpro_payfast_plugins_loaded() {
+
+	load_plugin_textdomain( 'pmpro-payfast', false, basename( __DIR__ ) . '/languages' );
 
 	// make sure PMPro is loaded
 	if ( ! defined( 'PMPRO_DIR' ) ) {
