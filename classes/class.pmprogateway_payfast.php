@@ -261,7 +261,7 @@ class PMProGateway_PayFast {
 	 * @since 1.8
 	 */
 	static function pmpro_checkout_before_change_membership_level( $user_id, $morder ) {
-		global $discount_code_id;
+		global $discount_code_id, $wpdb;
 
 		// if no order, no need to pay
 		if ( empty( $morder ) ) {
@@ -305,6 +305,7 @@ class PMProGateway_PayFast {
 	}
 
 	function process( &$order ) {
+
 		if ( empty( $order->code ) ) {
 			$order->code = $order->getRandomCode();
 		}
@@ -313,9 +314,8 @@ class PMProGateway_PayFast {
 		$order->payment_type = 'PayFast';
 		$order->CardType     = '';
 		$order->cardtype     = '';
-
-		// just save, the user will go to PayFast to pay
-		$order->status = 'review';
+		
+		$order->status = "review";
 		$order->saveOrder();
 
 		return true;
@@ -325,9 +325,17 @@ class PMProGateway_PayFast {
 	 * @param $order
 	 */
 	function sendToPayFast( &$order ) {
-		 global $pmpro_currency;
+		global $pmpro_currency, $discount_code;
 
-		// taxes on initial amount
+		if ( empty( $order->code ) ) {
+			$order->code = $order->getRandomCode();
+		}
+
+		$order->payment_type = 'PayFast';
+		$order->CardType = "";
+		$order->cardtype = "";
+
+		// taxes on initial payment
 		$initial_payment     = $order->InitialPayment;
 		$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
 		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
@@ -373,30 +381,15 @@ class PMProGateway_PayFast {
 		switch ( $order->BillingPeriod ) {
 			case 'Month':
 				$frequency = '3';
-
 				break;
 
 			case 'Year':
 				$frequency = '6';
-
 				break;
 		}
 
-		// set the recurringDiscount to true by default and change to false only if a non recurring code is used
-		$recurringDiscount = true;
-
-		// check if a discount code is being used
-		if ( ! empty( $order->discount_code ) ) {
-			// check to see whether or not it is a recurring discount code
-			if ( isset( $order->TotalBillingCycles ) ) {
-				$recurringDiscount = true; // 1
-			} else {
-				$recurringDiscount = false;
-			}
-		}
-
 		// Add subscription data
-		if ( ! empty( $frequency ) && ! empty( $recurringDiscount ) ) {
+		if ( ! empty( $frequency ) ) {
 			// $data['m_subscription_id'] = /*$order->getRandomCode()*/$order->code;
 			$data['custom_str1']       = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
 			$data['subscription_type'] = 1;
@@ -405,29 +398,16 @@ class PMProGateway_PayFast {
 			$data['frequency']         = $frequency;
 			$data['cycles']            = $cycles == 0 ? 0 : $cycles + 1;
 
-			if ( empty( $order->code ) ) {
-				$order->code = $order->getRandomCode();
-			}
-
 			// filter order before subscription. use with care.
 			$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
-
-			// taxes on initial amount
-			$initial_payment     = $order->InitialPayment;
-			$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
-			$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
-
-			// taxes on the amount
-			$amount     = $order->PaymentAmount;
-			$amount_tax = $order->getTaxForPrice( $amount );
-			// $amount = round((float)$amount + (float)$amount_tax, 2);
-			$order->status                      = 'pending';
-			$order->payment_transaction_id      = $order->code;
-			$order->subscription_transaction_id = $order->code;
-
-			// update order
-			$order->saveOrder();
 		}
+
+		$order->status                      = 'pending';
+		$order->payment_transaction_id      = $order->code;
+		$order->subscription_transaction_id = $order->code;
+
+		// Save the order before redirecting to PayFast.
+		$order->saveOrder();
 
 		$pfOutput  = '';
 		$pffOutput = '';
