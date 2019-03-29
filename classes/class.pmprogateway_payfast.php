@@ -325,7 +325,7 @@ class PMProGateway_PayFast {
 	 * @param $order
 	 */
 	function sendToPayFast( &$order ) {
-		global $pmpro_currency, $discount_code;
+		global $pmpro_currency;
 
 		if ( empty( $order->code ) ) {
 			$order->code = $order->getRandomCode();
