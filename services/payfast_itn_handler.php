@@ -8,14 +8,6 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 
-// in case the file is loaded directly
-if ( ! defined( 'WP_USE_THEMES' ) ) {
-	global $isapage;
-	$isapage = true;
-	define( 'WP_USE_THEMES', false );
-	require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
-}
-
 // Bail if PMPro or the PayFast add on is not active
 if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_PAYFAST_DIR' ) ) {
 	error_log( __( 'Paid Memberships Pro and the PMPro PayFast Add On must be activated for the PMPro PayFast ITN handler to function.', 'pmpro-payfast' ) );
