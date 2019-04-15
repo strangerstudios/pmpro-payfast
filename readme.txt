@@ -50,4 +50,4 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 == Changelog ==
 
 = .8 =
-* Initial release.
+* Initial release. Pluganized from the PayFast PMPro fork. Includes many bug fixes and improvements.
