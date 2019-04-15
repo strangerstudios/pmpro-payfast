@@ -278,7 +278,7 @@ class PMProGateway_PayFast {
 
 		// if global is empty by query is available.
 		if ( empty( $discount_code) && isset( $_REQUEST['discount_code'] ) ) {
-			$discount_code_id = $wpdb->get_var( "SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql( $_REQUEST['discount_code'] ) . "'" );
+			$discount_code_id = $wpdb->get_var( "SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql( sanitize_text_field( $_REQUEST['discount_code'] ) ) . "'" );
 		}
 
 		// save discount code use
