@@ -34,8 +34,10 @@ class PMProGateway_PayFast {
 
 		add_filter( 'pmpro_payment_option_fields', array( 'PMProGateway_PayFast', 'pmpro_payment_option_fields' ), 10, 2 );
 
-		add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
-		add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
+		if ( pmpro_getOption( 'gateway' ) == 'payfast' ) {
+			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
+			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
+		}
 
 		add_filter( 'pmpro_required_billing_fields', '__return_empty_array' );
 		add_filter( 'pmpro_checkout_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_checkout_before_submit_button' ) );
