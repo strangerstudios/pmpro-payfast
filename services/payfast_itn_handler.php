@@ -481,16 +481,35 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 
 /**
  * pfGetData
+ * documentation reference - https://developers.payfast.co.za/documentation/#notify-page-itn
+ * @uses pmpro_getParam - https://github.com/strangerstudios/paid-memberships-pro/blob/dev/includes/functions.php#L2260
  *
  * @author Jonathan Smit (PayFast.co.za)
+ * @author Stranger Studios 2019 (paidmembershipspro.com)
  */
 function pmpro_pfGetData() {
-	// Posted variables from ITN
-	$pfData = $_POST;
-	// Strip any slashes in data
-	foreach ( $pfData as $key => $val ) {
-		$pfData[ $key ] = stripslashes( $val );
-	}
+	
+	$pfData = array();
+
+	// Get all post data and clean it up.
+	$pfData['m_payment_id'] = pmpro_getParam( 'm_payment_id', 'POST' );
+	$pfData['pf_payment_id'] = pmpro_getParam( 'pf_payment_id', 'POST' );
+	$pfData['payment_status'] = pmpro_getParam( 'payment_status', 'POST' );
+	$pfData['item_name'] = pmpro_getParam( 'item_name', 'POST' );
+	$pfData['item_description'] = pmpro_getParam( 'item_description', 'POST' );
+	$pfData['amount_gross'] = pmpro_getParam( 'amount_gross', 'POST' );
+	$pfData['amount_fee'] = pmpro_getParam( 'amount_fee', 'POST' );
+	$pfData['amount_net'] = pmpro_getParam( 'amount_net', 'POST' );
+	$pfData['custom_str1'] = pmpro_getParam( 'custom_str1', 'POST' );
+	$pfData['custom_int1'] = pmpro_getParam( 'custom_int1', 'POST' );
+	$pfData['name_first'] = pmpro_getParam( 'name_first', 'POST' );
+	$pfData['name_last'] = pmpro_getParam( 'name_last', 'POST' );
+	$pfData['email_address'] = pmpro_getParam( 'email_address', 'POST', '', 'sanitize_email' );
+	$pfData['merchant_id'] = pmpro_getParam( 'merchant_id', 'POST' );
+	$pfData['token'] = pmpro_getParam( 'token', 'POST' );
+	$pfData['payment_status'] = pmpro_getParam( 'payment_status', 'POST' );
+	$pfData['signature'] = pmpro_getParam( 'signature', 'POST' );
+
 	// Return "false" if no data was received
 	if ( sizeof( $pfData ) == 0 ) {
 		return( false );
