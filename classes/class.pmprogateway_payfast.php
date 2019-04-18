@@ -169,10 +169,10 @@ class PMProGateway_PayFast {
 				?>
 			style="display: none;"<?php } ?>>
 			<th scope="row" valign="top">
-				<label for="payfast_passphrase"><?php _e( 'PayFast Signature', 'pmpro-payfast' ); ?>:</label>
+				<label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
 			</th>
 			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'Do not set a password unless you have set it in your PayFast settings on www.PayFast.co.za', 'pmpro-payfast' ); ?></small>
+				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is required for recurring subscriptions.', 'pmpro-payfast' ); ?></small>
 			</td>
 		</tr>
 		<script>
