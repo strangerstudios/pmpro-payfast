@@ -8,6 +8,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 
+
 // Bail if PMPro or the PayFast add on is not active
 if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_PAYFAST_DIR' ) ) {
 	error_log( __( 'Paid Memberships Pro and the PMPro PayFast Add On must be activated for the PMPro PayFast ITN handler to function.', 'pmpro-payfast' ) );
@@ -379,7 +380,7 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 			}
 		}
 		// hook
-		do_action( 'pmpro_after_checkout', $morder->user_id );
+		do_action( 'pmpro_after_checkout', $morder->user_id, $morder );
 		// setup some values for the emails
 		if ( ! empty( $morder ) ) {
 			$invoice = new MemberOrder( $morder->id );
@@ -481,16 +482,43 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 
 /**
  * pfGetData
+ * documentation reference - https://developers.payfast.co.za/documentation/#notify-page-itn
+ * @uses pmpro_getParam - https://github.com/strangerstudios/paid-memberships-pro/blob/dev/includes/functions.php#L2260
  *
  * @author Jonathan Smit (PayFast.co.za)
+ * @author Stranger Studios 2019 (paidmembershipspro.com)
  */
 function pmpro_pfGetData() {
-	// Posted variables from ITN
-	$pfData = $_POST;
-	// Strip any slashes in data
-	foreach ( $pfData as $key => $val ) {
-		$pfData[ $key ] = stripslashes( $val );
-	}
+	
+	$pfData = array();
+
+	// Get all the POST data and sanitize it.
+	$pfData['m_payment_id'] = pmpro_getParam( 'm_payment_id', 'POST' );
+	$pfData['pf_payment_id'] = pmpro_getParam( 'pf_payment_id', 'POST' );
+	$pfData['payment_status'] = pmpro_getParam( 'payment_status', 'POST' );
+	$pfData['item_name'] = pmpro_getParam( 'item_name', 'POST' );
+	$pfData['item_description'] = pmpro_getParam( 'item_description', 'POST' );
+	$pfData['amount_gross'] = pmpro_getParam( 'amount_gross', 'POST' );
+	$pfData['amount_fee'] = pmpro_getParam( 'amount_fee', 'POST' );
+	$pfData['amount_net'] = pmpro_getParam( 'amount_net', 'POST' );
+	$pfData['custom_str1'] = pmpro_getParam( 'custom_str1', 'POST' );
+	$pfData['custom_str2'] = pmpro_getParam( 'custom_str2', 'POST' );
+	$pfData['custom_str3'] = pmpro_getParam( 'custom_str3', 'POST' );
+	$pfData['custom_str4'] = pmpro_getParam( 'custom_str4', 'POST' );
+	$pfData['custom_str5'] = pmpro_getParam( 'custom_str5', 'POST' );
+	$pfData['custom_int1'] = pmpro_getParam( 'custom_int1', 'POST' );
+	$pfData['custom_int2'] = pmpro_getParam( 'custom_int2', 'POST' );
+	$pfData['custom_int3'] = pmpro_getParam( 'custom_int3', 'POST' );
+	$pfData['custom_int4'] = pmpro_getParam( 'custom_int4', 'POST' );
+	$pfData['custom_int5'] = pmpro_getParam( 'custom_int5', 'POST' );
+ 	$pfData['name_first'] = pmpro_getParam( 'name_first', 'POST' );
+	$pfData['name_last'] = pmpro_getParam( 'name_last', 'POST' );
+	$pfData['email_address'] = pmpro_getParam( 'email_address', 'POST', '', 'sanitize_email' );
+	$pfData['merchant_id'] = pmpro_getParam( 'merchant_id', 'POST' );
+	$pfData['token'] = pmpro_getParam( 'token', 'POST' );
+	$pfData['billing_date'] = pmpro_getParam( 'billing_date', 'POST' );
+	$pfData['signature'] = pmpro_getParam( 'signature', 'POST' );	
+
 	// Return "false" if no data was received
 	if ( sizeof( $pfData ) == 0 ) {
 		return( false );
@@ -521,6 +549,7 @@ function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPh
 	} else {
 		$tempParamString = $pfParamString . '&passphrase=' . urlencode( trim( $passPhrase ) );
 	}
+	
 	$signature = md5( $tempParamString );
 	$result = ( $pfData['signature'] == $signature );
 	pmpro_payfast_itnlog( __( 'Signature Sent: ', 'pmpro-payfast' ) . $signature );
@@ -543,11 +572,13 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	$url = 'https://' . $pfHost . '/eng/query/validate';
 	
 	$response = wp_remote_post( $url, array(
+			'method' => 'POST',
 			'sslverify' => false,
 			'body' => $pfParamString,
 			'timeout' => PF_TIMEOUT
 		)
 	);
+
 	
 	if ( is_wp_error( $response ) ) {
 		$error_message = $response->get_error_message();
