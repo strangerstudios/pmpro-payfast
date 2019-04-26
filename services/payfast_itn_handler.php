@@ -15,44 +15,44 @@ if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_PAYFAST_DIR' ) ) {
 	exit;
 }
 
-define( 'PF_SOFTWARE_NAME', 'Paid Memberships Pro' );
-define( 'PF_SOFTWARE_VER', PMPRO_VERSION );
-define( 'PF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
-define( 'PF_MODULE_VER', '1.0' );
-define( 'PF_DEBUG', pmpro_getOption( 'payfast_debug' ) );
+define( 'PMPROPF_SOFTWARE_NAME', 'Paid Memberships Pro' );
+define( 'PMPROPF_SOFTWARE_VER', PMPRO_VERSION );
+define( 'PMPROPF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
+define( 'PMPROPF_MODULE_VER', '1.0' );
+define( 'PMPROPF_DEBUG', pmpro_getOption( 'payfast_debug' ) );
 
 // Features
 // - PHP
 $pfFeatures = 'PHP ' . phpversion() . ';';
 
 // Create user agrent
-define( 'PF_USER_AGENT', PF_SOFTWARE_NAME . '/' . PF_SOFTWARE_VER . ' (' . trim( $pfFeatures ) . ') ' . PF_MODULE_NAME . '/' . PF_MODULE_VER );
+define( 'PMPROPF_USER_AGENT', PMPROPF_SOFTWARE_NAME . '/' . PMPROPF_SOFTWARE_VER . ' (' . trim( $pfFeatures ) . ') ' . PMPROPF_MODULE_NAME . '/' . PMPROPF_MODULE_VER );
 // General Defines
-define( 'PF_TIMEOUT', 15 );
-define( 'PF_EPSILON', 0.01 );
+define( 'PMPROPF_TIMEOUT', 15 );
+define( 'PMPROPF_EPSILON', 0.01 );
 // Messages
 // Error
-define( 'PF_ERR_AMOUNT_MISMATCH', __( 'Amount mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_BAD_ACCESS', __( 'Bad access of page', 'pmpro-payfast' ) );
-define( 'PF_ERR_BAD_SOURCE_IP', __( 'Bad source IP address', 'pmpro-payfast' ) );
-define( 'PF_ERR_CONNECT_FAILED', __( 'Failed to connect to PayFast', 'pmpro-payfast' ) );
-define( 'PF_ERR_INVALID_SIGNATURE', __( 'Security signature mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_MERCHANT_ID_MISMATCH', __( 'Merchant ID mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_NO_SESSION', __( 'No saved session found for ITN transaction', 'pmpro-payfast' ) );
-define( 'PF_ERR_ORDER_ID_MISSING_URL', __( 'Order ID not present in URL', 'pmpro-payfast' ) );
-define( 'PF_ERR_ORDER_ID_MISMATCH', __( 'Order ID mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_ORDER_INVALID', __( 'This order ID is invalid', 'pmpro-payfast' ) );
-define( 'PF_ERR_ORDER_NUMBER_MISMATCH', __( 'Order Number mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_ORDER_PROCESSED', __( 'This order has already been processed', 'pmpro-payfast' ) );
-define( 'PF_ERR_PDT_FAIL', __( 'PDT query failed', 'pmpro-payfast' ) );
-define( 'PF_ERR_PDT_TOKEN_MISSING', __( 'PDT token not present in URL', 'pmpro-payfast' ) );
-define( 'PF_ERR_SESSIONID_MISMATCH', __( 'Session ID mismatch', 'pmpro-payfast' ) );
-define( 'PF_ERR_UNKNOWN', __( 'Unkown error occurred', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_AMOUNT_MISMATCH', __( 'Amount mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_BAD_ACCESS', __( 'Bad access of page', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_BAD_SOURCE_IP', __( 'Bad source IP address', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_CONNECT_FAILED', __( 'Failed to connect to PayFast', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_INVALID_SIGNATURE', __( 'Security signature mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_MERCHANT_ID_MISMATCH', __( 'Merchant ID mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_NO_SESSION', __( 'No saved session found for ITN transaction', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_ORDER_ID_MISSING_URL', __( 'Order ID not present in URL', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_ORDER_ID_MISMATCH', __( 'Order ID mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_ORDER_INVALID', __( 'This order ID is invalid', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_ORDER_NUMBER_MISMATCH', __( 'Order Number mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_ORDER_PROCESSED', __( 'This order has already been processed', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_PDT_FAIL', __( 'PDT query failed', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_PDT_TOKEN_MISSING', __( 'PDT token not present in URL', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_SESSIONID_MISMATCH', __( 'Session ID mismatch', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_UNKNOWN', __( 'Unkown error occurred', 'pmpro-payfast' ) );
 	// General
-define( 'PF_MSG_OK', __( 'Payment was successful', 'pmpro-payfast' ) );
-define( 'PF_MSG_FAILED', __( 'Payment has failed', 'pmpro-payfast' ) );
+define( 'PMPROPF_MSG_OK', __( 'Payment was successful', 'pmpro-payfast' ) );
+define( 'PMPROPF_MSG_FAILED', __( 'Payment has failed', 'pmpro-payfast' ) );
 define(
-	'PF_MSG_PENDING', __( 'pmpro-payfast' ),
+	'PMPROPF_MSG_PENDING', __( 'pmpro-payfast' ),
 	__( 'The payment is pending. Please note, you will receive another Instant', 'pmpro-payfast' ) .
 	__( ' Transaction Notification when the payment status changes to', 'pmpro-payfast' ) .
 	__( ' "Completed", or "Failed"', 'pmpro-payfast' )
@@ -90,7 +90,7 @@ if ( ! $pfError && ! $pfDone ) {
 	pmpro_payfast_itnlog( __( 'PayFast Data: ', 'pmpro-payfast' ) . print_r( $pfData, true ) );
 	if ( $pfData === false ) {
 		$pfError = true;
-		$pfErrMsg = PF_ERR_BAD_ACCESS;
+		$pfErrMsg = PMPROPF_ERR_BAD_ACCESS;
 	}
 }
 
@@ -102,15 +102,15 @@ if ( ! $pfError && ! $pfDone ) {
 	// If signature different, log for debugging
 	if ( ! pmpro_pfValidSignature( $pfData, $pfParamString, $pfPassPhrase ) ) {
 		$pfError = true;
-		$pfErrMsg = PF_ERR_INVALID_SIGNATURE;
+		$pfErrMsg = PMPROPF_ERR_INVALID_SIGNATURE;
 	}
 }
 // Verify source IP (If not in debug mode)
-if ( ! $pfError && ! $pfDone && ! PF_DEBUG ) {
+if ( ! $pfError && ! $pfDone && ! PMPROPF_DEBUG ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
 		$pfError = true;
-		$pfErrMsg = PF_ERR_BAD_SOURCE_IP;
+		$pfErrMsg = PMPROPF_ERR_BAD_SOURCE_IP;
 	}
 }
 // Verify data received
@@ -119,7 +119,7 @@ if ( ! $pfError ) {
 	$pfValid = pmpro_pfValidData( $pfHost, $pfParamString );
 	if ( ! $pfValid ) {
 		$pfError = true;
-		$pfErrMsg = PF_ERR_BAD_ACCESS;
+		$pfErrMsg = PMPROPF_ERR_BAD_ACCESS;
 	}
 }
 
@@ -130,7 +130,7 @@ if ( ! $pfError && ! $pfDone && $pfData['payment_status'] == 'COMPLETE' ) {
 		if ( ! pmpro_pfAmountsEqual( $pfData['amount_gross'], $morder->total ) ) {
 			pmpro_payfast_itnlog( __( 'Amount Returned: ', 'pmpro-payfast' ) . $pfData['amount_gross'] . __( "\n Amount in Cart:", 'pmpro-payfast' ) . $checkTotal );
 			$pfError = true;
-			$pfErrMsg = PF_ERR_AMOUNT_MISMATCH;
+			$pfErrMsg = PMPROPF_ERR_AMOUNT_MISMATCH;
 		}
 	}
 }
@@ -287,7 +287,7 @@ function pmpro_payfast_ipnExit() {
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
 		// log?
-		if ( PF_DEBUG ) {
+		if ( PMPROPF_DEBUG ) {
 			echo $logstr;
 			$loghandle = fopen( PMPRO_PAYFAST_DIR . '/logs/payfast_itn.txt', 'a+' );
 			fwrite( $loghandle, $logstr );
@@ -575,7 +575,7 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 			'method' => 'POST',
 			'sslverify' => false,
 			'body' => $pfParamString,
-			'timeout' => PF_TIMEOUT
+			'timeout' => PMPROPF_TIMEOUT
 		)
 	);
 
@@ -642,7 +642,7 @@ function pmpro_pfValidIP( $sourceIP ) {
  * @param $amount2 Float 2nd amount for comparison
  */
 function pmpro_pfAmountsEqual( $amount1, $amount2 ) {
-	if ( abs( floatval( $amount1 ) - floatval( $amount2 ) ) > PF_EPSILON ) {
+	if ( abs( floatval( $amount1 ) - floatval( $amount2 ) ) > PMPROPF_EPSILON ) {
 		return( false );
 	} else {
 		return( true );
