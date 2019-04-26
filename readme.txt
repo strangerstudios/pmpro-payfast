@@ -3,7 +3,7 @@ Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 4.8
 Tested up to: 5.1.1
-Stable tag: .8.1
+Stable tag: .8.2
 
 Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
 
@@ -48,6 +48,9 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+
+= .8.2 - 2019-04-26 =
+* ENHANCEMENT: Prefix all constants to avoid conflict with other PayFast Plugins.
 
 = .8.1 =
 * SECURITY: Better sanitization of POST parameters in the ITN hander.
