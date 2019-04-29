@@ -1,5 +1,5 @@
 === Paid Memberships Pro - PayFast Gateway Add On ===
-Contributors: strangerstudios
+Contributors: strangerstudios,andrewza
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 4.8
 Tested up to: 5.1.1
