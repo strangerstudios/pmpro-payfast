@@ -11,9 +11,11 @@ Add the South African payment processing service PayFast as a gateway option for
 
 Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
 
-PayFast (https://www.payfast.co.za/) is a payments processing service for South Africans and South African websites. Their payment gateway offers a secure and instant transfer of money between online buyers and sellers. Merchants can accept funds from local and international customers from anywhere in the world in ZAR.
+[PayFast](https://www.payfast.co.za/) is a payments processing service for South Africans and South African websites. Their payment gateway offers a secure and instant transfer of money between online buyers and sellers. Merchants can accept funds from local and international customers from anywhere in the world in ZAR.
 
-Fees are charged per-transaction according to this fee schedule and there are no setup or monthly fees.
+Fees are charged per-transaction [according to this fee schedule](https://www.payfast.co.za/fees/) and there are no setup or monthly fees.
+
+[youtube http://www.youtube.com/watch?v=aDjjSjmJ-j8]
 
 == Installation ==
 
