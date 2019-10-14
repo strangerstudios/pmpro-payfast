@@ -490,11 +490,12 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
  */
 function pmpro_pfGetData() {
 	
+	$pfData = array();
     // Ensure that all posted data is used at the ITN stage
-	$pfData = $_POST;
+	$postedData = array_keys($_POST);
 
     // Sanitize all posted data
-    foreach ( $pfData as $key => $val ) {
+    foreach ( $postedData as $key ) {
 		if ( $key != 'email_address' ) {
 			$pfData[$key] = pmpro_getParam( $key, 'POST' );
 		} else {
