@@ -491,33 +491,17 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 function pmpro_pfGetData() {
 	
 	$pfData = array();
+    // Ensure that all posted data is used at the ITN stage
+	$postedData = array_keys($_POST);
 
-	// Get all the POST data and sanitize it.
-	$pfData['m_payment_id'] = pmpro_getParam( 'm_payment_id', 'POST' );
-	$pfData['pf_payment_id'] = pmpro_getParam( 'pf_payment_id', 'POST' );
-	$pfData['payment_status'] = pmpro_getParam( 'payment_status', 'POST' );
-	$pfData['item_name'] = pmpro_getParam( 'item_name', 'POST' );
-	$pfData['item_description'] = pmpro_getParam( 'item_description', 'POST' );
-	$pfData['amount_gross'] = pmpro_getParam( 'amount_gross', 'POST' );
-	$pfData['amount_fee'] = pmpro_getParam( 'amount_fee', 'POST' );
-	$pfData['amount_net'] = pmpro_getParam( 'amount_net', 'POST' );
-	$pfData['custom_str1'] = pmpro_getParam( 'custom_str1', 'POST' );
-	$pfData['custom_str2'] = pmpro_getParam( 'custom_str2', 'POST' );
-	$pfData['custom_str3'] = pmpro_getParam( 'custom_str3', 'POST' );
-	$pfData['custom_str4'] = pmpro_getParam( 'custom_str4', 'POST' );
-	$pfData['custom_str5'] = pmpro_getParam( 'custom_str5', 'POST' );
-	$pfData['custom_int1'] = pmpro_getParam( 'custom_int1', 'POST' );
-	$pfData['custom_int2'] = pmpro_getParam( 'custom_int2', 'POST' );
-	$pfData['custom_int3'] = pmpro_getParam( 'custom_int3', 'POST' );
-	$pfData['custom_int4'] = pmpro_getParam( 'custom_int4', 'POST' );
-	$pfData['custom_int5'] = pmpro_getParam( 'custom_int5', 'POST' );
- 	$pfData['name_first'] = pmpro_getParam( 'name_first', 'POST' );
-	$pfData['name_last'] = pmpro_getParam( 'name_last', 'POST' );
-	$pfData['email_address'] = pmpro_getParam( 'email_address', 'POST', '', 'sanitize_email' );
-	$pfData['merchant_id'] = pmpro_getParam( 'merchant_id', 'POST' );
-	$pfData['token'] = pmpro_getParam( 'token', 'POST' );
-	$pfData['billing_date'] = pmpro_getParam( 'billing_date', 'POST' );
-	$pfData['signature'] = pmpro_getParam( 'signature', 'POST' );	
+    // Sanitize all posted data
+    foreach ( $postedData as $key ) {
+		if ( $key != 'email_address' ) {
+			$pfData[$key] = pmpro_getParam( $key, 'POST' );
+		} else {
+			$pfData[$key] = pmpro_getParam( $key, 'POST', '', 'sanitize_email' );
+		}
+	}
 
 	// Return "false" if no data was received
 	if ( sizeof( $pfData ) == 0 ) {
