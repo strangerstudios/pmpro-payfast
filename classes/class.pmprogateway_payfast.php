@@ -37,6 +37,8 @@ class PMProGateway_PayFast {
 		if ( pmpro_getOption( 'gateway' ) == 'payfast' ) {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
 			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
+			add_filter( 'pmpro_billing_show_payment_method', '__return_false' );
+			add_action( 'pmpro_billing_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_billing_before_submit_button' ) );
 		}
 
 		add_filter( 'pmpro_required_billing_fields', '__return_empty_array' );
@@ -209,6 +211,10 @@ class PMProGateway_PayFast {
 		unset( $fields['CVV'] );
 
 		return $fields;
+	}
+
+	function pmpro_billing_before_submit_button() {
+		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to PayFast.", 'pmpro-payfast'), "<a href='https://payfast.co.za' target='_blank'>PayFast</a>" );
 	}
 
 	/**
@@ -541,5 +547,15 @@ class PMProGateway_PayFast {
 				return false;
 			}
 		}
+	}
+
+	/**
+	 * Fallback in case people are navigating to the billing page URL.
+	 * 
+	 * @since 0.8.4
+	 */
+	function update() {
+		wp_redirect( esc_url( apply_filters( 'pmpro_update_billing_payfast_url', 'https://payfast.co.za' ) ) );
+		exit;
 	}
 } //end of class
