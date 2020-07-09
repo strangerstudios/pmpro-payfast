@@ -88,3 +88,27 @@ function pmpro_payfast_plugin_row_meta( $links, $file ) {
 	return $links;
 }
 add_filter( 'plugin_row_meta', 'pmpro_payfast_plugin_row_meta', 10, 2 );
+
+/**
+ * Filter the results of the discount code check to make sure
+ * fixed-term discounts codes are not applied to recurring subscriptions.
+ *
+ * @param bool   $okay     True if discount code check is okay. False is there was an error.
+ * @param Object $dbcode   Object containing code data from database row.
+ * @param int    $level_id Level the user is checking out for.
+ * @param string $code     Discount code string.
+ */
+function pmpro_payfast_pmpro_check_discount_code($okay, $dbcode, $level_id, $code) {
+	$discount = new PMPro_Discount_Code( $code );
+	$membership_level = new PMPro_Membership_Level( $level_id );
+	$is_recurring_membership = (int) $membership_level->expiration_number === 0;
+	$is_fixed_term_discount = ! empty( $discount->levels[$level_id] ) &&
+		(int) $discount->levels[$level_id]['expiration_number'] <> 0;
+
+	if ( $is_recurring_membership && $is_fixed_term_discount ) {
+		return  __( 'The discount code could not be applied. Please contact the administrators.', 'pmpro-payfast' );
+	}
+
+	return $okay;
+}
+add_filter( 'pmpro_check_discount_code', 'pmpro_payfast_pmpro_check_discount_code', 10, 4);
