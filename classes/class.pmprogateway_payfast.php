@@ -390,15 +390,17 @@ class PMProGateway_PayFast {
 
 		$cycles = $order->membership_level->billing_limit;
 
-		// convert PMPro cycle_number and period into a PayFast frequency
-		switch ( $order->BillingPeriod ) {
-			case 'Month':
-				$frequency = '3';
-				break;
+		if( ! empty( $order->BillingFrequency ) ) {
+			// convert PMPro cycle_number and period into a PayFast frequency
+			switch ( $order->BillingPeriod ) {
+				case 'Month':
+					$frequency = '3';
+					break;
 
-			case 'Year':
-				$frequency = '6';
-				break;
+				case 'Year':
+					$frequency = '6';
+					break;
+			}
 		}
 
 		// Add subscription data
