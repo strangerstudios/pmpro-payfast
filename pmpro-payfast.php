@@ -56,6 +56,25 @@ function pmpro_payfast_admin_notice() {
 }
 add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
 
+/*
+ * Fix PMPro Payfast showing SSL error in admin menus
+ * when set up correctly.
+ *
+ * @since 0.9
+ */
+function pmpro_payfast_pmpro_is_ready( $pmpro_is_ready ) {
+	global $pmpro_gateway_ready, $pmpro_pages_ready;
+
+	if ( empty($pmpro_gateway_ready) && 'payfast' === pmpro_getOption( 'gateway' ) ) {
+		if( pmpro_getOption( 'payfast_merchant_id' ) && pmpro_getOption( 'payfast_merchant_key' ) && pmpro_getOption( 'payfast_passphrase' ) ) {
+			$pmpro_gateway_ready = true;
+		}
+	}
+
+	return ( $pmpro_gateway_ready && $pmpro_pages_ready );
+}
+add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
+
 /**
  * Function to add links to the plugin action links
  *
