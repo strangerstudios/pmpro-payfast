@@ -107,3 +107,24 @@ function pmpro_payfast_plugin_row_meta( $links, $file ) {
 	return $links;
 }
 add_filter( 'plugin_row_meta', 'pmpro_payfast_plugin_row_meta', 10, 2 );
+
+function pmpro_is_payfast_ready( $ready ){
+
+	$environment = pmpro_getOption( 'gateway_environment' );
+
+	if( 
+		pmpro_getOption('payfast_merchant_id') == "" ||
+		pmpro_getOption('payfast_merchant_key') == "" ||
+		pmpro_getOption('payfast_passphrase') == "" || 
+		'sandbox' === $environment || 
+		'beta-sandbox' === $environment 
+	){
+		$ready = false;
+	} else {
+		$ready = true;
+	}
+
+	return $ready;
+
+}
+add_filter( 'pmpro_is_ready', 'pmpro_is_payfast_ready' );
