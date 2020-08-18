@@ -107,3 +107,70 @@ function pmpro_payfast_plugin_row_meta( $links, $file ) {
 	return $links;
 }
 add_filter( 'plugin_row_meta', 'pmpro_payfast_plugin_row_meta', 10, 2 );
+
+function pmpro_checkForPayFastCompatibility( $level = NULL ){
+
+	$gateway = pmpro_getOption("gateway");
+
+	if( $gateway == "payfast" ){
+
+		global $wpdb;
+
+		//check ALL the levels
+		if( empty( $level ) ){
+
+			$sqlQuery = "SELECT * FROM $wpdb->pmpro_membership_levels ORDER BY id ASC";
+			$levels = $wpdb->get_results($sqlQuery, OBJECT);
+			
+			if( !empty( $levels ) ){
+				foreach( $levels as $level ){
+
+					if( !pmpro_checkForPayFastCompatibility( $level->id ) ){
+						return false;
+					}
+
+				}
+			}
+
+		} else {
+
+			if( is_numeric( $level ) ){
+
+				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) );
+
+				if( $level->trial_amount > 0 || $level->trial_limit > 0 || ( $level->cycle_number > 0 && ( $level->cycle_period == "Day" || $level->cycle_period == "Week") ) ){
+					return false;
+				}
+
+			}
+						
+		}
+	}
+
+	return true;
+
+}
+
+function pmpro_payfast_check_level_compat(){
+
+	$compatible = pmpro_checkForPayFastCompatibility();
+	
+	if( !$compatible ){
+		?>
+		<div class="<?php if( !$compatible ) { ?>error<?php } else { ?>notice notice-warning<?php } ?> fade">		
+			<p>
+				<?php
+					//only show the invalid part if they've entered a key
+					
+					if( $compatible ){
+						?><strong><?php _e('Some of the billing details for some of your membership levels is not supported by PayFast.', 'pmpro-payfast' );?></strong><?php
+					} 
+				?>
+				<?php _e("Custom trials are not supported by PayFast at this point in time.", 'pmpro-payfast' );?>
+				<a href="<?php echo admin_url('admin.php?page=pmpro-membershiplevels');?>"><?php _e('View Levels', 'pmpro-payfast' );?></a>
+			</p>
+		</div>
+		<?php
+	}
+}
+add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
