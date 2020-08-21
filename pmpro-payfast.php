@@ -122,7 +122,7 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 			$code_level = $wpdb->get_row("SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = '" . $level_id . "' LIMIT 1");
 		}
 
-		if( !empty( $code_level->code_id ) ){ //A valid discount code was returned
+		if( pmpro_isLevelFree( $code_level ) ){ //A valid discount code was returned
 			?>
 				jQuery('#pmpro_payfast_before_checkout').hide();
 			<?php
