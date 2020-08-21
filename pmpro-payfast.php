@@ -219,3 +219,26 @@ function pmpro_payfast_plugin_row_meta( $links, $file ) {
 	return $links;
 }
 add_filter( 'plugin_row_meta', 'pmpro_payfast_plugin_row_meta', 10, 2 );
+
+function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, $level_id, $code_level ){
+		
+		global $wpdb;
+
+		//okay, send back new price info
+		$sqlQuery = "SELECT l.id, cl.*, l.name, l.description, l.allow_signups FROM $wpdb->pmpro_discount_codes_levels cl LEFT JOIN $wpdb->pmpro_membership_levels l ON cl.level_id = l.id LEFT JOIN $wpdb->pmpro_discount_codes dc ON dc.id = cl.code_id WHERE dc.code = '" . $discount_code . "' AND cl.level_id = '" . $level_id . "' LIMIT 1";
+		
+		$code_level = $wpdb->get_row($sqlQuery);
+
+		//if the discount code doesn't adjust the level, let's just get the straight level
+		if(empty($code_level)){
+			$code_level = $wpdb->get_row("SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = '" . $level_id . "' LIMIT 1");
+		}
+
+		if( pmpro_isLevelFree( $code_level ) ){ //A valid discount code was returned
+			?>
+				jQuery('#pmpro_payfast_before_checkout').hide();
+			<?php
+		}
+
+	}
+add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_result', 10, 4 );
