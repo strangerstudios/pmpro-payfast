@@ -41,7 +41,7 @@ function pmpro_payfast_admin_notice_activation_hook() {
 /**
  * Admin Notice on Activation.
  *
- * @since 0.1.0
+ * @since 0.1
  */
 function pmpro_payfast_admin_notice() {
 	// Check transient, if available display notice.
@@ -56,7 +56,33 @@ function pmpro_payfast_admin_notice() {
 }
 add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
 
-/*
+/** 
+ * Show an admin warning notice if there is a level setup that is incorrect.
+ * @since 0.9
+ */
+ function pmpro_payfast_check_level_compat(){
+
+	// Only show the notice on either the levels page or payment settings page.
+	if ( isset( $_REQUEST['page'] ) &&  ( $_REQUEST['page'] != 'pmpro-membershiplevels' && $_REQUEST['page'] != 'pmpro-paymentsettings' ) ) {
+		return;
+	}
+
+	$level = isset( $_REQUEST['edit'] ) ? intval( $_REQUEST['edit'] ) : '';
+	$compatible = pmpro_payfast_check_billing_compat( $level );
+	
+	if ( ! $compatible ){
+		?>
+		<div class="notice notice-error fade">		
+			<p>
+				<?php _e( "PayFast currently doesn't support custom trials; Daily or weekly recurring pricing. Please can you update your membership levels that may have these set.", 'pmpro-payfast' );?>
+			</p>
+		</div>
+		<?php
+	}
+}
+add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
+
+/**
  * Fix PMPro Payfast showing SSL error in admin menus
  * when set up correctly.
  *
@@ -74,6 +100,92 @@ function pmpro_payfast_pmpro_is_ready( $pmpro_is_ready ) {
 	return ( $pmpro_gateway_ready && $pmpro_pages_ready );
 }
 add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
+
+/**
+ * Check if there are billing compatibility issues for levels and PayFast.
+ * @since 0.9
+ */
+ function pmpro_payfast_check_billing_compat( $level = NULL ){
+
+	$gateway = pmpro_getOption("gateway");
+
+	if( $gateway == "payfast" ){
+
+		global $wpdb;
+
+		//check ALL the levels
+		if( empty( $level ) ){
+			$sqlQuery = "SELECT * FROM $wpdb->pmpro_membership_levels ORDER BY id ASC";
+			$levels = $wpdb->get_results($sqlQuery, OBJECT);
+			
+			if( !empty( $levels ) ){
+				foreach( $levels as $level ){
+					if( !pmpro_payfast_check_billing_compat( $level->id ) ){
+						return false;
+					}
+
+				}
+			}
+
+		} else {
+
+			if( is_numeric( $level ) ){
+
+				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) );
+				
+				if( pmpro_isLevelTrial( $level ) || ( $level->cycle_period == "Day" || $level->cycle_period == "Week") ){
+					return false;
+				}
+
+			}
+						
+		}
+	}
+
+	return true;
+
+}
+
+/**
+ * Show a warning if custom trial is selected during level setup.
+ * @since 0.9
+ */
+function pmpro_payfast_custom_trial_js_check() {
+	$gateway = pmpro_getOption( 'gateway' );
+
+	if ( $gateway !== 'payfast' ) {
+		return;
+	}
+	?>
+		<script>
+			jQuery(document).ready(function(){
+				var message = "<?php _e( 'PayFast does not support custom trials at this point in time.', 'pmpro-payfast' ); ?>";
+				jQuery( '<tr id="payfast-trial-warning" style="display:none;"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
+
+				// Show for existing levels.
+				if ( jQuery('#custom-trial').prop('checked', true) ) {
+					jQuery( '#payfast-trial-warning' ).show();
+
+				}
+
+				// Toggle if checked or not
+				pmpro_payfast_trial_checked();
+
+				function pmpro_payfast_trial_checked() {
+
+					jQuery('#custom_trial').change(function(){
+						if ( jQuery(this).prop('checked') ) {
+							jQuery( '#payfast-trial-warning' ).show();
+						} else {
+							jQuery( '#payfast-trial-warning' ).hide();
+						}
+					});
+				}
+			});
+		</script>
+	<?php
+}
+add_action( 'pmpro_membership_level_after_other_settings', 'pmpro_payfast_custom_trial_js_check' );
 
 /**
  * Function to add links to the plugin action links
