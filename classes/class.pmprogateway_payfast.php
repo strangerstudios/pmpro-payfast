@@ -420,6 +420,9 @@ class PMProGateway_PayFast {
 		$order->status                      = 'pending';
 		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
+		$order->subtotal = $order->InitialPayment;
+		$order->tax = $initial_payment_tax;
+		$order->total = $initial_payment;
 
 		// Save the order before redirecting to PayFast.
 		$order->saveOrder();
