@@ -133,7 +133,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
 
 		} else {
 
-			if( is_numeric( $level ) ){
+			if( is_numeric( $level ) && $level > 0 ){
 
 				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) );
 				
