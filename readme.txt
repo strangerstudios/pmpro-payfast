@@ -3,7 +3,7 @@ Contributors: strangerstudios,andrewza
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 4.7
 Tested up to: 5.5
-Stable tag: 0.9
+Stable tag: 1.0
 
 Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
 
@@ -50,7 +50,12 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
-= 0.9 - 2020-08-21 =
+= 1.0 - 2020-10-21 =
+* BUG FIX: Fixed a fatal error if Paid Memberships Pro (core) plugin was disabled.
+* BUG FIX: Fixed an issue where initial order was showing incorrect amount charged if initial price wasn't the same as the recurring price.
+* BUG FIX: Fixed a PHP warning when creating a new membership level while PayFast was enabled as the active gateway.
+
+= 0.9 - 2020-21-08 =
 * BUG FIX: Hide the PayFast logo on checkout when a discount is applied that sets the level to be free.
 * ENHANCEMENT: Show warnings within the admin dashboard area when levels contain custom trials, not-supported billing periods.
 
