@@ -107,6 +107,10 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
  */
  function pmpro_payfast_check_billing_compat( $level = NULL ){
 
+ 	if( !function_exists( 'pmpro_getOption' ) ){
+ 		return;
+ 	}
+ 	
 	$gateway = pmpro_getOption("gateway");
 
 	if( $gateway == "payfast" ){
