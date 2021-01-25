@@ -1,9 +1,9 @@
 === Paid Memberships Pro - PayFast Gateway Add On ===
-Contributors: strangerstudios,andrewza
+Contributors: strangerstudios, andrewza
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 4.7
-Tested up to: 5.5
-Stable tag: 1.0
+Tested up to: 5.6
+Stable tag: 1.1
 
 Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
 
@@ -50,6 +50,10 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.1 - 2021-01-25 =
+* BUG FIX: Fixed an issue where cancellations inside Paid Memberships Pro weren't cancelling the subscription inside PayFast.
+* ENHANCEMENT: Moved the location of the 'pmpro_payfast_data' filter to allow proper filtering of data passed to PayFast.
+
 = 1.0 - 2020-10-21 =
 * BUG FIX: Fixed a fatal error if Paid Memberships Pro (core) plugin was disabled.
 * BUG FIX: Fixed an issue where initial order was showing incorrect amount charged if initial price wasn't the same as the recurring price.
@@ -79,6 +83,9 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 * Initial release. Pluganized from the PayFast PMPro fork. Includes many bug fixes and improvements.
 
 == Upgrade Notice ==
+= 1.1 =
+* Please upgrade for fixes to cancellation process.
+
 = 0.9 = 
 * Please upgrade for some minor fixes.
 
