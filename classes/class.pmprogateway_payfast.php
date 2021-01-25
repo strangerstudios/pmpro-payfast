@@ -384,9 +384,7 @@ class PMProGateway_PayFast {
 			'amount'        => $initial_payment,
 			'item_name'     => html_entity_decode( substr( $order->membership_level->name . ' at ' . get_bloginfo( 'name' ), 0, 99 ) ),
 			'custom_int1'   => $order->user_id,
-		);
-
-		$data = apply_filters( 'pmpro_payfast_data', $data );
+		);		
 
 		$cycles = $order->membership_level->billing_limit;
 
@@ -417,12 +415,14 @@ class PMProGateway_PayFast {
 			$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
 		}
 
+		$data = apply_filters( 'pmpro_payfast_data', $data, $order );
+
 		$order->status                      = 'pending';
 		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
 		$order->subtotal = $order->InitialPayment;
 		$order->tax = $initial_payment_tax;
-		$order->total = $initial_payment;
+		$order->total = $initial_payment;		
 
 		// Save the order before redirecting to PayFast.
 		$order->saveOrder();
