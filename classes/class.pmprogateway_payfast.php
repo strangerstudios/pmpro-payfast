@@ -534,6 +534,7 @@ class PMProGateway_PayFast {
 						'merchant-id' => $hashArray['merchant-id'],
 						'signature'   => $signature,
 						'timestamp'   => $hashArray['timestamp'],
+						'content-length' => 0
 					),
 				)
 			);
