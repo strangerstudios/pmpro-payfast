@@ -347,6 +347,7 @@ class PMProGateway_PayFast {
 		$order->payment_type = 'PayFast';
 		$order->CardType = "";
 		$order->cardtype = "";
+		$order->ProfileStartDate = date_i18n( 'Y-m-d', current_time( 'timestamp' ) );
 
 		// taxes on initial payment
 		$initial_payment     = $order->InitialPayment;
@@ -404,12 +405,15 @@ class PMProGateway_PayFast {
 		// Add subscription data
 		if ( ! empty( $frequency ) ) {
 			// $data['m_subscription_id'] = /*$order->getRandomCode()*/$order->code;
-			$data['custom_str1']       = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+			$data['custom_str1']       = $order->ProfileStartDate;
 			$data['subscription_type'] = 1;
-			$data['billing_date']      = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+			$data['billing_date']      = apply_filters( 'pmpro_profile_start_date', $order->ProfileStartDate, $order );
 			$data['recurring_amount']  = $amount;
 			$data['frequency']         = $frequency;
 			$data['cycles']            = $cycles == 0 ? 0 : $cycles + 1;
+
+			// Remove time parameter if it's set.
+			$data['billing_date'] = str_replace( 'T0:0:0', '', $data['billing_date'] );
 
 			// filter order before subscription. use with care.
 			$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
