@@ -168,7 +168,6 @@ function pmpro_payfast_custom_trial_js_check() {
 	}
 
 	$custom_trial_warning = __( sprintf( 'PayFast does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-payfast' ); ?>
-	?>
 		<script>
 			jQuery(document).ready(function(){
 				var message = "<?php echo $custom_trial_warning; ?>";
