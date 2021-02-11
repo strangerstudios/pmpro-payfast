@@ -60,7 +60,7 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
  * Show an admin warning notice if there is a level setup that is incorrect.
  * @since 0.9
  */
-function pmpro_payfast_check_level_compat(){
+ function pmpro_payfast_check_level_compat(){
 
 	// Only show the notice on either the levels page or payment settings page.
 	if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'pmpro-membershiplevels' ) {
@@ -87,6 +87,7 @@ function pmpro_payfast_check_level_compat(){
 	}
 }
 add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
+
 /**
  * Fix PMPro Payfast showing SSL error in admin menus
  * when set up correctly.
@@ -165,14 +166,16 @@ function pmpro_payfast_custom_trial_js_check() {
 	if ( $gateway !== 'payfast' ) {
 		return;
 	}
+
+	$custom_trial_warning = __( sprintf( 'PayFast does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-payfast' ); ?>";;
 	?>
 		<script>
 			jQuery(document).ready(function(){
-				var message = "<?php _e( 'PayFast does not support custom trials at this point in time.', 'pmpro-payfast' ); ?>";
-				jQuery( '<tr id="payfast-trial-warning" style="display:none;"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
+				var message = "<?php echo $custom_trial_warning; ?>";
+				jQuery( '<tr id="payfast-trial-warning" style="display:none"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
 
 				// Show for existing levels.
-				if ( jQuery('#custom-trial').prop('checked', true) ) {
+				if ( jQuery('#custom-trial').is(':checked') ) {
 					jQuery( '#payfast-trial-warning' ).show();
 
 				}
