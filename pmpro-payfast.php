@@ -60,14 +60,20 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
  * Show an admin warning notice if there is a level setup that is incorrect.
  * @since 0.9
  */
- function pmpro_payfast_check_level_compat(){
+function pmpro_payfast_check_level_compat(){
 
 	// Only show the notice on either the levels page or payment settings page.
-	if ( isset( $_REQUEST['page'] ) &&  ( $_REQUEST['page'] != 'pmpro-membershiplevels' && $_REQUEST['page'] != 'pmpro-paymentsettings' ) ) {
+	if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'pmpro-membershiplevels' ) {
 		return;
 	}
 
 	$level = isset( $_REQUEST['edit'] ) ? intval( $_REQUEST['edit'] ) : '';
+
+	// Don't check if level is not set.
+	if ( empty( $level ) ) {
+		return;
+	}
+
 	$compatible = pmpro_payfast_check_billing_compat( $level );
 	
 	if ( ! $compatible ){
@@ -81,7 +87,6 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
 	}
 }
 add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
-
 /**
  * Fix PMPro Payfast showing SSL error in admin menus
  * when set up correctly.
