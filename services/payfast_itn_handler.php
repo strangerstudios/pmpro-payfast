@@ -70,6 +70,7 @@ $pfData = array();
 $pfHost = ( ( $gateway_environment == 'sandbox' ) ? 'sandbox' : 'www' ) . '.payfast.co.za';
 $pfOrderId = '';
 $pfParamString = '';
+$initial_payment_status = '';
 pmpro_payfast_itnlog( __( 'PayFast ITN call received', 'pmpro-payfast' ) );
 
 // Notify PayFast that information has been received
