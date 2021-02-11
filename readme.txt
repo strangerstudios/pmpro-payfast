@@ -50,6 +50,10 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.2 - 2021-02-11 =
+* BUG FIX: Fixed admin notice showing up on all pages in WordPress dashboard when custom trial is set.
+* ENHANCEMENT: Support Subscriptions Delay Add On
+
 = 1.1 - 2021-01-25 =
 * BUG FIX: Fixed an issue where cancellations inside Paid Memberships Pro weren't cancelling the subscription inside PayFast.
 * ENHANCEMENT: Moved the location of the 'pmpro_payfast_data' filter to allow proper filtering of data passed to PayFast.
@@ -83,6 +87,9 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 * Initial release. Pluganized from the PayFast PMPro fork. Includes many bug fixes and improvements.
 
 == Upgrade Notice ==
+= 1.2 =
+* Please upgrade for Subscriptions Delay support and minor bug fixes.
+
 = 1.1 =
 * Please upgrade for fixes to cancellation process.
 
