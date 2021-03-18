@@ -304,7 +304,7 @@ function pmpro_payfast_ipnExit() {
 function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 	global $wpdb;
 	// filter for level
-	$morder->membership_level = apply_filters( 'pmpro_ipnhandler_level', $morder->membership_level, $morder->user_id );
+	$morder->membership_level = apply_filters( 'pmpro_payfast_itnhandler_level', $morder->membership_level, $morder->user_id );
 	// fix expiration date
 	if ( ! empty( $morder->membership_level->expiration_number ) ) {
 		$enddate = "'" . date( 'Y-m-d', strtotime( '+ ' . $morder->membership_level->expiration_number . ' ' . $morder->membership_level->expiration_period ) ) . "'";
