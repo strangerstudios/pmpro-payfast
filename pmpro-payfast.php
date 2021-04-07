@@ -204,11 +204,12 @@ add_action( 'pmpro_membership_level_after_other_settings', 'pmpro_payfast_custom
  * @param array $links Array of links to be shown in plugin action links.
  */
 function pmpro_payfast_plugin_action_links( $links ) {
+	$new_links = array();
+
 	if ( current_user_can( 'manage_options' ) ) {
-		$new_links = array(
-			'<a href="' . get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) . '">' . __( 'Configure Payfast', 'pmpro-payfast' ) . '</a>',
-		);
+		$new_links[] = '<a href="' . get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) . '">' . __( 'Configure Payfast', 'pmpro-payfast' ) . '</a>';
 	}
+
 	return array_merge( $new_links, $links );
 }
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pmpro_payfast_plugin_action_links' );
