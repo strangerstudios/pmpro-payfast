@@ -163,6 +163,9 @@ if ( ! $pfError && ! $pfDone ) {
 
 			pmpro_payfast_ipnExit();
 		} else {
+
+			pmpro_doing_webhook( 'payfast', true );
+
 			// Subscription Payment
 			$last_subscr_order = new MemberOrder();
 			if ( $last_subscr_order->getLastMemberOrderBySubscriptionTransactionID( $pfData['m_payment_id'] ) ) {
@@ -433,9 +436,18 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		$morder->payment_type = $last_order->payment_type;
 		// set amount based on which PayPal type
 		if ( $last_order->gateway == 'payfast' ) {
-			$morder->InitialPayment = sanitize_text_field( $_POST['amount_gross'] );    // not the initial payment, but the class is expecting that
-			$morder->PaymentAmount = sanitize_text_field( $_POST['amount_gross'] );
+
+			$amount_gross = float( sanitize_text_field( $_POST['amount_gross'] ) );
+
+			$subtotal = pmpro_payfast_calculate_subtotal( $amount_gross ), apply_filters( 'pmpro_payfast_vat_rate', 0.15 ) );
+
+			$morder->subtotal = $subtotal;
+			$morder->tax = $amount_gross - $subtotal;
+
+			$morder->InitialPayment = $amount_gross;    // not the initial payment, but the class is expecting that
+			$morder->PaymentAmount = $amount_gross;
 		}
+		
 		$morder->FirstName = sanitize_text_field( $_POST['name_first'] );
 		$morder->LastName = sanitize_text_field( $_POST['name_last'] );
 		$morder->Email = sanitize_email( $_POST['email_address'] );

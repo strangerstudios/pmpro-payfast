@@ -254,3 +254,12 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 
 	}
 add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_result', 10, 4 );
+
+
+function pmpro_payfast_calculate_subtotal( $final_amount, $tax_rate ){
+
+	$original_amount = $final_amount / ( 1 + $tax_rate );
+
+	return round( $original_amount, apply_filters( 'pmpro_payfast_rounding', 2 ) );
+
+}
