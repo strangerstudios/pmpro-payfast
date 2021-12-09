@@ -38,7 +38,7 @@ class PMProGateway_PayFast {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
 			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
 			add_filter( 'pmpro_billing_show_payment_method', '__return_false' );
-			add_action( 'pmpro_billing_before_submit_button', array( $this, 'pmpro_billing_before_submit_button' ) );
+			add_action( 'pmpro_billing_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_billing_before_submit_button' ) );
 		}
 
 		add_filter( 'pmpro_required_billing_fields', '__return_empty_array' );
@@ -213,7 +213,7 @@ class PMProGateway_PayFast {
 		return $fields;
 	}
 
-	function pmpro_billing_before_submit_button() {
+	static function pmpro_billing_before_submit_button() {
 		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to PayFast.", 'pmpro-payfast'), "<a href='https://payfast.co.za' target='_blank'>PayFast</a>" );
 	}
 
