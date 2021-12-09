@@ -421,7 +421,7 @@ class PMProGateway_PayFast {
 
 		$data = apply_filters( 'pmpro_payfast_data', $data, $order );
 
-		$order->status                      = 'pending';
+		$order->status                      = 'token';
 		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
 		$order->subtotal = $order->InitialPayment;
