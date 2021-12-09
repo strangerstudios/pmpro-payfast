@@ -38,7 +38,7 @@ class PMProGateway_PayFast {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
 			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
 			add_filter( 'pmpro_billing_show_payment_method', '__return_false' );
-			add_action( 'pmpro_billing_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_billing_before_submit_button' ) );
+			add_action( 'pmpro_billing_before_submit_button', array( $this, 'pmpro_billing_before_submit_button' ) );
 		}
 
 		add_filter( 'pmpro_required_billing_fields', '__return_empty_array' );
