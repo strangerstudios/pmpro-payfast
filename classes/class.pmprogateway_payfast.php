@@ -13,7 +13,7 @@ require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
 // load classes init method
 add_action( 'init', array( 'PMProGateway_PayFast', 'init' ) );
-class PMProGateway_PayFast {
+class PMProGateway_PayFast extends PMProGateway {
 
 	function __construct( $gateway = null ) {
 		$this->gateway = $gateway;
@@ -41,7 +41,7 @@ class PMProGateway_PayFast {
 			add_action( 'pmpro_billing_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_billing_before_submit_button' ) );
 		}
 
-		add_filter( 'pmpro_required_billing_fields', '__return_empty_array' );
+		add_filter( 'pmpro_required_billing_fields', array( 'PMProGateway_PayFast', 'pmpro_required_billing_fields' ) );
 		add_filter( 'pmpro_checkout_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_checkout_before_submit_button' ) );
 		add_filter( 'pmpro_checkout_before_change_membership_level', array( 'PMProGateway_PayFast', 'pmpro_checkout_before_change_membership_level' ), 10, 2 );
 
@@ -213,14 +213,28 @@ class PMProGateway_PayFast {
 		return $fields;
 	}
 
+	/**
+	 * Show a notice on the Update Billing screen.
+	 * 
+	 * @since 1.0.0
+	 */
 	static function pmpro_billing_before_submit_button() {
+
+		if ( apply_filters( 'pmpro_payfast_hide_update_billing_button', true ) ) {
+		?>
+		<script>
+			jQuery(document).ready(function(){
+				jQuery('.pmpro_submit').hide();
+			});
+		</script>
+		<?php
+		}
 		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to PayFast.", 'pmpro-payfast'), "<a href='https://payfast.co.za' target='_blank'>PayFast</a>" );
 	}
 
 	/**
 	 * Show information before PMPro's checkout button.
 	 *
-	 * @todo: Add a filter to show/hide this notice.
 	 * @since 1.8
 	 */
 	static function pmpro_checkout_before_submit_button() {
@@ -311,6 +325,8 @@ class PMProGateway_PayFast {
 
 	/**
 	 * Send traffic to wp-admin/admin-ajax.php?action=pmpro_payfast_itn_handler to the itn handler
+	 * 
+	 * @since 1.0.0
 	 */
 	static function wp_ajax_pmpro_payfast_itn_handler() {
 		require_once PMPRO_PAYFAST_DIR . 'services/payfast_itn_handler.php';
@@ -559,13 +575,4 @@ class PMProGateway_PayFast {
 		}
 	}
 
-	/**
-	 * Fallback in case people are navigating to the billing page URL.
-	 * 
-	 * @since 0.8.4
-	 */
-	function update() {
-		wp_redirect( esc_url( apply_filters( 'pmpro_update_billing_payfast_url', 'https://payfast.co.za' ) ) );
-		exit;
-	}
 } //end of class
