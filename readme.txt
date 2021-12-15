@@ -2,8 +2,8 @@
 Contributors: strangerstudios, andrewza
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 4.7
-Tested up to: 5.6
-Stable tag: 1.2
+Tested up to: 5.8
+Stable tag: 1.3.0
 
 Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
 
@@ -50,6 +50,12 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.3.0 - 2021-12-15 =
+* ENHANCEMENT: Set the default order status to "token" instead of "pending".
+* ENHANCEMENT: Hide the Update/Cancel buttons on the membership billing page when PayFast is used.
+* BUG FIX: Fixed fatal error where method was called incorrectly on the membership billing page.
+* BUG FIX: Rename filter in the ITN Handler to prevent conflicts. Filter name changed from 'pmpro_ipnhandler_level' to 'pmpro_payfast_itnhandler_level'.
+
 = 1.2 - 2021-02-11 =
 * BUG FIX: Fixed admin notice showing up on all pages in WordPress dashboard when custom trial is set.
 * ENHANCEMENT: Support Subscriptions Delay Add On
@@ -87,6 +93,9 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 * Initial release. Pluganized from the PayFast PMPro fork. Includes many bug fixes and improvements.
 
 == Upgrade Notice ==
+= 1.3.0 =
+* This update includes minor bug fixes and general enhancements.
+
 = 1.2 =
 * Please upgrade for Subscriptions Delay support and minor bug fixes.
 
