@@ -16,8 +16,7 @@ add_action( 'init', array( 'PMProGateway_PayFast', 'init' ) );
 class PMProGateway_PayFast extends PMProGateway {
 
 	function __construct( $gateway = null ) {
-		$this->gateway = $gateway;
-		return $this->gateway;
+        return parent::__construct( $gateway );
 	}
 
 	/**
