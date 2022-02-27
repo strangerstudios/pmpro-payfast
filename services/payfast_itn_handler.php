@@ -52,7 +52,7 @@ define( 'PMPROPF_ERR_UNKNOWN', __( 'Unkown error occurred', 'pmpro-payfast' ) );
 define( 'PMPROPF_MSG_OK', __( 'Payment was successful', 'pmpro-payfast' ) );
 define( 'PMPROPF_MSG_FAILED', __( 'Payment has failed', 'pmpro-payfast' ) );
 define(
-	'PMPROPF_MSG_PENDING', __( 'pmpro-payfast' ),
+	'PMPROPF_MSG_PENDING',
 	__( 'The payment is pending. Please note, you will receive another Instant', 'pmpro-payfast' ) .
 	__( ' Transaction Notification when the payment status changes to', 'pmpro-payfast' ) .
 	__( ' "Completed", or "Failed"', 'pmpro-payfast' )
