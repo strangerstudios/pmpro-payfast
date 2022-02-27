@@ -354,8 +354,6 @@ class PMProGateway_PayFast extends PMProGateway {
 	 * @param $order
 	 */
 	function sendToPayFast( &$order ) {
-		global $pmpro_currency;
-
 		if ( empty( $order->code ) ) {
 			$order->code = $order->getRandomCode();
 		}
@@ -477,8 +475,6 @@ class PMProGateway_PayFast extends PMProGateway {
 	}
 
 	function subscribe( &$order ) {
-		global $pmpro_currency;
-
 		if ( empty( $order->code ) ) {
 			$order->code = $order->getRandomCode();
 		}
@@ -486,15 +482,6 @@ class PMProGateway_PayFast extends PMProGateway {
 		// filter order before subscription. use with care.
 		$order = apply_filters( 'pmpro_subscribe_order', $order, $this );
 
-		// taxes on initial amount
-		$initial_payment     = $order->InitialPayment;
-		$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
-		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
-
-		// taxes on the amount
-		$amount     = $order->PaymentAmount;
-		$amount_tax = $order->getTaxForPrice( $amount );
-		// $amount = round((float)$amount + (float)$amount_tax, 2);
 		$order->status                      = 'success';
 		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
