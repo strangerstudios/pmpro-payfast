@@ -202,7 +202,7 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 			} else {
 				// if the initial payment failed, cancel with status error instead of cancelled
 				if ( $initial_payment_status === 'Failed' ) {
-					pmpro_changeMembershipLevel( 0, $last_subscr_order->user_id, 'error' );
+					pmpro_cancelMembershipLevel( $last_subsc_order->membership_id, $last_subscr_order->user_id, 'error' );
 				} else {
 					// pmpro_changeMembershipLevel( 0, $last_subscr_order->user_id, 'cancelled' );
 					$last_subscr_order->updateStatus( 'cancelled' );
