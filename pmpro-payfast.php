@@ -256,12 +256,24 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_result', 10, 4 );
 
 /**
- * Store the checkout vars in the order meta before
- * sending to Payfast
+ * Store the checkout vars in the order meta before sending to PayFast.
+ * 
+ * @since TBD
  */
 function pmpro_payfast_before_send_to_payfast( $user_id, $morder ) {
 
-	update_pmpro_membership_order_meta( $morder->id, 'checkout_vars', $_REQUEST );
+	$submit_values = $_REQUEST;
+
+	// We don't need to store the password fields for this fix.
+	unset( $submit_values['password'] );
+	unset( $submit_values['password2'] );
+
+	// Loop through $_REQUEST and sanitize each value
+	foreach ( $submit_values as $key => $value ) {
+		$submit_values[ $key ] = sanitize_text_field( $value );
+	}
+
+	update_pmpro_membership_order_meta( $morder->id, 'checkout_vars', $submit_values );
 
 }
 add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfast', 1, 2 );
@@ -269,18 +281,20 @@ add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfas
 /**
  * Load the checkout vars from the order meta into the 
  * $_REQUEST variable so that everything in the after_checkout
- * hook can access the data 
+ * hook can access the data.
+ * 
+ * @since TBD
  */
 function pmpro_payfast_after_checkout( $user_id, $morder ) {
 
 	$checkout_vars = get_pmpro_membership_order_meta( $morder->id, 'checkout_vars', true );
 
-	if( ! empty( $checkout_vars ) ) {
+	// Merge these values into $_REQUEST so that everything in the after_checkout.
+	if ( ! empty( $checkout_vars ) ) {
 		$_REQUEST = array_merge( $_REQUEST, $checkout_vars );		
 	}
 	
-	delete_pmpro_membership_order_meta( $morder->id, 'checkout_vars' ); //Delete afterwards?
+	delete_pmpro_membership_order_meta( $morder->id, 'checkout_vars' ); //Delete afterwards as we don't need it.
 	
 }
 add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout', 1, 2 );
-
