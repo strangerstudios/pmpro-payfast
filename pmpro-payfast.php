@@ -260,7 +260,7 @@ add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_re
  * 
  * @since TBD
  */
-function pmpro_payfast_before_send_to_payfast( $user_id, $morder ) {
+function pmpro_payfast_before_send_to_payfast_save_data( $user_id, $morder ) {
 
 	$submit_values = $_REQUEST;
 
@@ -281,7 +281,7 @@ function pmpro_payfast_before_send_to_payfast( $user_id, $morder ) {
 	update_pmpro_membership_order_meta( $morder->id, 'checkout_vars', $submit_values );
 
 }
-add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfast', 1, 2 );
+add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfast_save_data', 1, 2 );
 
 /**
  * Load the checkout vars from the order meta into the 
@@ -290,7 +290,7 @@ add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfas
  * 
  * @since TBD
  */
-function pmpro_payfast_after_checkout( $user_id, $morder ) {
+function pmpro_payfast_after_checkout_clean_data( $user_id, $morder ) {
 
 	$checkout_vars = get_pmpro_membership_order_meta( $morder->id, 'checkout_vars', true );
 
@@ -302,4 +302,4 @@ function pmpro_payfast_after_checkout( $user_id, $morder ) {
 	delete_pmpro_membership_order_meta( $morder->id, 'checkout_vars' ); //Delete afterwards as we don't need it.
 	
 }
-add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout', 1, 2 );
+add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout_clean_data', 1, 2 );
