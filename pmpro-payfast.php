@@ -265,8 +265,13 @@ function pmpro_payfast_before_send_to_payfast( $user_id, $morder ) {
 	$submit_values = $_REQUEST;
 
 	// We don't need to store the password fields for this fix.
-	unset( $submit_values['password'] );
-	unset( $submit_values['password2'] );
+	if ( isset( $submit_values['password'] ) ) {
+		unset( $submit_values['password'] );
+	}
+
+	if ( isset( $submit_values['password2'] ) ) {
+		unset( $submit_values['password2'] );
+	}
 
 	// Loop through $_REQUEST and sanitize each value
 	foreach ( $submit_values as $key => $value ) {
