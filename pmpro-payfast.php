@@ -254,3 +254,31 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 
 	}
 add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_result', 10, 4 );
+
+/**
+ * Store the checkout vars in the order meta before
+ * sending to Payfast
+ */
+function pmpro_payfast_before_send_to_payfast( $user_id, $morder ) {
+
+	update_pmpro_membership_order_meta( $morder->id, 'checkout_vars', $_REQUEST );
+
+}
+add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfast', 1, 2 );
+
+/**
+ * Load the checkout vars from the order meta into the 
+ * $_REQUEST variable so that everything in the after_checkout
+ * hook can access the data 
+ */
+function pmpro_payfast_after_checkout( $user_id, $morder ) {
+
+	$checkout_vars = get_pmpro_membership_order_meta( $morder->id, 'checkout_vars', true );
+
+	if( ! empty( $checkout_vars ) ) {
+		$_REQUEST = array_merge( $_REQUEST, $checkout_vars );		
+	}
+	
+}
+add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout', 1, 2 );
+
