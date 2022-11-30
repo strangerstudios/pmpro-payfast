@@ -177,6 +177,12 @@ if ( ! $pfError && ! $pfDone ) {
 }
 
 if ( $pfData['payment_status'] == 'CANCELLED' ) {
+	if ( function_exists( 'pmpro_handle_subscription_cancellation_at_gateway' ) ) {
+		// Using PMPro v3.0+, so we have a helper function to handle subscription cancellations.
+		pmpro_payfast_itnlog( pmpro_handle_subscription_cancellation_at_gateway( $pfData['m_payment_id'], 'payfast', $gateway_environment ) );
+		pmpro_payfast_ipnExit();
+	}
+	// PMPro version < 3.0. Use the legacy method of handling subscription cancellations.
 	// find last order
 	$last_subscr_order = new MemberOrder();
 	if ( $last_subscr_order->getLastMemberOrderBySubscriptionTransactionID( $pfData['m_payment_id'] ) == false ) {
