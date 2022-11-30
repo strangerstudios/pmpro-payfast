@@ -279,6 +279,8 @@ function pmpro_payfast_after_checkout( $user_id, $morder ) {
 		$_REQUEST = array_merge( $_REQUEST, $checkout_vars );		
 	}
 	
+	delete_pmpro_membership_order_meta( $morder->id, 'checkout_vars' ); //Delete afterwards?
+	
 }
 add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout', 1, 2 );
 
