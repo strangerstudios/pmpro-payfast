@@ -453,6 +453,11 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 			$morder->CountryCode = 'ZA';
 			$morder->Zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
 			$morder->PhoneNumber = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
+
+			if ( ! isset( $morder->billing ) ) {
+				$morder->billing = new stdClass();
+			}
+
 			$morder->billing->name = sanitize_text_field( $_POST['name_first'] ) . ' ' . sanitize_text_field( $_POST['name_last'] );
 			$morder->billing->street = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
 			$morder->billing->city = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
