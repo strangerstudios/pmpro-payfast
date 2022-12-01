@@ -1,7 +1,7 @@
 === Paid Memberships Pro - PayFast Gateway Add On ===
 Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
-Requires at least: 4.7
+Requires at least: 5.0
 Tested up to: 6.1
 Stable tag: 1.3.0
 
@@ -50,6 +50,12 @@ To test PayFast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.4 - 2022-12-01 =
+* ENHANCEMENT: Added better support for MMPU when a member cancels their membership. (@dparker1005)
+* BUG FIX/ENHANCEMENT: Fixed an issue where custom fields were not saving correctly during checkout. (@jarrydlong)
+* BUG FIX: Fix fatal error during ITN service PayFast uses. (@louiswol94)
+* REFACTOR: Removed redundant code and cleaned up code. (@mircobabini)
+
 = 1.3.0 - 2021-12-15 =
 * ENHANCEMENT: Set the default order status to "token" instead of "pending".
 * ENHANCEMENT: Hide the Update/Cancel buttons on the membership billing page when PayFast is used.

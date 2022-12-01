@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - PayFast Gateway
 Plugin URI: https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/
 Description: Adds PayFast as a gateway option for Paid Memberships Pro.
-Version: 1.3.0
+Version: 1.4
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-payfast
@@ -258,7 +258,7 @@ add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_re
 /**
  * Store the checkout vars in the order meta before sending to PayFast.
  * 
- * @since TBD
+ * @since 1.4
  */
 function pmpro_payfast_before_send_to_payfast_save_data( $user_id, $morder ) {
 
@@ -288,7 +288,7 @@ add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfas
  * $_REQUEST variable so that everything in the after_checkout
  * hook can access the data.
  * 
- * @since TBD
+ * @since 1.4
  */
 function pmpro_payfast_after_checkout_clean_data( $user_id, $morder ) {
 
