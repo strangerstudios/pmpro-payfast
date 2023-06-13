@@ -1,7 +1,7 @@
 <?php
 /**
  * Based on the scripts by Ron Darby shared at
- * https://www.payfast.co.za/shopping-carts/paid-memberships-pro/
+ * https://payfast.io/integration/shopping-carts/paid-memberships-pro/
  *
  * @author     Ron Darby - PayFast
  * @copyright  2009-2014 PayFast (Pty) Ltd
@@ -228,7 +228,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		</script>
 		<?php
 		}
-		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to PayFast.", 'pmpro-payfast'), "<a href='https://payfast.co.za' target='_blank'>PayFast</a>" );
+		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast.", 'pmpro-payfast'), "<a href='https://payfast.io' target='_blank'>Payfast</a>" );
 	}
 
 	/**
