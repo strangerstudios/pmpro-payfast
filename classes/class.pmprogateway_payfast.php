@@ -175,7 +175,7 @@ class PMProGateway_PayFast extends PMProGateway {
 				<label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
 			</th>
 			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is required for recurring subscriptions.', 'pmpro-payfast' ); ?></small>
+				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
 			</td>
 		</tr>
 		<script>
