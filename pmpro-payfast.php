@@ -97,8 +97,8 @@ add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
 function pmpro_payfast_pmpro_is_ready( $pmpro_is_ready ) {
 	global $pmpro_gateway_ready, $pmpro_pages_ready;
 
-	if ( empty($pmpro_gateway_ready) && 'payfast' === pmpro_getOption( 'gateway' ) ) {
-		if( pmpro_getOption( 'payfast_merchant_id' ) && pmpro_getOption( 'payfast_merchant_key' ) && pmpro_getOption( 'payfast_passphrase' ) ) {
+	if ( empty($pmpro_gateway_ready) && 'payfast' === get_option( 'pmpro_gateway' ) ) {
+		if( get_option( 'pmpro_payfast_merchant_id' ) && get_option( 'pmpro_payfast_merchant_key' ) && get_option( 'pmpro_payfast_passphrase' ) ) {
 			$pmpro_gateway_ready = true;
 		}
 	}
@@ -113,11 +113,11 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
  */
  function pmpro_payfast_check_billing_compat( $level = NULL ){
 
- 	if( !function_exists( 'pmpro_getOption' ) ){
+ 	if( !function_exists( 'pmpro_init' ) ){
  		return;
  	}
  	
-	$gateway = pmpro_getOption("gateway");
+	$gateway = get_option("pmpro_gateway");
 
 	if( $gateway == "payfast" ){
 
@@ -161,7 +161,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
  * @since 0.9
  */
 function pmpro_payfast_custom_trial_js_check() {
-	$gateway = pmpro_getOption( 'gateway' );
+	$gateway = get_option( 'pmpro_gateway' );
 
 	if ( $gateway !== 'payfast' ) {
 		return;

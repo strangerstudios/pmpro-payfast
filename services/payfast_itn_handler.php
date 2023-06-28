@@ -19,7 +19,7 @@ define( 'PMPROPF_SOFTWARE_NAME', 'Paid Memberships Pro' );
 define( 'PMPROPF_SOFTWARE_VER', PMPRO_VERSION );
 define( 'PMPROPF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
 define( 'PMPROPF_MODULE_VER', '1.0' );
-define( 'PMPROPF_DEBUG', pmpro_getOption( 'payfast_debug' ) );
+define( 'PMPROPF_DEBUG', get_option( 'pmpro_payfast_debug' ) );
 
 // Features
 // - PHP
@@ -98,7 +98,7 @@ if ( ! $pfError && ! $pfDone ) {
 // Verify security signature
 if ( ! $pfError && ! $pfDone ) {
 	pmpro_payfast_itnlog( __( 'Verify security signature', 'pmpro-payfast' ) );
-	$passPhrase = pmpro_getOption( 'payfast_passphrase' );
+	$passPhrase = get_option( 'pmpro_payfast_passphrase' );
 	$pfPassPhrase = empty( $passPhrase ) ? null : $passPhrase;
 	// If signature different, log for debugging
 	if ( ! pmpro_pfValidSignature( $pfData, $pfParamString, $pfPassPhrase ) ) {
