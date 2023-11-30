@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - PayFast Gateway
 Plugin URI: https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/
 Description: Adds PayFast as a gateway option for Paid Memberships Pro.
-Version: 1.4
+Version: 1.4.1
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-payfast
