@@ -33,7 +33,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 		add_filter( 'pmpro_payment_option_fields', array( 'PMProGateway_PayFast', 'pmpro_payment_option_fields' ), 10, 2 );
 
-		if ( pmpro_getOption( 'gateway' ) == 'payfast' ) {
+		if ( get_option( 'pmpro_gateway' ) == 'payfast' ) {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
 			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
 			add_filter( 'pmpro_billing_show_payment_method', '__return_false' );
@@ -374,11 +374,11 @@ class PMProGateway_PayFast extends PMProGateway {
 		$amount          = round( (float) $amount + (float) $amount_tax, 2 );
 
 		// merchant details
-		$merchant_id  = pmpro_getOption( 'payfast_merchant_id' );
-		$merchant_key = pmpro_getOption( 'payfast_merchant_key' );
+		$merchant_id  = get_option( 'pmpro_payfast_merchant_id' );
+		$merchant_key = get_option( 'pmpro_payfast_merchant_key' );
 
 		// build PayFast Redirect
-		$environment = pmpro_getOption( 'gateway_environment' );
+		$environment = get_option( 'pmpro_gateway_environment' );
 		if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
 			$payfast_url = 'https://sandbox.payfast.co.za/eng/process';
 		} else {
@@ -452,7 +452,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 
 		// Remove last ampersand
-		$passPhrase = pmpro_getOption( 'payfast_passphrase' );
+		$passPhrase = get_option( 'pmpro_payfast_passphrase' );
 
 		// Add passphrase to URL.
 		if ( empty( $passPhrase ) ) {
@@ -507,10 +507,10 @@ class PMProGateway_PayFast extends PMProGateway {
 			$token = $order->paypal_token;
 
 			$hashArray  = array();
-			$passphrase = pmpro_getOption( 'payfast_passphrase' );
+			$passphrase = get_option( 'pmpro_payfast_passphrase' );
 
 			$hashArray['version']     = 'v1';
-			$hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
+			$hashArray['merchant-id'] = get_option( 'pmpro_payfast_merchant_id' );
 			$hashArray['passphrase']  = $passphrase;
 			$hashArray['timestamp']   = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
 
@@ -524,7 +524,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 			$url = $domain . '/subscriptions/' . $token . '/cancel';
 
-			$environment = pmpro_getOption( 'gateway_environment' );
+			$environment = get_option( 'pmpro_gateway_environment' );
 
 			if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
 				$url = $url . '?testing=true';
