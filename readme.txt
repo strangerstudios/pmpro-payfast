@@ -1,19 +1,19 @@
-=== Paid Memberships Pro - PayFast Gateway Add On ===
+=== Paid Memberships Pro - Payfast Gateway Add On ===
 Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
-Tested up to: 6.1
-Stable tag: 1.3.0
+Tested up to: 6.4
+Stable tag: 1.4.1
 
-Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
+Add the South African payment processing service Payfast as a gateway option for Paid Memberships Pro.
 
 == Description ==
 
-Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
+Add the South African payment processing service Payfast as a gateway option for Paid Memberships Pro.
 
-[PayFast](https://www.payfast.co.za/) is a payments processing service for South Africans and South African websites. Their payment gateway offers a secure and instant transfer of money between online buyers and sellers. Merchants can accept funds from local and international customers from anywhere in the world in ZAR.
+[Payfast](https://www.payfast.io/) is a payments processing service for South Africans and South African websites. Their payment gateway offers a secure and instant transfer of money between online buyers and sellers. Merchants can accept funds from local and international customers from anywhere in the world in ZAR.
 
-Fees are charged per-transaction [according to this fee schedule](https://www.payfast.co.za/fees/) and there are no setup or monthly fees.
+Fees are charged per-transaction [according to this fee schedule](https://www.payfast.io/fees/) and there are no setup or monthly fees.
 
 [youtube http://www.youtube.com/watch?v=aDjjSjmJ-j8]
 
@@ -22,13 +22,13 @@ Fees are charged per-transaction [according to this fee schedule](https://www.pa
 1. Make sure you have the Paid Memberships Pro plugin installed and activated.
 1. Upload the `pmpro-payfast` directory to the `/wp-content/plugins/` directory of your site.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Go to Memberships -> Payment Settings in your WordPress dashboard to complete the PayFast settings.
+1. Go to Memberships -> Payment Settings in your WordPress dashboard to complete the Payfast settings.
 
 = Setup =
-1. Register and validate your account with PayFast: https://www.payfast.co.za/user/register.
-1. Log in to your PayFast account and select 'Settings' to retrieve your merchant details.
+1. Register and validate your account with Payfast: https://registration.payfast.io/.
+1. Log in to your Payfast account and select 'Settings' to retrieve your merchant details.
 1. Log in to your WordPress dashboard and navigate to Memberships > Payment Settings.
-1. Set your "Payment Gateway" to "PayFast". Fill out your merchant details and Security Passphrase (required in order to accept recurring payments).
+1. Set your "Payment Gateway" to "Payfast". Fill out your merchant details and Security Passphrase (required in order to accept recurring payments).
 1. Set your currency to "South African Rand".
 1. Save your settings.
 
@@ -44,16 +44,20 @@ For immediate help, also post to our premium support site at https://www.paidmem
 
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
-= I need to test PayFast in sandbox mode. =
+= I need to test Payfast in sandbox mode. =
 
-To test PayFast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
+To test Payfast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
 
 
 == Changelog ==
+= 1.4.1 - 2023-11-30 =
+* REFACTOR: Changed the checkout logo to the new Payfast logo
+* REFACTOR: Moved to using get_option instead of the pmpro_getOption.
+
 = 1.4 - 2022-12-01 =
 * ENHANCEMENT: Added better support for MMPU when a member cancels their membership. (@dparker1005)
 * BUG FIX/ENHANCEMENT: Fixed an issue where custom fields were not saving correctly during checkout. (@jarrydlong)
-* BUG FIX: Fix fatal error during ITN service PayFast uses. (@louiswol94)
+* BUG FIX: Fix fatal error during ITN service Payfast uses. (@louiswol94)
 * REFACTOR: Removed redundant code and cleaned up code. (@mircobabini)
 
 = 1.3.0 - 2021-12-15 =

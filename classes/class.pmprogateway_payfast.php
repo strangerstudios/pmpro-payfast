@@ -1,7 +1,7 @@
 <?php
 /**
  * Based on the scripts by Ron Darby shared at
- * https://www.payfast.co.za/shopping-carts/paid-memberships-pro/
+ * https://payfast.io/integration/shopping-carts/paid-memberships-pro/
  *
  * @author     Ron Darby - PayFast
  * @copyright  2009-2014 PayFast (Pty) Ltd
@@ -33,7 +33,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 		add_filter( 'pmpro_payment_option_fields', array( 'PMProGateway_PayFast', 'pmpro_payment_option_fields' ), 10, 2 );
 
-		if ( pmpro_getOption( 'gateway' ) == 'payfast' ) {
+		if ( get_option( 'pmpro_gateway' ) == 'payfast' ) {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
 			add_filter( 'pmpro_include_payment_information_fields', '__return_false' );
 			add_filter( 'pmpro_billing_show_payment_method', '__return_false' );
@@ -175,7 +175,7 @@ class PMProGateway_PayFast extends PMProGateway {
 				<label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
 			</th>
 			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is required for recurring subscriptions.', 'pmpro-payfast' ); ?></small>
+				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
 			</td>
 		</tr>
 		<script>
@@ -228,7 +228,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		</script>
 		<?php
 		}
-		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to PayFast.", 'pmpro-payfast'), "<a href='https://payfast.co.za' target='_blank'>PayFast</a>" );
+		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast.", 'pmpro-payfast'), "<a href='https://payfast.io' target='_blank'>Payfast</a>" );
 	}
 
 	/**
@@ -374,11 +374,11 @@ class PMProGateway_PayFast extends PMProGateway {
 		$amount          = round( (float) $amount + (float) $amount_tax, 2 );
 
 		// merchant details
-		$merchant_id  = pmpro_getOption( 'payfast_merchant_id' );
-		$merchant_key = pmpro_getOption( 'payfast_merchant_key' );
+		$merchant_id  = get_option( 'pmpro_payfast_merchant_id' );
+		$merchant_key = get_option( 'pmpro_payfast_merchant_key' );
 
 		// build PayFast Redirect
-		$environment = pmpro_getOption( 'gateway_environment' );
+		$environment = get_option( 'pmpro_gateway_environment' );
 		if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
 			$payfast_url = 'https://sandbox.payfast.co.za/eng/process';
 		} else {
@@ -452,7 +452,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 
 		// Remove last ampersand
-		$passPhrase = pmpro_getOption( 'payfast_passphrase' );
+		$passPhrase = get_option( 'pmpro_payfast_passphrase' );
 
 		// Add passphrase to URL.
 		if ( empty( $passPhrase ) ) {
@@ -507,10 +507,10 @@ class PMProGateway_PayFast extends PMProGateway {
 			$token = $order->paypal_token;
 
 			$hashArray  = array();
-			$passphrase = pmpro_getOption( 'payfast_passphrase' );
+			$passphrase = get_option( 'pmpro_payfast_passphrase' );
 
 			$hashArray['version']     = 'v1';
-			$hashArray['merchant-id'] = pmpro_getOption( 'payfast_merchant_id' );
+			$hashArray['merchant-id'] = get_option( 'pmpro_payfast_merchant_id' );
 			$hashArray['passphrase']  = $passphrase;
 			$hashArray['timestamp']   = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
 
@@ -524,7 +524,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 			$url = $domain . '/subscriptions/' . $token . '/cancel';
 
-			$environment = pmpro_getOption( 'gateway_environment' );
+			$environment = get_option( 'pmpro_gateway_environment' );
 
 			if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
 				$url = $url . '?testing=true';
