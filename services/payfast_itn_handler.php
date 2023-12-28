@@ -300,6 +300,11 @@ function pmpro_payfast_ipnExit() {
 			$filename = 'payfast_itn_' . $file_suffix . '.txt';
 			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/'. $filename );
 
+			// Make the /logs directory if it doesn't exist
+			if ( ! file_exists( PMPRO_PAYFAST_DIR . '/logs' ) ) {
+				mkdir( PMPRO_PAYFAST_DIR . '/logs', 0700 );
+			}
+
 			// If the log file doesn't exist let's create it.
 			if ( ! file_exists( $logfile ) ) {
 				// create a blank text file
