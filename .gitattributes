@@ -1,5 +1,6 @@
 # Items to ignore when downloading a zip
 pmpro-payfast-banner.png export-ignore
 .gitattributes export-ignore
+.github export-ignore
 .wordpress-org export-ignore
 README.MD export-ignore
