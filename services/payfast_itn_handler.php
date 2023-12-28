@@ -19,7 +19,6 @@ define( 'PMPROPF_SOFTWARE_NAME', 'Paid Memberships Pro' );
 define( 'PMPROPF_SOFTWARE_VER', PMPRO_VERSION );
 define( 'PMPROPF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
 define( 'PMPROPF_MODULE_VER', '1.0' );
-define( 'PMPROPF_DEBUG', get_option( 'pmpro_payfast_debug' ) );
 
 // Features
 // - PHP
@@ -57,7 +56,6 @@ define(
 	__( ' Transaction Notification when the payment status changes to', 'pmpro-payfast' ) .
 	__( ' "Completed", or "Failed"', 'pmpro-payfast' )
 );
-define( 'PMPRO_IPN_DEBUG', 'log' ); // this is called inside wp-config rather.
 
 // some globals
 global $wpdb, $gateway_environment, $logstr;
@@ -107,7 +105,7 @@ if ( ! $pfError && ! $pfDone ) {
 	}
 }
 // Verify source IP (If not in debug mode)
-if ( ! $pfError && ! $pfDone && ! PMPROPF_DEBUG ) {
+if ( ! $pfError && ! $pfDone && ( ! PMPROPF_DEBUG || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
 		$pfError = true;
@@ -293,12 +291,33 @@ function pmpro_payfast_ipnExit() {
 	// for log
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
-		// log?
-		if ( PMPROPF_DEBUG ) {
-			echo $logstr;
-			$loghandle = fopen( PMPRO_PAYFAST_DIR . '/logs/payfast_itn.txt', 'a+' );
+		echo esc_html( $logstr );
+
+		//Log to file or email, 
+		if ( get_option( 'pmpro_payfast_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
+			// Let's create the file and add a random suffix to it, to tighten up security.
+			$file_suffix = substr( md5( get_option( 'pmpro_payfast_merchant_id', true ) ), 0, 10 );
+			$filename = 'payfast_itn_' . $file_suffix . '.txt';
+			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/'. $filename );
+
+			// Make the /logs directory if it doesn't exist
+			if ( ! file_exists( PMPRO_PAYFAST_DIR . '/logs' ) ) {
+				mkdir( PMPRO_PAYFAST_DIR . '/logs', 0700 );
+			}
+
+			// If the log file doesn't exist let's create it.
+			if ( ! file_exists( $logfile ) ) {
+				// create a blank text file
+				file_put_contents( $logfile, '' );
+			}
+						
+			$loghandle = fopen( $logfile, "a+" );
 			fwrite( $loghandle, $logstr );
 			fclose( $loghandle );
+		} elseif ( defined( 'PMPROPF_DEBUG' ) && false !== PMPROPF_DEBUG ) {
+			// Send via email.
+			$log_email = strpos( PMPROPF_DEBUG, '@' ) ? PMPROPF_DEBUG : get_option( 'admin_email' );
+			wp_mail( $log_email, get_option( 'blogname' ) . ' PayFast Webhook Log', nl2br( esc_html( $logstr ) ) );
 		}
 	}
 	exit;
