@@ -56,7 +56,6 @@ define(
 	__( ' Transaction Notification when the payment status changes to', 'pmpro-payfast' ) .
 	__( ' "Completed", or "Failed"', 'pmpro-payfast' )
 );
-define( 'PMPRO_IPN_DEBUG', 'log' ); // this is called inside wp-config rather.
 
 // some globals
 global $wpdb, $gateway_environment, $logstr;
@@ -106,7 +105,7 @@ if ( ! $pfError && ! $pfDone ) {
 	}
 }
 // Verify source IP (If not in debug mode)
-if ( ! $pfError && ! $pfDone && ! PMPROPF_DEBUG ) {
+if ( ! $pfError && ! $pfDone && ( ! PMPROPF_DEBUG || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
 		$pfError = true;
@@ -294,10 +293,19 @@ function pmpro_payfast_ipnExit() {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
 		echo esc_html( $logstr );
 
-		//log in file or email?
-		if ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) {
-			// Output to log file.
-			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/payfast_itn.txt' );
+		//Log to file or email, 
+		if ( get_option( 'pmpro_payfast_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
+			// Let's create the file and add a random suffix to it, to tighten up security.
+			$file_suffix = substr( md5( get_option( 'pmpro_payfast_merchant_id', true ) ), 0, 10 );
+			$filename = 'payfast_itn_' . $file_suffix . '.txt';
+			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/'. $filename );
+
+			// If the log file doesn't exist let's create it.
+			if ( ! file_exists( $logfile ) ) {
+				// create a blank text file
+				file_put_contents( $logfile, '' );
+			}
+						
 			$loghandle = fopen( $logfile, "a+" );
 			fwrite( $loghandle, $logstr );
 			fclose( $loghandle );
