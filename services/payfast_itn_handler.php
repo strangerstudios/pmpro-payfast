@@ -19,7 +19,6 @@ define( 'PMPROPF_SOFTWARE_NAME', 'Paid Memberships Pro' );
 define( 'PMPROPF_SOFTWARE_VER', PMPRO_VERSION );
 define( 'PMPROPF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
 define( 'PMPROPF_MODULE_VER', '1.0' );
-define( 'PMPROPF_DEBUG', get_option( 'pmpro_payfast_debug' ) );
 
 // Features
 // - PHP
@@ -293,12 +292,19 @@ function pmpro_payfast_ipnExit() {
 	// for log
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
-		// log?
-		if ( PMPROPF_DEBUG ) {
-			echo $logstr;
-			$loghandle = fopen( PMPRO_PAYFAST_DIR . '/logs/payfast_itn.txt', 'a+' );
+		echo esc_html( $logstr );
+
+		//log in file or email?
+		if ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) {
+			// Output to log file.
+			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/payfast_itn.txt' );
+			$loghandle = fopen( $logfile, "a+" );
 			fwrite( $loghandle, $logstr );
 			fclose( $loghandle );
+		} elseif ( defined( 'PMPROPF_DEBUG' ) && false !== PMPROPF_DEBUG ) {
+			// Send via email.
+			$log_email = strpos( PMPROPF_DEBUG, '@' ) ? PMPROPF_DEBUG : get_option( 'admin_email' );
+			wp_mail( $log_email, get_option( 'blogname' ) . ' PayFast Webhook Log', nl2br( esc_html( $logstr ) ) );
 		}
 	}
 	exit;
