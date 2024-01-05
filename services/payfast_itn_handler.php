@@ -105,7 +105,7 @@ if ( ! $pfError && ! $pfDone ) {
 	}
 }
 // Verify source IP (If not in debug mode)
-if ( ! $pfError && ! $pfDone && ( ! PMPROPF_DEBUG || ! get_option( 'pmpro_payfast_debug' ) ) ) {
+if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
 		$pfError = true;
