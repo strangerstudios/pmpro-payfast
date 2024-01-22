@@ -1,38 +1,62 @@
 ![](pmpro-payfast-banner.png)
 
-# [Paid Memberships Pro - Payfast Gateway Integration](https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/) #
+# [Paid Memberships Pro - MPesa Gateway Integration](https://www.paidmembershipspro.com/add-ons/mpesa-payment-gateway/) #
 [comment]: # (Generate badges from shields.io, only works for .org plugins to get other stats etc. We'd have to create our own endpoints for Premium plugins)
 
-![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dy/pmpro-payfast?style=flat-square) ![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg?style=flat-square)
+![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dy/pmpro-MPesa?style=flat-square) ![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg?style=flat-square)
 
-### Welcome to the Paid Memberships Pro - Payfast Gateway Integration GitHub Repository
-Add the South African payment processing service PayFast as a gateway option for Paid Memberships Pro.
+# Paid Memberships Pro - MPesa Gateway Integration
 
-For more information please visit [paidmembershipspro.com/add-ons/payfast-payment-gateway/](https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/)
+## Overview
 
-## Installation ##
-For detailed installation steps, visit the [documentation](https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/) page.
+This repository contains code and documentation for integrating the MPesa payment gateway with the Paid Memberships Pro (PMP) WordPress plugin. With this integration, you can accept payments from MPesa users for your membership subscriptions, making it easier for your users to subscribe and access premium content on your WordPress site.
 
-1. Download the current development ZIP file directly: `https://github.com/strangerstudios/pmpro-payfast/archive/dev.zip`
+## Getting Started
 
-**Please ensure that once installing this version of the plugin to remove `-dev` from the plugin's folder name.**
+To get started with the MPesa Gateway integration for Paid Memberships Pro, follow these steps:
 
-## Bugs ##
-If you find an issue/bug, let us know by [creating a detailed GitHub issue](https://github.com/strangerstudios/pmpro-payfast/issues/new).
+1. **Prerequisites**
+   - You need to have WordPress and Paid Memberships Pro installed on your website.
+   - Obtain API credentials and merchant information from MPesa to configure the integration.
 
-## Support ##
-This is a developer's portal for Paid Memberships Pro - Payfast Gateway Integration. We do not offer support on this channel. **Any support related questions should be directed to [paidmembershipspro.com/add-ons/payfast-payment-gateway/](https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/).**
+2. **Installation**
+   - Clone this repository or download the latest release and extract it to your WordPress plugin directory.
 
-## Contributing to Paid Memberships Pro - Payfast Gateway Integration ##
-We encourage and welcome any contribution to Paid Memberships Pro - Payfast Gateway Integration. Please read the [guidelines for contributing](https://github.com/strangerstudios/paid-memberships-pro/blob/dev/.github/CONTRIBUTING.md) to this repository.
+3. **Configuration**
+   - Navigate to the WordPress dashboard and go to "Paid Memberships Pro" > "Settings" > "Payment Gateway & SSL."
+   - Enable the MPesa Gateway.
+   - Enter your MPesa API credentials and other required information.
 
-There are various **ways to the help development** of Paid Memberships Pro - Payfast Gateway Integration:
+4. **Testing**
+   - Before going live, it is recommended to test the integration with MPesa's sandbox environment to ensure everything is working correctly.
 
-1. Report [bugs/issues](https://github.com/strangerstudios/pmpro-payfast/issues/new) on GitHub.
-2. Work on any issues by submitting a Pull Request.
+5. **Usage**
+   - Once configured, your users will see MPesa as a payment option when subscribing to memberships on your site. They can complete the payment process through MPesa's payment flow.
 
-Here are some ways for **non-developers to contribute** to Paid Memberships Pro - Payfast Gateway Integration:
+6. **Documentation**
+   - For detailed usage instructions and troubleshooting tips, refer to the documentation provided in the "docs" directory of this repository.
 
-1. Translate Paid Memberships Pro - Payfast Gateway Integration into your own [language](https://www.paidmembershipspro.com/paid-memberships-pro-in-your-language/).
+## Contribution
+
+We welcome contributions from the community. If you find a bug or want to enhance the integration, please feel free to fork this repository and submit a pull request. Make sure to follow our [Contribution Guidelines](CONTRIBUTING.md).
+
+## Support
+
+If you encounter any issues or have questions related to this integration, please reach out to us through the GitHub Issues section. We will do our best to assist you.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
+
+## Disclaimer
+
+Please note that this integration is not officially endorsed or supported by MPesa. Make sure to comply with all legal and security requirements when handling payments on your website.
+
+---
+
+Thank you for choosing the Paid Memberships Pro - MPesa Gateway Integration. We hope this integration enhances your website's payment options and improves the overall user experience.
+Here are some ways for **non-developers to contribute** to Paid Memberships Pro - MPesa Gateway Integration:
+
+1. Translate Paid Memberships Pro - MPesa Gateway Integration into your own [language](https://www.paidmembershipspro.com/paid-memberships-pro-in-your-language/).
 2. [Purchase a paid membership](https://paidmembershipspro.com/pricing) to help fund ongoing development and bug fixes.
-3. Leave an honest review for [Plugin Name](https://wordpress.org/support/plugin/pmpro-payfast/reviews/#new-post).
+3. Leave an honest review for [Plugin Name](https://wordpress.org/support/plugin/pmpro-MPesa/reviews/#new-post).
