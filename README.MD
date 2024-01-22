@@ -1,3 +1,5 @@
+# ⚠️ **UNDER DEVELOPMENT - PAYFAST PLUGIN BASED INTEGRATION** ⚠️
+
 ![](pmpro-payfast-banner.png)
 
 # [Paid Memberships Pro - MPesa Gateway Integration](https://www.paidmembershipspro.com/add-ons/mpesa-payment-gateway/) #
