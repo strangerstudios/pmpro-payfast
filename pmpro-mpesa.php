@@ -1,41 +1,41 @@
 <?php
 /*
-Plugin Name: Paid Memberships Pro - PayFast Gateway
-Plugin URI: https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/
-Description: Adds PayFast as a gateway option for Paid Memberships Pro.
+Plugin Name: Paid Memberships Pro - MPesa Gateway
+Plugin URI: https://www.paidmembershipspro.com/add-ons/mpesa-payment-gateway/
+Description: Adds MPesa as a gateway option for Paid Memberships Pro.
 Version: 1.4.3
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
-Text Domain: pmpro-payfast
+Text Domain: pmpro-mpesa
 Domain Path: /languages
 */
 
-define( 'PMPRO_PAYFAST_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PMPRO_MPESA_DIR', plugin_dir_path( __FILE__ ) );
 
 // load payment gateway class after all plugins are loaded to make sure PMPro stuff is available
-function pmpro_payfast_plugins_loaded() {
+function pmpro_mpesa_plugins_loaded() {
 
-	load_plugin_textdomain( 'pmpro-payfast', false, basename( __DIR__ ) . '/languages' );
+	load_plugin_textdomain( 'pmpro-mpesa', false, basename( __DIR__ ) . '/languages' );
 
 	// make sure PMPro is loaded
 	if ( ! defined( 'PMPRO_DIR' ) ) {
 		return;
 	}
 
-	require_once( PMPRO_PAYFAST_DIR . '/classes/class.pmprogateway_payfast.php' );
+	require_once( PMPRO_MPESA_DIR . '/classes/class.pmprogateway_mpesa.php' );
 }
-add_action( 'plugins_loaded', 'pmpro_payfast_plugins_loaded' );
+add_action( 'plugins_loaded', 'pmpro_mpesa_plugins_loaded' );
 
 // Register activation hook.
-register_activation_hook( __FILE__, 'pmpro_payfast_admin_notice_activation_hook' );
+register_activation_hook( __FILE__, 'pmpro_mpesa_admin_notice_activation_hook' );
 /**
  * Runs only when the plugin is activated.
  *
  * @since 0.1.0
  */
-function pmpro_payfast_admin_notice_activation_hook() {
+function pmpro_mpesa_admin_notice_activation_hook() {
 	// Create transient data.
-	set_transient( 'pmpro-payfast-admin-notice', true, 5 );
+	set_transient( 'pmpro-mpesa-admin-notice', true, 5 );
 }
 
 /**
@@ -43,24 +43,24 @@ function pmpro_payfast_admin_notice_activation_hook() {
  *
  * @since 0.1
  */
-function pmpro_payfast_admin_notice() {
+function pmpro_mpesa_admin_notice() {
 	// Check transient, if available display notice.
-	if ( get_transient( 'pmpro-payfast-admin-notice' ) ) { ?>
+	if ( get_transient( 'pmpro-mpesa-admin-notice' ) ) { ?>
 		<div class="updated notice is-dismissible">
-			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the Payfast Gateway.', 'pmpro-payfast' ), esc_url( get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ) ); ?></p>
+			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the MPesa Gateway.', 'pmpro-mpesa' ), esc_url( get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ) ); ?></p>
 		</div>
 		<?php
 		// Delete transient, only display this notice once.
-		delete_transient( 'pmpro-payfast-admin-notice' );
+		delete_transient( 'pmpro-mpesa-admin-notice' );
 	}
 }
-add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
+add_action( 'admin_notices', 'pmpro_mpesa_admin_notice' );
 
 /** 
  * Show an admin warning notice if there is a level setup that is incorrect.
  * @since 0.9
  */
- function pmpro_payfast_check_level_compat(){
+ function pmpro_mpesa_check_level_compat(){
 
 	// Only show the notice on either the levels page or payment settings page.
 	if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'pmpro-membershiplevels' ) {
@@ -74,44 +74,44 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
 		return;
 	}
 
-	$compatible = pmpro_payfast_check_billing_compat( $level );
+	$compatible = pmpro_mpesa_check_billing_compat( $level );
 	
 	if ( ! $compatible ){
 		?>
 		<div class="notice notice-error fade">		
 			<p>
-				<?php _e( "PayFast currently doesn't support custom trials; Daily or weekly recurring pricing. Please can you update your membership levels that may have these set.", 'pmpro-payfast' );?>
+				<?php _e( "MPesa currently doesn't support custom trials; Daily or weekly recurring pricing. Please can you update your membership levels that may have these set.", 'pmpro-mpesa' );?>
 			</p>
 		</div>
 		<?php
 	}
 }
-add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
+add_action( 'admin_notices', 'pmpro_mpesa_check_level_compat' );
 
 /**
- * Fix PMPro Payfast showing SSL error in admin menus
+ * Fix PMPro MPesa showing SSL error in admin menus
  * when set up correctly.
  *
  * @since 0.9
  */
-function pmpro_payfast_pmpro_is_ready( $pmpro_is_ready ) {
+function pmpro_mpesa_pmpro_is_ready( $pmpro_is_ready ) {
 	global $pmpro_gateway_ready, $pmpro_pages_ready;
 
-	if ( empty($pmpro_gateway_ready) && 'payfast' === get_option( 'pmpro_gateway' ) ) {
-		if( get_option( 'pmpro_payfast_merchant_id' ) && get_option( 'pmpro_payfast_merchant_key' ) && get_option( 'pmpro_payfast_passphrase' ) ) {
+	if ( empty($pmpro_gateway_ready) && 'mpesa' === get_option( 'pmpro_gateway' ) ) {
+		if( get_option( 'pmpro_mpesa_merchant_id' ) && get_option( 'pmpro_mpesa_merchant_key' ) && get_option( 'pmpro_mpesa_passphrase' ) ) {
 			$pmpro_gateway_ready = true;
 		}
 	}
 
 	return ( $pmpro_gateway_ready && $pmpro_pages_ready );
 }
-add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
+add_filter( 'pmpro_is_ready', 'pmpro_mpesa_pmpro_is_ready' );
 
 /**
- * Check if there are billing compatibility issues for levels and PayFast.
+ * Check if there are billing compatibility issues for levels and MPesa.
  * @since 0.9
  */
- function pmpro_payfast_check_billing_compat( $level = NULL ){
+ function pmpro_mpesa_check_billing_compat( $level = NULL ){
 
  	if( !function_exists( 'pmpro_init' ) ){
  		return;
@@ -119,7 +119,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
  	
 	$gateway = get_option("pmpro_gateway");
 
-	if( $gateway == "payfast" ){
+	if( $gateway == "mpesa" ){
 
 		global $wpdb;
 
@@ -130,7 +130,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
 			
 			if( !empty( $levels ) ){
 				foreach( $levels as $level ){
-					if( !pmpro_payfast_check_billing_compat( $level->id ) ){
+					if( !pmpro_mpesa_check_billing_compat( $level->id ) ){
 						return false;
 					}
 
@@ -160,35 +160,35 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
  * Show a warning if custom trial is selected during level setup.
  * @since 0.9
  */
-function pmpro_payfast_custom_trial_js_check() {
+function pmpro_mpesa_custom_trial_js_check() {
 	$gateway = get_option( 'pmpro_gateway' );
 
-	if ( $gateway !== 'payfast' ) {
+	if ( $gateway !== 'mpesa' ) {
 		return;
 	}
 
-	$custom_trial_warning = __( sprintf( 'PayFast does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-payfast' ); ?>
+	$custom_trial_warning = __( sprintf( 'MPesa does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-mpesa' ); ?>
 		<script>
 			jQuery(document).ready(function(){
 				var message = "<?php echo $custom_trial_warning; ?>";
-				jQuery( '<tr id="payfast-trial-warning" style="display:none"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
+				jQuery( '<tr id="mpesa-trial-warning" style="display:none"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
 
 				// Show for existing levels.
 				if ( jQuery('#custom-trial').is(':checked') ) {
-					jQuery( '#payfast-trial-warning' ).show();
+					jQuery( '#mpesa-trial-warning' ).show();
 
 				}
 
 				// Toggle if checked or not
-				pmpro_payfast_trial_checked();
+				pmpro_mpesa_trial_checked();
 
-				function pmpro_payfast_trial_checked() {
+				function pmpro_mpesa_trial_checked() {
 
 					jQuery('#custom_trial').change(function(){
 						if ( jQuery(this).prop('checked') ) {
-							jQuery( '#payfast-trial-warning' ).show();
+							jQuery( '#mpesa-trial-warning' ).show();
 						} else {
-							jQuery( '#payfast-trial-warning' ).hide();
+							jQuery( '#mpesa-trial-warning' ).hide();
 						}
 					});
 				}
@@ -196,23 +196,23 @@ function pmpro_payfast_custom_trial_js_check() {
 		</script>
 	<?php
 }
-add_action( 'pmpro_membership_level_after_other_settings', 'pmpro_payfast_custom_trial_js_check' );
+add_action( 'pmpro_membership_level_after_other_settings', 'pmpro_mpesa_custom_trial_js_check' );
 
 /**
  * Function to add links to the plugin action links
  *
  * @param array $links Array of links to be shown in plugin action links.
  */
-function pmpro_payfast_plugin_action_links( $links ) {
+function pmpro_mpesa_plugin_action_links( $links ) {
 	$new_links = array();
 
 	if ( current_user_can( 'manage_options' ) ) {
-		$new_links[] = '<a href="' . get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) . '">' . __( 'Configure Payfast', 'pmpro-payfast' ) . '</a>';
+		$new_links[] = '<a href="' . get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) . '">' . __( 'Configure MPesa', 'pmpro-mpesa' ) . '</a>';
 	}
 
 	return array_merge( $new_links, $links );
 }
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pmpro_payfast_plugin_action_links' );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pmpro_mpesa_plugin_action_links' );
 
 /**
  * Function to add links to the plugin row meta
@@ -220,19 +220,19 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'pmpro_payfast
  * @param array  $links Array of links to be shown in plugin meta.
  * @param string $file Filename of the plugin meta is being shown for.
  */
-function pmpro_payfast_plugin_row_meta( $links, $file ) {
-	if ( strpos( $file, 'pmpro-payfast.php' ) !== false ) {
+function pmpro_mpesa_plugin_row_meta( $links, $file ) {
+	if ( strpos( $file, 'pmpro-mpesa.php' ) !== false ) {
 		$new_links = array(
-			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/' ) . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-payfast' ) ) . '">' . __( 'Docs', 'pmpro-payfast' ) . '</a>',
-			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/support/' ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-payfast' ) ) . '">' . __( 'Support', 'pmpro-payfast' ) . '</a>',
+			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/add-ons/mpesa-payment-gateway/' ) . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-mpesa' ) ) . '">' . __( 'Docs', 'pmpro-mpesa' ) . '</a>',
+			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/support/' ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-mpesa' ) ) . '">' . __( 'Support', 'pmpro-mpesa' ) . '</a>',
 		);
 		$links = array_merge( $links, $new_links );
 	}
 	return $links;
 }
-add_filter( 'plugin_row_meta', 'pmpro_payfast_plugin_row_meta', 10, 2 );
+add_filter( 'plugin_row_meta', 'pmpro_mpesa_plugin_row_meta', 10, 2 );
 
-function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, $level_id, $code_level ){
+function pmpro_mpesa_discount_code_result( $discount_code, $discount_code_id, $level_id, $code_level ){
 		
 		global $wpdb;
 
@@ -248,19 +248,19 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 
 		if( pmpro_isLevelFree( $code_level ) ){ //A valid discount code was returned
 			?>
-				jQuery('#pmpro_payfast_before_checkout').hide();
+				jQuery('#pmpro_mpesa_before_checkout').hide();
 			<?php
 		}
 
 	}
-add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_payfast_discount_code_result', 10, 4 );
+add_action( 'pmpro_applydiscountcode_return_js', 'pmpro_mpesa_discount_code_result', 10, 4 );
 
 /**
- * Store the checkout vars in the order meta before sending to PayFast.
+ * Store the checkout vars in the order meta before sending to MPesa.
  * 
  * @since 1.4
  */
-function pmpro_payfast_before_send_to_payfast_save_data( $user_id, $morder ) {
+function pmpro_mpesa_before_send_to_mpesa_save_data( $user_id, $morder ) {
 
 	$submit_values = $_REQUEST;
 
@@ -281,7 +281,7 @@ function pmpro_payfast_before_send_to_payfast_save_data( $user_id, $morder ) {
 	update_pmpro_membership_order_meta( $morder->id, 'checkout_vars', $submit_values );
 
 }
-add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfast_save_data', 1, 2 );
+add_action( 'pmpro_before_send_to_mpesa', 'pmpro_mpesa_before_send_to_mpesa_save_data', 1, 2 );
 
 /**
  * Load the checkout vars from the order meta into the 
@@ -290,7 +290,7 @@ add_action( 'pmpro_before_send_to_payfast', 'pmpro_payfast_before_send_to_payfas
  * 
  * @since 1.4
  */
-function pmpro_payfast_after_checkout_clean_data( $user_id, $morder ) {
+function pmpro_mpesa_after_checkout_clean_data( $user_id, $morder ) {
 
 	$checkout_vars = get_pmpro_membership_order_meta( $morder->id, 'checkout_vars', true );
 
@@ -302,4 +302,4 @@ function pmpro_payfast_after_checkout_clean_data( $user_id, $morder ) {
 	delete_pmpro_membership_order_meta( $morder->id, 'checkout_vars' ); //Delete afterwards as we don't need it.
 	
 }
-add_action( 'pmpro_after_checkout', 'pmpro_payfast_after_checkout_clean_data', 1, 2 );
+add_action( 'pmpro_after_checkout', 'pmpro_mpesa_after_checkout_clean_data', 1, 2 );

@@ -1,6 +1,6 @@
-# ⚠️ **UNDER DEVELOPMENT - PAYFAST PLUGIN BASED INTEGRATION** ⚠️
+# ⚠️ **UNDER DEVELOPMENT - MPESA PLUGIN BASED INTEGRATION** ⚠️
 
-![](pmpro-payfast-banner.png)
+![](pmpro-mpesa-banner.png)
 
 # [Paid Memberships Pro - MPesa Gateway Integration](https://www.paidmembershipspro.com/add-ons/mpesa-payment-gateway/) #
 [comment]: # (Generate badges from shields.io, only works for .org plugins to get other stats etc. We'd have to create our own endpoints for Premium plugins)

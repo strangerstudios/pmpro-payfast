@@ -1,23 +1,23 @@
 <?php
 /**
  * Based on the scripts by Ron Darby shared at
- * https://www.payfast.co.za/shopping-carts/paid-memberships-pro/
+ * https://www.mpesa.co.za/shopping-carts/paid-memberships-pro/
  *
- * @author     Ron Darby - PayFast
- * @copyright  2009-2014 PayFast (Pty) Ltd
+ * @author     Ron Darby - MPesa
+ * @copyright  2009-2014 MPesa (Pty) Ltd
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 
 
-// Bail if PMPro or the PayFast add on is not active
-if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_PAYFAST_DIR' ) ) {
-	error_log( __( 'Paid Memberships Pro and the PMPro PayFast Add On must be activated for the PMPro PayFast ITN handler to function.', 'pmpro-payfast' ) );
+// Bail if PMPro or the MPesa add on is not active
+if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_MPESA_DIR' ) ) {
+	error_log( __( 'Paid Memberships Pro and the PMPro MPesa Add On must be activated for the PMPro MPesa ITN handler to function.', 'pmpro-mpesa' ) );
 	exit;
 }
 
 define( 'PMPROPF_SOFTWARE_NAME', 'Paid Memberships Pro' );
 define( 'PMPROPF_SOFTWARE_VER', PMPRO_VERSION );
-define( 'PMPROPF_MODULE_NAME', 'PayFast-PaidMembershipsPro' );
+define( 'PMPROPF_MODULE_NAME', 'MPesa-PaidMembershipsPro' );
 define( 'PMPROPF_MODULE_VER', '1.0' );
 
 // Features
@@ -31,30 +31,30 @@ define( 'PMPROPF_TIMEOUT', 15 );
 define( 'PMPROPF_EPSILON', 0.01 );
 // Messages
 // Error
-define( 'PMPROPF_ERR_AMOUNT_MISMATCH', __( 'Amount mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_BAD_ACCESS', __( 'Bad access of page', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_BAD_SOURCE_IP', __( 'Bad source IP address', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_CONNECT_FAILED', __( 'Failed to connect to PayFast', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_INVALID_SIGNATURE', __( 'Security signature mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_MERCHANT_ID_MISMATCH', __( 'Merchant ID mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_NO_SESSION', __( 'No saved session found for ITN transaction', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_ORDER_ID_MISSING_URL', __( 'Order ID not present in URL', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_ORDER_ID_MISMATCH', __( 'Order ID mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_ORDER_INVALID', __( 'This order ID is invalid', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_ORDER_NUMBER_MISMATCH', __( 'Order Number mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_ORDER_PROCESSED', __( 'This order has already been processed', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_PDT_FAIL', __( 'PDT query failed', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_PDT_TOKEN_MISSING', __( 'PDT token not present in URL', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_SESSIONID_MISMATCH', __( 'Session ID mismatch', 'pmpro-payfast' ) );
-define( 'PMPROPF_ERR_UNKNOWN', __( 'Unkown error occurred', 'pmpro-payfast' ) );
+define( 'PMPROPF_ERR_AMOUNT_MISMATCH', __( 'Amount mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_BAD_ACCESS', __( 'Bad access of page', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_BAD_SOURCE_IP', __( 'Bad source IP address', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_CONNECT_FAILED', __( 'Failed to connect to MPesa', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_INVALID_SIGNATURE', __( 'Security signature mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_MERCHANT_ID_MISMATCH', __( 'Merchant ID mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_NO_SESSION', __( 'No saved session found for ITN transaction', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_ORDER_ID_MISSING_URL', __( 'Order ID not present in URL', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_ORDER_ID_MISMATCH', __( 'Order ID mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_ORDER_INVALID', __( 'This order ID is invalid', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_ORDER_NUMBER_MISMATCH', __( 'Order Number mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_ORDER_PROCESSED', __( 'This order has already been processed', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_PDT_FAIL', __( 'PDT query failed', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_PDT_TOKEN_MISSING', __( 'PDT token not present in URL', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_SESSIONID_MISMATCH', __( 'Session ID mismatch', 'pmpro-mpesa' ) );
+define( 'PMPROPF_ERR_UNKNOWN', __( 'Unkown error occurred', 'pmpro-mpesa' ) );
 	// General
-define( 'PMPROPF_MSG_OK', __( 'Payment was successful', 'pmpro-payfast' ) );
-define( 'PMPROPF_MSG_FAILED', __( 'Payment has failed', 'pmpro-payfast' ) );
+define( 'PMPROPF_MSG_OK', __( 'Payment was successful', 'pmpro-mpesa' ) );
+define( 'PMPROPF_MSG_FAILED', __( 'Payment has failed', 'pmpro-mpesa' ) );
 define(
 	'PMPROPF_MSG_PENDING',
-	__( 'The payment is pending. Please note, you will receive another Instant', 'pmpro-payfast' ) .
-	__( ' Transaction Notification when the payment status changes to', 'pmpro-payfast' ) .
-	__( ' "Completed", or "Failed"', 'pmpro-payfast' )
+	__( 'The payment is pending. Please note, you will receive another Instant', 'pmpro-mpesa' ) .
+	__( ' Transaction Notification when the payment status changes to', 'pmpro-mpesa' ) .
+	__( ' "Completed", or "Failed"', 'pmpro-mpesa' )
 );
 
 // some globals
@@ -65,28 +65,28 @@ $pfError = false;
 $pfErrMsg = '';
 $pfDone = false;
 $pfData = array();
-$pfHost = ( ( $gateway_environment == 'sandbox' ) ? 'sandbox' : 'www' ) . '.payfast.co.za';
+$pfHost = ( ( $gateway_environment == 'sandbox' ) ? 'sandbox' : 'www' ) . '.mpesa.co.za';
 $pfOrderId = '';
 $pfParamString = '';
 $initial_payment_status = '';
-pmpro_payfast_itnlog( __( 'PayFast ITN call received', 'pmpro-payfast' ) );
+pmpro_mpesa_itnlog( __( 'MPesa ITN call received', 'pmpro-mpesa' ) );
 
-// Notify PayFast that information has been received
+// Notify MPesa that information has been received
 if ( ! $pfError && ! $pfDone ) {
 	header( 'HTTP/1.0 200 OK' );
 	flush();
 }
 
-// Get data sent by PayFast
+// Get data sent by MPesa
 if ( ! $pfError && ! $pfDone ) {
-	pmpro_payfast_itnlog( __( 'Get posted data', 'pmpro-payfast' ) );
+	pmpro_mpesa_itnlog( __( 'Get posted data', 'pmpro-mpesa' ) );
 	// Posted variables from ITN
 	$pfData = pmpro_pfGetData();
 	$morder = new MemberOrder( $pfData['m_payment_id'] );
 	$morder->getMembershipLevel();
 	$morder->getUser();
 
-	pmpro_payfast_itnlog( __( 'PayFast Data: ', 'pmpro-payfast' ) . print_r( $pfData, true ) );
+	pmpro_mpesa_itnlog( __( 'MPesa Data: ', 'pmpro-mpesa' ) . print_r( $pfData, true ) );
 	if ( $pfData === false ) {
 		$pfError = true;
 		$pfErrMsg = PMPROPF_ERR_BAD_ACCESS;
@@ -95,8 +95,8 @@ if ( ! $pfError && ! $pfDone ) {
 
 // Verify security signature
 if ( ! $pfError && ! $pfDone ) {
-	pmpro_payfast_itnlog( __( 'Verify security signature', 'pmpro-payfast' ) );
-	$passPhrase = get_option( 'pmpro_payfast_passphrase' );
+	pmpro_mpesa_itnlog( __( 'Verify security signature', 'pmpro-mpesa' ) );
+	$passPhrase = get_option( 'pmpro_mpesa_passphrase' );
 	$pfPassPhrase = empty( $passPhrase ) ? null : $passPhrase;
 	// If signature different, log for debugging
 	if ( ! pmpro_pfValidSignature( $pfData, $pfParamString, $pfPassPhrase ) ) {
@@ -105,8 +105,8 @@ if ( ! $pfError && ! $pfDone ) {
 	}
 }
 // Verify source IP (If not in debug mode)
-if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_payfast_debug' ) ) ) {
-	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
+if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_mpesa_debug' ) ) ) {
+	pmpro_mpesa_itnlog( __( 'Verify source IP', 'pmpro-mpesa' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
 		$pfError = true;
 		$pfErrMsg = PMPROPF_ERR_BAD_SOURCE_IP;
@@ -114,7 +114,7 @@ if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 
 }
 // Verify data received
 if ( ! $pfError ) {
-	pmpro_payfast_itnlog( __( 'Verify data received', 'pmpro-payfast' ) );
+	pmpro_mpesa_itnlog( __( 'Verify data received', 'pmpro-mpesa' ) );
 	$pfValid = pmpro_pfValidData( $pfHost, $pfParamString );
 	if ( ! $pfValid ) {
 		$pfError = true;
@@ -127,7 +127,7 @@ if ( ! $pfError && ! $pfDone && $pfData['payment_status'] == 'COMPLETE' ) {
 	// Only check initial orders.
 	if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ) . '- 2 days' ) ) {
 		if ( ! pmpro_pfAmountsEqual( $pfData['amount_gross'], $morder->total ) ) {
-			pmpro_payfast_itnlog( __( 'Amount Returned: ', 'pmpro-payfast' ) . $pfData['amount_gross'] );
+			pmpro_mpesa_itnlog( __( 'Amount Returned: ', 'pmpro-mpesa' ) . $pfData['amount_gross'] );
 			$pfError = true;
 			$pfErrMsg = PMPROPF_ERR_AMOUNT_MISMATCH;
 		}
@@ -154,12 +154,12 @@ if ( ! $pfError && ! $pfDone ) {
 			$txn_id = $pfData['m_payment_id'];
 			// update membership
 			if ( pmpro_itnChangeMembershipLevel( $txn_id, $morder ) ) {
-				pmpro_payfast_itnlog( 'Checkout processed (' . $morder->code . ') success!' );
+				pmpro_mpesa_itnlog( 'Checkout processed (' . $morder->code . ') success!' );
 			} else {
-				pmpro_payfast_itnlog( __( "ERROR: Couldn't change level for order (", 'pmpro-payfast' ) . $morder->code . __( ').', 'pmpro-payfast' ) );
+				pmpro_mpesa_itnlog( __( "ERROR: Couldn't change level for order (", 'pmpro-mpesa' ) . $morder->code . __( ').', 'pmpro-mpesa' ) );
 			}
 
-			pmpro_payfast_ipnExit();
+			pmpro_mpesa_ipnExit();
 		} else {
 			// Subscription Payment
 			$last_subscr_order = new MemberOrder();
@@ -167,9 +167,9 @@ if ( ! $pfError && ! $pfDone ) {
 				$last_subscr_order->paypal_token = $pfData['token'];
 				pmpro_ipnSaveOrder( $pfData['pf_payment_id'], $last_subscr_order );
 			} else {
-				pmpro_payfast_itnlog( __( "ERROR: Couldn't find last order for this recurring payment (", 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( ').', 'pmpro-payfast' ) );
+				pmpro_mpesa_itnlog( __( "ERROR: Couldn't find last order for this recurring payment (", 'pmpro-mpesa' ) . $pfData['m_payment_id'] . __( ').', 'pmpro-mpesa' ) );
 			}
-			pmpro_payfast_ipnExit();
+			pmpro_mpesa_ipnExit();
 		}
 	}
 }
@@ -177,26 +177,26 @@ if ( ! $pfError && ! $pfDone ) {
 if ( $pfData['payment_status'] == 'CANCELLED' ) {
 	if ( function_exists( 'pmpro_handle_subscription_cancellation_at_gateway' ) ) {
 		// Using PMPro v3.0+, so we have a helper function to handle subscription cancellations.
-		pmpro_payfast_itnlog( pmpro_handle_subscription_cancellation_at_gateway( $pfData['m_payment_id'], 'payfast', $gateway_environment ) );
-		pmpro_payfast_ipnExit();
+		pmpro_mpesa_itnlog( pmpro_handle_subscription_cancellation_at_gateway( $pfData['m_payment_id'], 'mpesa', $gateway_environment ) );
+		pmpro_mpesa_ipnExit();
 	}
 	// PMPro version < 3.0. Use the legacy method of handling subscription cancellations.
 	// find last order
 	$last_subscr_order = new MemberOrder();
 	if ( $last_subscr_order->getLastMemberOrderBySubscriptionTransactionID( $pfData['m_payment_id'] ) == false ) {
-		pmpro_payfast_itnlog( __( "ERROR: Couldn't find this order to cancel (subscription_transaction_id=", 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( ').', 'pmpro-payfast' ) );
-		pmpro_payfast_ipnExit();
+		pmpro_mpesa_itnlog( __( "ERROR: Couldn't find this order to cancel (subscription_transaction_id=", 'pmpro-mpesa' ) . $pfData['m_payment_id'] . __( ').', 'pmpro-mpesa' ) );
+		pmpro_mpesa_ipnExit();
 	} else {
 		// found order, let's cancel the membership
 		$user = get_userdata( $last_subscr_order->user_id );
 		if ( empty( $user ) || empty( $user->ID ) ) {
-			pmpro_payfast_itnlog( __( 'ERROR: Could not cancel membership. No user attached to order #', 'pmpro-payfast' ) . $last_subscr_order->id . __( ' with subscription transaction id = ', 'pmpro-payfast' ) . $last_subscr_order->subscription_transaction_id . __( '.', 'pmpro-payfast' ) );
+			pmpro_mpesa_itnlog( __( 'ERROR: Could not cancel membership. No user attached to order #', 'pmpro-mpesa' ) . $last_subscr_order->id . __( ' with subscription transaction id = ', 'pmpro-mpesa' ) . $last_subscr_order->subscription_transaction_id . __( '.', 'pmpro-mpesa' ) );
 		} else {
 
 			if ( $last_subscr_order->status == 'cancelled' ) {
-				pmpro_payfast_itnlog( __( "We've already processed this cancellation. Probably originated from WP/PMPro. (Order #", 'pmpro-payfast' ) . $last_subscr_order->id . __( ', Subscription Transaction ID #', 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( ')', 'pmpro-payfast' ) );
+				pmpro_mpesa_itnlog( __( "We've already processed this cancellation. Probably originated from WP/PMPro. (Order #", 'pmpro-mpesa' ) . $last_subscr_order->id . __( ', Subscription Transaction ID #', 'pmpro-mpesa' ) . $pfData['m_payment_id'] . __( ')', 'pmpro-mpesa' ) );
 			} elseif ( ! pmpro_hasMembershipLevel( $last_subscr_order->membership_id, $user->ID ) ) {
-				pmpro_payfast_itnlog( __( 'This user has a different level than the one associated with this order. Their membership was probably changed by an admin or through an upgrade/downgrade. (Order #', 'pmpro-payfast' ) . $last_subscr_order->id . __( ', Subscription Transaction ID #', 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( ')', 'pmpro-payfast' ) );
+				pmpro_mpesa_itnlog( __( 'This user has a different level than the one associated with this order. Their membership was probably changed by an admin or through an upgrade/downgrade. (Order #', 'pmpro-mpesa' ) . $last_subscr_order->id . __( ', Subscription Transaction ID #', 'pmpro-mpesa' ) . $pfData['m_payment_id'] . __( ')', 'pmpro-mpesa' ) );
 			} else {
 				// if the initial payment failed, cancel with status error instead of cancelled
 				if ( $initial_payment_status === 'Failed' ) {
@@ -223,7 +223,7 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 					);
 					$wpdb->query( $sqlQuery );
 				}
-				pmpro_payfast_itnlog( __( 'Cancelled membership for user with id = ', 'pmpro-payfast' ) . $last_subscr_order->user_id . __( '. Subscription transaction id = ', 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( '.', 'pmpro-payfast' ) );
+				pmpro_mpesa_itnlog( __( 'Cancelled membership for user with id = ', 'pmpro-mpesa' ) . $last_subscr_order->user_id . __( '. Subscription transaction id = ', 'pmpro-mpesa' ) . $pfData['m_payment_id'] . __( '.', 'pmpro-mpesa' ) );
 				// send an email to the member
 				$myemail = new PMProEmail();
 				$myemail->sendCancelEmail( $user );
@@ -232,16 +232,16 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 				$myemail->sendCancelAdminEmail( $user, $last_subscr_order->membership_id );
 			}
 		}
-		pmpro_payfast_ipnExit();
+		pmpro_mpesa_ipnExit();
 	}
 }
 
-pmpro_payfast_itnlog( __( 'Check status and update order', 'pmpro-payfast' ) );
+pmpro_mpesa_itnlog( __( 'Check status and update order', 'pmpro-mpesa' ) );
 $transaction_id = $pfData['pf_payment_id'];
 $morder = new MemberOrder( $pfData['m_payment_id'] );
 $morder->getMembershipLevel();
 $morder->getUser();
-pmpro_payfast_itnlog( __( 'check token', 'pmpro-payfast' ) );
+pmpro_mpesa_itnlog( __( 'check token', 'pmpro-mpesa' ) );
 	// if ( ! empty( $pfData['token'] ) )
 	// {
 switch ( $pfData['payment_status'] ) {
@@ -251,34 +251,34 @@ switch ( $pfData['payment_status'] ) {
 		$morder->getUser();
 		// update membership
 		if ( pmpro_itnChangeMembershipLevel( $transaction_id, $morder ) ) {
-			pmpro_payfast_itnlog( 'Checkout processed (' . $morder->code . ') success!' );
+			pmpro_mpesa_itnlog( 'Checkout processed (' . $morder->code . ') success!' );
 		} else {
-			pmpro_payfast_itnlog( __( "ERROR: Couldn't change level for order (", 'pmpro-payfast' ) . $morder->code . ').' );
+			pmpro_mpesa_itnlog( __( "ERROR: Couldn't change level for order (", 'pmpro-mpesa' ) . $morder->code . ').' );
 		}
 		break;
 	case 'FAILED':
-		pmpro_payfast_itnlog( __( 'ERROR: ITN from PayFast for order (', 'pmpro-payfast' ) . $morder->code . __( ') Failed.', 'pmpro-payfast' ) );
+		pmpro_mpesa_itnlog( __( 'ERROR: ITN from MPesa for order (', 'pmpro-mpesa' ) . $morder->code . __( ') Failed.', 'pmpro-mpesa' ) );
 		break;
 	case 'PENDING':
-		pmpro_payfast_itnlog( __( 'ERROR: ITN from PayFast for order (', 'pmpro-payfast' ) . $morder->code . ') Pending.' );
+		pmpro_mpesa_itnlog( __( 'ERROR: ITN from MPesa for order (', 'pmpro-mpesa' ) . $morder->code . ') Pending.' );
 		break;
 	default:
-		pmpro_payfast_itnlog( __( 'ERROR: Unknown error for order (', 'pmpro-payfast' ) . $morder->code . ').' );
+		pmpro_mpesa_itnlog( __( 'ERROR: Unknown error for order (', 'pmpro-mpesa' ) . $morder->code . ').' );
 		break;
 }
 	// }
 	// If an error occurred
 if ( $pfError ) {
 
-	pmpro_payfast_itnlog( __( 'Error occurred: ', 'pmpro-payfast' ) . $pfErrMsg );
+	pmpro_mpesa_itnlog( __( 'Error occurred: ', 'pmpro-mpesa' ) . $pfErrMsg );
 }
 
-pmpro_payfast_ipnExit();
+pmpro_mpesa_ipnExit();
 
 /*
 	Add message to ipnlog string
 */
-function pmpro_payfast_itnlog( $s ) {
+function pmpro_mpesa_itnlog( $s ) {
 	 global $logstr;
 	$logstr .= "\t" . $s . "\n";
 }
@@ -286,23 +286,23 @@ function pmpro_payfast_itnlog( $s ) {
 /*
 	Output ipnlog and exit;
 */
-function pmpro_payfast_ipnExit() {
+function pmpro_mpesa_ipnExit() {
 	global $logstr;
 	// for log
 	if ( $logstr ) {
-		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
+		$logstr = __( 'Logged On: ', 'pmpro-mpesa' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
 		echo esc_html( $logstr );
 
 		//Log to file or email, 
-		if ( get_option( 'pmpro_payfast_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
+		if ( get_option( 'pmpro_mpesa_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
 			// Let's create the file and add a random suffix to it, to tighten up security.
-			$file_suffix = substr( md5( get_option( 'pmpro_payfast_merchant_id', true ) ), 0, 10 );
-			$filename = 'payfast_itn_' . $file_suffix . '.txt';
-			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/'. $filename );
+			$file_suffix = substr( md5( get_option( 'pmpro_mpesa_merchant_id', true ) ), 0, 10 );
+			$filename = 'mpesa_itn_' . $file_suffix . '.txt';
+			$logfile = apply_filters( 'pmpro_mpesa_itn_logfile', PMPRO_MPESA_DIR . '/logs/'. $filename );
 
 			// Make the /logs directory if it doesn't exist
-			if ( ! file_exists( PMPRO_PAYFAST_DIR . '/logs' ) ) {
-				mkdir( PMPRO_PAYFAST_DIR . '/logs', 0700 );
+			if ( ! file_exists( PMPRO_MPESA_DIR . '/logs' ) ) {
+				mkdir( PMPRO_MPESA_DIR . '/logs', 0700 );
 			}
 
 			// If the log file doesn't exist let's create it.
@@ -317,7 +317,7 @@ function pmpro_payfast_ipnExit() {
 		} elseif ( defined( 'PMPROPF_DEBUG' ) && false !== PMPROPF_DEBUG ) {
 			// Send via email.
 			$log_email = strpos( PMPROPF_DEBUG, '@' ) ? PMPROPF_DEBUG : get_option( 'admin_email' );
-			wp_mail( $log_email, get_option( 'blogname' ) . ' PayFast Webhook Log', nl2br( esc_html( $logstr ) ) );
+			wp_mail( $log_email, get_option( 'blogname' ) . ' MPesa Webhook Log', nl2br( esc_html( $logstr ) ) );
 		}
 	}
 	exit;
@@ -329,7 +329,7 @@ function pmpro_payfast_ipnExit() {
 function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 	global $wpdb;
 	// filter for level
-	$morder->membership_level = apply_filters( 'pmpro_payfast_itnhandler_level', $morder->membership_level, $morder->user_id );
+	$morder->membership_level = apply_filters( 'pmpro_mpesa_itnhandler_level', $morder->membership_level, $morder->user_id );
 	// fix expiration date
 	if ( ! empty( $morder->membership_level->expiration_number ) ) {
 		$enddate = "'" . date( 'Y-m-d', strtotime( '+ ' . $morder->membership_level->expiration_number . ' ' . $morder->membership_level->expiration_period ) ) . "'";
@@ -365,7 +365,7 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 	global $pmpro_error;
 	if ( ! empty( $pmpro_error ) ) {
 		echo $pmpro_error;
-		pmpro_payfast_itnlog( $pmpro_error );
+		pmpro_mpesa_itnlog( $pmpro_error );
 	}
 	// change level and continue "checkout"
 	if ( pmpro_changeMembershipLevel( $custom_level, $morder->user_id ) !== false ) {
@@ -457,7 +457,7 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		// Payment Type.
 		$morder->payment_type = $last_order->payment_type;
 		// set amount based on which PayPal type
-		if ( $last_order->gateway == 'payfast' ) {
+		if ( $last_order->gateway == 'mpesa' ) {
 			$morder->InitialPayment = sanitize_text_field( $_POST['amount_gross'] );    // not the initial payment, but the class is expecting that
 			$morder->PaymentAmount = sanitize_text_field( $_POST['amount_gross'] );
 		}
@@ -465,7 +465,7 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		$morder->LastName = sanitize_text_field( $_POST['name_last'] );
 		$morder->Email = sanitize_email( $_POST['email_address'] );
 		// get address info if appropriate
-		if ( $last_order->gateway == 'payfast' ) {
+		if ( $last_order->gateway == 'mpesa' ) {
 			$morder->Address1 = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
 			$morder->City = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
 			$morder->State = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
@@ -503,20 +503,20 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		$pmproemail->sendInvoiceEmail( get_userdata( $last_order->user_id ), $morder );
 		do_action( 'pmpro_subscription_payment_completed', $morder );
 
-		pmpro_payfast_itnlog( __( 'New order (', 'pmpro-payfast' ) . $morder->code . __( ') created.', 'pmpro-payfast' ) );
+		pmpro_mpesa_itnlog( __( 'New order (', 'pmpro-mpesa' ) . $morder->code . __( ') created.', 'pmpro-mpesa' ) );
 		return true;
 	} else {
-		pmpro_payfast_itnlog( __( 'Duplicate Transaction ID: ', 'pmpro-payfast' ) . $txn_id );
+		pmpro_mpesa_itnlog( __( 'Duplicate Transaction ID: ', 'pmpro-mpesa' ) . $txn_id );
 		return true;
 	}
 }
 
 /**
  * pfGetData
- * documentation reference - https://developers.payfast.co.za/documentation/#notify-page-itn
+ * documentation reference - https://developers.mpesa.co.za/documentation/#notify-page-itn
  * @uses pmpro_getParam - https://github.com/strangerstudios/paid-memberships-pro/blob/dev/includes/functions.php#L2260
  *
- * @author Jonathan Smit (PayFast.co.za)
+ * @author Jonathan Smit (MPesa.co.za)
  * @author Stranger Studios 2019 (paidmembershipspro.com)
  */
 function pmpro_pfGetData() {
@@ -545,7 +545,7 @@ function pmpro_pfGetData() {
 /**
  * pfValidSignature
  *
- * @author Jonathan Smit (PayFast.co.za)
+ * @author Jonathan Smit (MPesa.co.za)
  */
 function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPhrase = null ) {
 	 // Dump the submitted variables and calculate security signature
@@ -567,22 +567,22 @@ function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPh
 	
 	$signature = md5( $tempParamString );
 	$result = ( $pfData['signature'] == $signature );
-	pmpro_payfast_itnlog( __( 'Signature Sent: ', 'pmpro-payfast' ) . $signature );
-	pmpro_payfast_itnlog( __( 'Signature = ', 'pmpro-payfast' ) . ( $result ? __( 'valid', 'pmpro-payfast' ) : __( 'invalid', 'pmpro-payfast' ) ) );
+	pmpro_mpesa_itnlog( __( 'Signature Sent: ', 'pmpro-mpesa' ) . $signature );
+	pmpro_mpesa_itnlog( __( 'Signature = ', 'pmpro-mpesa' ) . ( $result ? __( 'valid', 'pmpro-mpesa' ) : __( 'invalid', 'pmpro-mpesa' ) ) );
 	return( $result );
 }
 
 /**
  * pfValidData
  *
- * @author Jonathan Smit (PayFast.co.za)
+ * @author Jonathan Smit (MPesa.co.za)
  * @param $pfHost String Hostname to use
  * @param $pfParamString String Parameter string to send
  * @param $proxy String Address of proxy to use or NULL if no proxy
  */
-function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfProxy = null ) {
-	pmpro_payfast_itnlog( __( 'Host = ', 'pmpro-payfast' ) . $pfHost );
-	pmpro_payfast_itnlog( __( 'Params = ', 'pmpro-payfast' ) . $pfParamString );
+function pmpro_pfValidData( $pfHost = 'www.mpesa.co.za', $pfParamString = '', $pfProxy = null ) {
+	pmpro_mpesa_itnlog( __( 'Host = ', 'pmpro-mpesa' ) . $pfHost );
+	pmpro_mpesa_itnlog( __( 'Params = ', 'pmpro-mpesa' ) . $pfParamString );
 	// Variable initialization
 	$url = 'https://' . $pfHost . '/eng/query/validate';
 	
@@ -597,13 +597,13 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	
 	if ( is_wp_error( $response ) ) {
 		$error_message = $response->get_error_message();
-		pmpro_payfast_itnlog( 'Error validating data: ' . $error_message );
+		pmpro_mpesa_itnlog( 'Error validating data: ' . $error_message );
 		die( 'Error validating data: ' . $error_message );
 	}
 
 	$body = wp_remote_retrieve_body( $response );
 
-	pmpro_payfast_itnlog( $body );
+	pmpro_mpesa_itnlog( $body );
 
 	if ( $body === 'VALID' ) {
 		return( true );
@@ -615,16 +615,16 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 /**
  * pfValidIP
  *
- * @author Jonathan Smit (PayFast.co.za)
+ * @author Jonathan Smit (MPesa.co.za)
  * @param $sourceIP String Source IP address
  */
 function pmpro_pfValidIP( $sourceIP ) {
 	 // Variable initialization
 	$validHosts = array(
-		'www.payfast.co.za',
-		'sandbox.payfast.co.za',
-		'w1w.payfast.co.za',
-		'w2w.payfast.co.za',
+		'www.mpesa.co.za',
+		'sandbox.mpesa.co.za',
+		'w1w.mpesa.co.za',
+		'w2w.mpesa.co.za',
 	);
 	$validIps = array();
 	foreach ( $validHosts as $pfHostname ) {
@@ -635,7 +635,7 @@ function pmpro_pfValidIP( $sourceIP ) {
 	}
 	// Remove duplicates
 	$validIps = array_unique( $validIps );
-	pmpro_payfast_itnlog( "Valid IPs:\n" . print_r( $validIps, true ) );
+	pmpro_mpesa_itnlog( "Valid IPs:\n" . print_r( $validIps, true ) );
 	if ( in_array( $sourceIP, $validIps ) ) {
 		return( true );
 	} else {
@@ -652,7 +652,7 @@ function pmpro_pfValidIP( $sourceIP ) {
  *
  * eg. 100.00 is equal to 100.0001
  *
- * @author Jonathan Smit (PayFast.co.za)
+ * @author Jonathan Smit (MPesa.co.za)
  * @param $amount1 Float 1st amount for comparison
  * @param $amount2 Float 2nd amount for comparison
  */
