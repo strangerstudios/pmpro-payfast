@@ -405,10 +405,15 @@ class PMProGateway_PayFast extends PMProGateway {
 		if( ! empty( $order->BillingFrequency ) ) {
 			// convert PMPro cycle_number and period into a PayFast frequency
 			switch ( $order->BillingPeriod ) {
+				case 'Day':
+					$frequency = '1';
+					break;
+				case 'Week':
+					$frequency = '2';
+					break;
 				case 'Month':
 					$frequency = '3';
 					break;
-
 				case 'Year':
 					$frequency = '6';
 					break;
@@ -491,13 +496,21 @@ class PMProGateway_PayFast extends PMProGateway {
 		return true;
 	}
 
-	function cancel( &$order ) {
+	function cancel( &$order, $update_status = true ) {
 
 		// Check to see if the order has a token and try to cancel it at the gateway. Only recurring subscriptions should have a token.
-		if ( ! empty( $order->paypal_token ) && ! empty( $order->subscription_transaction_id ) ) {
+		if ( ! empty( $order->subscription_transaction_id ) ) {
+
+			// Let's double check that the paypal_token isn't really there. (Payfast uses paypal_token to store their token)
+			if ( empty( $order->paypal_token ) ) {
+				$last_subscription_order = $order->get_orders( array( 'subscription_transaction_id' => $order->subscription_transaction_id, 'limit' => 1 ) );
+				$order->paypal_token = $last_subscription_order[0]->paypal_token;
+			}
 
 			// cancel order status immediately.
-			$order->updateStatus( 'cancelled' );
+			if ( $update_status ) {
+				$order->updateStatus( 'cancelled' );
+			}
 
 			// check if we are getting an ITN notification which means it's already cancelled within PayFast.
 			if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) {
@@ -533,7 +546,7 @@ class PMProGateway_PayFast extends PMProGateway {
 			$response = wp_remote_post(
 				$url,
 				array(
-					'method'  => 'PUT',
+					'method' => 'PUT',
 					'timeout' => 60,
 					'headers' => array(
 						'version'     => 'v1',
@@ -558,6 +571,109 @@ class PMProGateway_PayFast extends PMProGateway {
 
 				return false;
 			}
+		}
+	}
+
+	/**
+	 * Function to handle cancellations of Subscriptions.
+	 *
+	 * @param object $subscription The PMPro Subscription Object
+	 * @since TBD
+	 */
+	function update_subscription_info( $subscription ) {
+
+		// We need to get the token from the order with this $subscription_id.
+		$subscription_id = $subscription->get_subscription_transaction_id();
+
+		$last_subscription_order = $subscription->get_orders( array( 'subscription_transaction_id' => $subscription_id, 'limit' => 1 ) );
+		
+		$payfast_token = isset( $last_subscription_order[0]->paypal_token ) ? sanitize_text_field( $last_subscription_order[0]->paypal_token ) : false;
+
+		if ( ! $payfast_token ) {
+			return false;
+		}
+
+		// Make an API call to PayFast to get the subscription details.
+
+		$hashArray  = array();
+		$passphrase = get_option( 'pmpro_payfast_passphrase' );
+
+		$hashArray['version']     = 'v1';
+		$hashArray['merchant-id'] = get_option( 'pmpro_payfast_merchant_id' );
+		$hashArray['passphrase']  = $passphrase;
+		$hashArray['timestamp']   = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
+
+		$orderedPrehash = $hashArray;
+
+		ksort( $orderedPrehash );
+
+		$signature = md5( http_build_query( $orderedPrehash ) );
+
+		$domain = 'https://api.payfast.co.za';
+
+		$url = $domain . '/subscriptions/' . $payfast_token . '/fetch';
+
+		// Is this a test transaction?
+		$environment = get_option( 'pmpro_gateway_environment' );
+		if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
+				$url = $url . '?testing=true';
+			}
+
+			$request = wp_remote_get(
+				$url,
+				array(
+					'timeout' => 60,
+					'headers' => array(
+						'version'     => 'v1',
+						'merchant-id' => $hashArray['merchant-id'],
+						'signature'   => $signature,
+						'timestamp'   => $hashArray['timestamp'],
+						'content-length' => 0
+					),
+				)
+			);
+		
+		// Get the data from the response now and update the subscription.
+		if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
+		$response = json_decode( wp_remote_retrieve_body( $request ) );
+
+		// No data in the response.
+		if ( empty( $response->data->response ) ) {
+			return false;
+		}
+
+		$sub_info = $response->data->response;
+		$update_array = array();
+		
+		// Get the subscription status and update it accordingly.
+		if ( $sub_info->status !== 1 ) {
+			$update_array['status'] = 'cancelled';
+		} else {
+			$update_array['status'] = 'active';
+		}
+
+		// Convert the frequency of the subscription back to PMPro format.
+		switch ( $sub_info->frequency ) {
+			case '1':
+				$update_array['cycle_period'] = 'Day';
+				break;
+			case '2':
+				$update_array['cycle_period'] = 'Week';
+				break;
+			case '3':
+				$update_array['cycle_period'] = 'Month';
+				break;
+			case '6':
+				$update_array['cycle_period'] = 'Year';
+				break;
+			default:
+				$update_array['cycle_period'] = 'Month';
+		}
+
+		$update_array['next_payment_date'] = sanitize_text_field( $sub_info->run_date );
+		$update_array['billing_amount'] = (float) $sub_info->amount/100;
+
+		$subscription->set( $update_array );
 		}
 	}
 
