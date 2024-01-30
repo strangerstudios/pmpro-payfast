@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - PayFast Gateway
 Plugin URI: https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/
 Description: Adds PayFast as a gateway option for Paid Memberships Pro.
-Version: 1.4.3
+Version: 1.5
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-payfast
@@ -80,7 +80,7 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
 		?>
 		<div class="notice notice-error fade">		
 			<p>
-				<?php _e( "PayFast currently doesn't support custom trials; Daily or weekly recurring pricing. Please can you update your membership levels that may have these set.", 'pmpro-payfast' );?>
+				<?php esc_html_e( "PayFast currently doesn't support custom trials. Please can you update your membership levels that may have these set.", 'pmpro-payfast' );?>
 			</p>
 		</div>
 		<?php
@@ -143,7 +143,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
 
 				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) );
 				
-				if( pmpro_isLevelTrial( $level ) || ( $level->cycle_period == "Day" || $level->cycle_period == "Week") ){
+				if( pmpro_isLevelTrial( $level ) ){
 					return false;
 				}
 
