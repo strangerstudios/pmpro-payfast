@@ -50,6 +50,11 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.5 - 2024-01-30 =
+* ENHANCEMENT: Added support for daily and weekly subscriptions. (Please note at the time of this writing, this isn't supported in sandbox environments.)
+* ENHANCEMENT: Added support for Paid Memberships Pro V3.0.
+
+
 = 1.4.3 - 2024-01-05 =
 * BUG FIX: Fixed an issue where the ITN handler would fatal error when PMPROPF_DEBUG constant was missing. (@JarrydLong)
 
