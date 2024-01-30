@@ -578,7 +578,8 @@ class PMProGateway_PayFast extends PMProGateway {
 	 * Function to handle cancellations of Subscriptions.
 	 *
 	 * @param object $subscription The PMPro Subscription Object
-	 * @since TBD
+	 * @return string|null Error message returned from gateway.
+	 * @since 1.5
 	 */
 	function update_subscription_info( $subscription ) {
 
@@ -634,8 +635,13 @@ class PMProGateway_PayFast extends PMProGateway {
 			);
 		
 		// Get the data from the response now and update the subscription.
-		if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
+		if ( ! is_wp_error( $request ) ) {
+
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
+
+		if ( 200 !== $response->code ) {
+			return __( sprintf( 'Payfast error: %s', $response->data->response ), 'pmpro-payfast' );
+		}
 
 		// No data in the response.
 		if ( empty( $response->data->response ) ) {
@@ -674,6 +680,8 @@ class PMProGateway_PayFast extends PMProGateway {
 		$update_array['billing_amount'] = (float) $sub_info->amount/100;
 
 		$subscription->set( $update_array );
+		} else {
+			return esc_html__( 'There was an error connecting to Payfast. Please check your connectivity or API details and try again later.', 'pmpro-payfast' );
 		}
 	}
 
