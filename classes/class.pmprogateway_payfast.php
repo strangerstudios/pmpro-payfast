@@ -76,6 +76,24 @@ class PMProGateway_PayFast extends PMProGateway {
 		return $gateways;
 	}
 
+	/* What features does Payfast support
+	 * 
+	 * @since TBD
+	 * 
+	 * @return array
+	 */
+	public static function supports( $feature ) {
+		$supports = array(
+			'subscription_sync' => true,
+		);
+
+		if ( empty( $supports[$feature] ) ) {
+			return false;
+		}
+
+		return $supports[$feature];
+	}
+
 	/**
 	 * Get a list of payment options that the this gateway needs/supports.
 	 *
