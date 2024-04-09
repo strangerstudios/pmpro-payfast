@@ -2,7 +2,7 @@
 Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.5
 Stable tag: 1.5
 
 Add the South African payment processing service Payfast as a gateway option for Paid Memberships Pro.
