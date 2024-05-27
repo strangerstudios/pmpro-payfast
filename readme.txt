@@ -4,6 +4,8 @@ Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 6.5
 Stable tag: 1.5.1
+License: GPLv2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Add the South African payment processing service Payfast as a gateway option for Paid Memberships Pro.
 
