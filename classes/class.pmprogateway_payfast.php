@@ -106,7 +106,6 @@ class PMProGateway_PayFast extends PMProGateway {
 			'payfast_merchant_key',
 			'payfast_passphrase',
 			'currency',
-			'use_ssl',
 			'tax_state',
 			'tax_rate',
 		);
