@@ -240,7 +240,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		?>
 		<script>
 			jQuery(document).ready(function(){
-				jQuery('.pmpro_submit').hide();
+				jQuery('.pmpro_form_submit').hide();
 			});
 		</script>
 		<?php
@@ -286,8 +286,8 @@ class PMProGateway_PayFast extends PMProGateway {
 				?>
 				style="display: none;"<?php } ?>>
 				<input type="hidden" name="submit-checkout" value="1" />
-				   <?php echo '<strong>' . __( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . __( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
-				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" width="100px" /></p>
+				   <?php echo '<strong>' . esc_html__( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . esc_html__( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
+				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" alt="Payfast logo" width="100px" /></p>
 			</span>
 		</div>
 			<?php
