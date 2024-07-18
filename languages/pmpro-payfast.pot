@@ -2,35 +2,40 @@
 # This file is distributed under the same license as the Paid Memberships Pro - PayFast Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.5\n"
+"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.5.2\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-30T10:57:00+00:00\n"
+"POT-Creation-Date: 2024-07-18T10:20:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: pmpro-payfast\n"
 
 #. Plugin Name of the plugin
+#: pmpro-payfast.php
 msgid "Paid Memberships Pro - PayFast Gateway"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: pmpro-payfast.php
 msgid "https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/"
 msgstr ""
 
 #. Description of the plugin
+#: pmpro-payfast.php
 msgid "Adds PayFast as a gateway option for Paid Memberships Pro."
 msgstr ""
 
 #. Author of the plugin
+#: pmpro-payfast.php
 msgid "Paid Memberships Pro"
 msgstr ""
 
 #. Author URI of the plugin
+#: pmpro-payfast.php
 msgid "https://www.paidmembershipspro.com"
 msgstr ""
 
@@ -38,44 +43,52 @@ msgstr ""
 msgid "PayFast"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:126
+#: classes/class.pmprogateway_payfast.php:143
 msgid "PayFast Merchant ID"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:138
+#: classes/class.pmprogateway_payfast.php:155
 msgid "PayFast Merchant Key"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:150
+#: classes/class.pmprogateway_payfast.php:167
 msgid "PayFast Debug Mode"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:158
+#: classes/class.pmprogateway_payfast.php:175
 msgid "On"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:164
+#: classes/class.pmprogateway_payfast.php:181
 msgid "Off"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:175
+#: classes/class.pmprogateway_payfast.php:192
 msgid "PayFast PassPhrase"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:178
+#: classes/class.pmprogateway_payfast.php:195
 msgid "A passphrase is now required for all transactions."
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:231
+#: classes/class.pmprogateway_payfast.php:248
 msgid "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast."
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:272
+#: classes/class.pmprogateway_payfast.php:289
+msgid "PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
+msgstr ""
+
+#: classes/class.pmprogateway_payfast.php:290
 msgid "NOTE:"
 msgstr ""
 
-#: classes/class.pmprogateway_payfast.php:272
+#: classes/class.pmprogateway_payfast.php:290
 msgid "if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
+msgstr ""
+
+#: classes/class.pmprogateway_payfast.php:702
+msgid "There was an error connecting to Payfast. Please check your connectivity or API details and try again later."
 msgstr ""
 
 #: pmpro-payfast.php:50
