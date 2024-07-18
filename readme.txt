@@ -52,6 +52,10 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.5.2 - 2024-07-18 =
+* ENHANCEMENT: Added improved support for Paid Memberships Pro V3.1+ (@andrewlimaza)
+* ENHANCEMENT: Added improved compatibility with screen readers for the help text on the checkout page (@andrewlimaza)
+
 = 1.5.1 - 2024-05-24 =
 * BUG FIX: Fixed an issue where certain custom fields weren't saving correctly. (@ipokkel)
 
