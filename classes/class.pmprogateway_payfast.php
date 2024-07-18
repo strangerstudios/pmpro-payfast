@@ -286,9 +286,8 @@ class PMProGateway_PayFast extends PMProGateway {
 				?>
 				style="display: none;"<?php } ?>>
 				<input type="hidden" name="submit-checkout" value="1" />
-				<span class="screen-reader-text">
-					<?php echo '<strong>' . esc_html__( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . esc_html__( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?>
-				</span>
+				<span class="screen-reader-text"><?php esc_html_e( 'PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?></span>
+				<p><?php echo '<strong>' . esc_html__( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . esc_html__( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?> </p>
 				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" alt="Payfast logo" width="100px" /></p>
 			</span>
 		</div>
