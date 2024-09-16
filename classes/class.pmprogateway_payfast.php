@@ -100,15 +100,15 @@ class PMProGateway_PayFast extends PMProGateway {
 	 * @since 1.8
 	 */
 	static function getGatewayOptions() {
-		$options = array(
+		//call super
+		$options = parent::getGatewayOptions();
+		//combine above with options below
+		$options = array_merge( $options, array(
 			'payfast_debug',
 			'payfast_merchant_id',
 			'payfast_merchant_key',
 			'payfast_passphrase',
-			'currency',
-			'tax_state',
-			'tax_rate',
-		);
+		) );
 
 		return $options;
 	}
