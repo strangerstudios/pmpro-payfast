@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Paid Memberships Pro - PayFast Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.5.2\n"
+"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.5.3\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-18T10:20:23+00:00\n"
+"POT-Creation-Date: 2024-09-30T09:49:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pmpro-payfast\n"
 
 #. Plugin Name of the plugin
@@ -40,56 +40,67 @@ msgid "https://www.paidmembershipspro.com"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:73
+#: classes/class.pmprogateway_payfast.php:59
 msgid "PayFast"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:126
 #: classes/class.pmprogateway_payfast.php:143
+#: classes/class.pmprogateway_payfast.php:129
 msgid "PayFast Merchant ID"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:138
 #: classes/class.pmprogateway_payfast.php:155
+#: classes/class.pmprogateway_payfast.php:141
 msgid "PayFast Merchant Key"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:150
 #: classes/class.pmprogateway_payfast.php:167
+#: classes/class.pmprogateway_payfast.php:153
 msgid "PayFast Debug Mode"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:158
 #: classes/class.pmprogateway_payfast.php:175
+#: classes/class.pmprogateway_payfast.php:161
 msgid "On"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:164
 #: classes/class.pmprogateway_payfast.php:181
+#: classes/class.pmprogateway_payfast.php:167
 msgid "Off"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:175
 #: classes/class.pmprogateway_payfast.php:192
+#: classes/class.pmprogateway_payfast.php:178
 msgid "PayFast PassPhrase"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:178
 #: classes/class.pmprogateway_payfast.php:195
+#: classes/class.pmprogateway_payfast.php:181
 msgid "A passphrase is now required for all transactions."
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:231
 #: classes/class.pmprogateway_payfast.php:248
+#: classes/class.pmprogateway_payfast.php:234
 msgid "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast."
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:272
 #: classes/class.pmprogateway_payfast.php:290
+#: classes/class.pmprogateway_payfast.php:276
 msgid "NOTE:"
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:272
 #: classes/class.pmprogateway_payfast.php:290
+#: classes/class.pmprogateway_payfast.php:276
 msgid "if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
 msgstr ""
 
@@ -325,38 +336,47 @@ msgid "Logged On: "
 msgstr ""
 
 #: services/payfast_itn_handler.php:506
+#: services/payfast_itn_handler.php:424
 msgid "New order ("
 msgstr ""
 
 #: services/payfast_itn_handler.php:506
+#: services/payfast_itn_handler.php:424
 msgid ") created."
 msgstr ""
 
 #: services/payfast_itn_handler.php:509
+#: services/payfast_itn_handler.php:427
 msgid "Duplicate Transaction ID: "
 msgstr ""
 
 #: services/payfast_itn_handler.php:570
+#: services/payfast_itn_handler.php:488
 msgid "Signature Sent: "
 msgstr ""
 
 #: services/payfast_itn_handler.php:571
+#: services/payfast_itn_handler.php:489
 msgid "Signature = "
 msgstr ""
 
 #: services/payfast_itn_handler.php:571
+#: services/payfast_itn_handler.php:489
 msgid "valid"
 msgstr ""
 
 #: services/payfast_itn_handler.php:571
+#: services/payfast_itn_handler.php:489
 msgid "invalid"
 msgstr ""
 
 #: services/payfast_itn_handler.php:584
+#: services/payfast_itn_handler.php:502
 msgid "Host = "
 msgstr ""
 
 #: services/payfast_itn_handler.php:585
+#: services/payfast_itn_handler.php:503
 msgid "Params = "
 msgstr ""
 
@@ -365,9 +385,11 @@ msgid "PayFast currently doesn't support custom trials. Please can you update yo
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:289
+#: classes/class.pmprogateway_payfast.php:275
 msgid "PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:702
+#: classes/class.pmprogateway_payfast.php:646
 msgid "There was an error connecting to Payfast. Please check your connectivity or API details and try again later."
 msgstr ""
