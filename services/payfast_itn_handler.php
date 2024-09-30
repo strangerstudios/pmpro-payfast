@@ -329,12 +329,6 @@ function pmpro_payfast_ipnExit() {
  * 
  */
 function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
-	
-	/**
-	 * Filter the membership level before processing the payment. This filter is not used anywhere and is now deprecated.
-	 * @deprecated 1.5.3
-	 */
-	$morder->membership_level = apply_filters_deprecated( 'pmpro_payfast_itnhandler_level', $morder->membership_level, $morder->user_id, '1.6' );
 
 	// update order status and transaction ids
 	$morder->payment_transaction_id = $txn_id;
