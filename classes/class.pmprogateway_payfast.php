@@ -42,25 +42,11 @@ class PMProGateway_PayFast extends PMProGateway {
 
 		add_filter( 'pmpro_required_billing_fields', array( 'PMProGateway_PayFast', 'pmpro_required_billing_fields' ) );
 		add_filter( 'pmpro_checkout_before_submit_button', array( 'PMProGateway_PayFast', 'pmpro_checkout_before_submit_button' ) );
-		add_filter( 'pmpro_checkout_before_change_membership_level', array( 'PMProGateway_PayFast', 'pmpro_checkout_before_change_membership_level' ), 10, 2 );
 
 		// itn handler
 		add_action( 'wp_ajax_nopriv_pmpro_payfast_itn_handler', array( 'PMProGateway_PayFast', 'wp_ajax_pmpro_payfast_itn_handler' ) );
 		add_action( 'wp_ajax_pmpro_payfast_itn_handler', array( 'PMProGateway_PayFast', 'wp_ajax_pmpro_payfast_itn_handler' ) );
 
-		add_filter( 'pmpro_gateways_with_pending_status', array( 'PMProGateway_PayFast', 'pmpro_gateways_with_pending_status' ) );
-	}
-
-
-	/**
-	 * Add PayFast to the list of allowed gateways.
-	 *
-	 * @return array
-	 */
-	static function pmpro_gateways_with_pending_status( $gateways ) {
-		$gateways[] = 'payfast';
-
-		return $gateways;
 	}
 
 	/**
@@ -294,51 +280,6 @@ class PMProGateway_PayFast extends PMProGateway {
 			<?php
 	}
 
-	/**
-	 * Instead of change membership levels, send users to PayFast to pay.
-	 *
-	 * @since 1.8
-	 */
-	static function pmpro_checkout_before_change_membership_level( $user_id, $morder ) {
-		global $discount_code_id, $wpdb;
-
-		// if no order, no need to pay
-		if ( empty( $morder ) ) {
-			return;
-		}
-
-		// bail if the current gateway is not set to PayFast.
-		if ( 'payfast' != $morder->gateway ) {
-			return;
-		}
-
-		$morder->user_id = $user_id;
-		$morder->saveOrder();
-
-		// if global is empty by query is available.
-		if ( empty( $discount_code_id ) && isset( $_REQUEST['discount_code'] ) ) {
-			$discount_code_id = $wpdb->get_var( "SELECT id FROM $wpdb->pmpro_discount_codes WHERE code = '" . esc_sql( sanitize_text_field( $_REQUEST['discount_code'] ) ) . "'" );
-		}
-
-		// save discount code use
-		if ( ! empty( $discount_code_id ) ) {
-			$wpdb->query(
-				$wpdb->prepare(
-					"INSERT INTO $wpdb->pmpro_discount_codes_uses 
-					(code_id, user_id, order_id, timestamp) 
-					VALUES( %d , %d, %d, %s )",
-					$discount_code_id,
-					$user_id,
-					$morder->id,
-					current_time( 'mysql' )
-				)
-			);
-		}
-
-		do_action( 'pmpro_before_send_to_payfast', $user_id, $morder );
-
-		$morder->Gateway->sendToPayFast( $morder );
-	}
 
 	/**
 	 * Send traffic to wp-admin/admin-ajax.php?action=pmpro_payfast_itn_handler to the itn handler
@@ -360,11 +301,14 @@ class PMProGateway_PayFast extends PMProGateway {
 		$order->payment_type = 'PayFast';
 		$order->CardType     = '';
 		$order->cardtype     = '';
-		
-		$order->status = "review";
+		$order->status = 'token';
 		$order->saveOrder();
 
-		return true;
+		pmpro_save_checkout_data_to_order( $order );
+
+		do_action( 'pmpro_before_send_to_payfast', $order->user_id, $order );
+
+		$this->sendToPayFast( $order );
 	}
 
 	/**

@@ -323,109 +323,33 @@ function pmpro_payfast_ipnExit() {
 	exit;
 }
 
-/*
-	Change the membership level. We also update the membership order to include filtered valus.
-*/
+/**
+ * Change the membership level. We also update the membership order to include filtered values.
+ * NOTE: Some legacy code has stayed within this function to ensure backwards compatibility.
+ * 
+ */
 function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
-	global $wpdb;
-	// filter for level
-	$morder->membership_level = apply_filters( 'pmpro_payfast_itnhandler_level', $morder->membership_level, $morder->user_id );
-	// fix expiration date
-	if ( ! empty( $morder->membership_level->expiration_number ) ) {
-		$enddate = "'" . date( 'Y-m-d', strtotime( '+ ' . $morder->membership_level->expiration_number . ' ' . $morder->membership_level->expiration_period ) ) . "'";
-	} else {
-		$enddate = 'NULL';
-	}
-	// get discount code     (NOTE: but discount_code isn't set here. How to handle discount codes for PayPal Standard?)
-	$morder->getDiscountCode();
-	if ( ! empty( $morder->discount_code ) ) {
-		// update membership level
-		$morder->getMembershipLevel( true );
-		$discount_code_id = $morder->discount_code->id;
-	} else {
-		$discount_code_id = '';
-	}
-	// set the start date to current_time('timestamp') but allow filters
-	$startdate = apply_filters( 'pmpro_checkout_start_date', "'" . current_time( 'mysql' ) . "'", $morder->user_id, $morder->membership_level );
-	// custom level to change user to
-	$custom_level = array(
-		'user_id' => $morder->user_id,
-		'membership_id' => $morder->membership_level->id,
-		'code_id' => $discount_code_id,
-		'initial_payment' => $morder->membership_level->initial_payment,
-		'billing_amount' => $morder->membership_level->billing_amount,
-		'cycle_number' => $morder->membership_level->cycle_number,
-		'cycle_period' => $morder->membership_level->cycle_period,
-		'billing_limit' => $morder->membership_level->billing_limit,
-		'trial_amount' => $morder->membership_level->trial_amount,
-		'trial_limit' => $morder->membership_level->trial_limit,
-		'startdate' => $startdate,
-		'enddate' => $enddate,
-	);
-	global $pmpro_error;
-	if ( ! empty( $pmpro_error ) ) {
-		echo $pmpro_error;
-		pmpro_payfast_itnlog( $pmpro_error );
-	}
-	// change level and continue "checkout"
-	if ( pmpro_changeMembershipLevel( $custom_level, $morder->user_id ) !== false ) {
-		// update order status and transaction ids
-		$morder->status = 'success';
-		$morder->payment_transaction_id = $txn_id;
-		if ( ! empty( $_POST['token'] ) ) {
-			$morder->subscription_transaction_id = sanitize_text_field( $_POST['m_payment_id'] );
-		} else {
-			$morder->subscription_transaction_id = '';
-		}
-		$morder->saveOrder();
-		// add discount code use
-		if ( ! empty( $discount_code ) && ! empty( $use_discount_code ) ) {
-			$wpdb->query(
-				$wpdb->prepare(
-					"INSERT INTO $wpdb->pmpro_discount_codes_uses 
-					(code_id, user_id, order_id, timestamp) 
-					VALUES( %d, %d, %d, %s )",
-					$discount_code_id,
-					$morder->user_id,
-					$morder->id,
-					current_time( 'mysql' )
-				)
-			);
-		}
-		// save first and last name fields
-		if ( ! empty( $_POST['first_name'] ) ) {
-			$old_firstname = get_user_meta( $morder->user_id, 'first_name', true );
-			if ( ! empty( $old_firstname ) ) {
-				update_user_meta( $morder->user_id, 'first_name', sanitize_text_field( $_POST['first_name'] ) );
-			}
-		}
-		if ( ! empty( $_POST['last_name'] ) ) {
-			$old_lastname = get_user_meta( $morder->user_id, 'last_name', true );
-			if ( ! empty( $old_lastname ) ) {
-				update_user_meta( $morder->user_id, 'last_name', sanitize_text_field( $_POST['last_name'] ) );
-			}
-		}
-		// hook
-		do_action( 'pmpro_after_checkout', $morder->user_id, $morder );
-		// setup some values for the emails
-		if ( ! empty( $morder ) ) {
-			$invoice = new MemberOrder( $morder->id );
-		} else {
-			$invoice = null;
-		}
-		$user = get_userdata( $morder->user_id );
-		$user->membership_level = $morder->membership_level;        // make sure they have the right level info
-		// send email to member
-		$pmproemail = new PMProEmail();
-		$pmproemail->sendCheckoutEmail( $user, $invoice );
-		// send email to admin
-		$pmproemail = new PMProEmail();
-		$pmproemail->sendCheckoutAdminEmail( $user, $invoice );
+	
+	/**
+	 * Filter the membership level before processing the payment. This filter is not used anywhere and is now deprecated.
+	 * @deprecated 1.5.3
+	 */
+	$morder->membership_level = apply_filters_deprecated( 'pmpro_payfast_itnhandler_level', $morder->membership_level, $morder->user_id, '1.6' );
 
-		return true;
+	// update order status and transaction ids
+	$morder->payment_transaction_id = $txn_id;
+
+	if ( ! empty( $_POST['token'] ) ) {
+		$morder->subscription_transaction_id = sanitize_text_field( $_POST['m_payment_id'] );
 	} else {
-		return false;
+		$morder->subscription_transaction_id = '';
 	}
+	$morder->saveOrder(); // Temporarily save the order before processing it.
+
+	// Change level and complete the order.
+	pmpro_pull_checkout_data_from_order( $morder );
+	return pmpro_complete_async_checkout( $morder );
+	
 }
 
 function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
