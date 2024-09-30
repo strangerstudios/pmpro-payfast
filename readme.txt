@@ -54,7 +54,7 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 == Changelog ==
 = 1.5.3 - 2024-09-30 =
 * BUG FIX/ENHANCEMENT: Added better support for User Fields not saving correctly during checkout. (@andrewlimaza)
-* REFACTOR: Refactored the `pmpro_itnChangeMembershipLevel` (@andrewlimaza)
+* REFACTOR: Refactored the `pmpro_itnChangeMembershipLevel` function (@andrewlimaza)
 
 = 1.5.2 - 2024-07-18 =
 * ENHANCEMENT: Added improved support for Paid Memberships Pro V3.1+ (@andrewlimaza)
