@@ -3,7 +3,7 @@ Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 6.6
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.5.4 - 2024-10-03 =
+* BUG FIX: Fixed a fatal issue with Paid Memberships Pro V3.2+ and improved compatibility with 3.2+.
+
 = 1.5.3 - 2024-09-30 =
 * BUG FIX/ENHANCEMENT: Added better support for User Fields not saving correctly during checkout. (@andrewlimaza)
 * REFACTOR: Refactored the `pmpro_itnChangeMembershipLevel` function (@andrewlimaza)
