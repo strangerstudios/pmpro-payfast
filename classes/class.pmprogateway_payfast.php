@@ -15,8 +15,11 @@ require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 add_action( 'init', array( 'PMProGateway_PayFast', 'init' ) );
 class PMProGateway_PayFast extends PMProGateway {
 
-	function __construct( $gateway = null ) {
-		return parent::__construct( $gateway );
+	function __construct( $gateway = NULL ) {
+		$this->gateway = $gateway;
+		$this->gateway_environment = get_option( 'pmpro_gateway_environment' );
+
+		return $this->gateway;
 	}
 
 	/**
