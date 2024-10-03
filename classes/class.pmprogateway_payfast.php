@@ -327,13 +327,16 @@ class PMProGateway_PayFast extends PMProGateway {
 		$order->cardtype = "";
 		$order->ProfileStartDate = date_i18n( 'Y-m-d', current_time( 'timestamp' ) );
 
+		// Get the level amount so we can set the initial payment amount.
+		$level = $order->getMembershipLevelAtCheckout();
+
 		// taxes on initial payment
-		$initial_payment     = $order->InitialPayment;
+		$initial_payment     = $order->subtotal;
 		$initial_payment_tax = $order->getTaxForPrice( $initial_payment );
 		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
 
 		// taxes on the amount
-		$amount          = $order->PaymentAmount;
+		$amount          = empty( $level->billing_amount ) ? 0 : $level->billing_amount;
 		$amount_tax      = $order->getTaxForPrice( $amount );
 		$order->subtotal = $amount;
 		$amount          = round( (float) $amount + (float) $amount_tax, 2 );
@@ -350,15 +353,18 @@ class PMProGateway_PayFast extends PMProGateway {
 			$payfast_url = 'https://www.payfast.co.za/eng/process';
 		}
 
+		$user = get_userdata( $order->user_id );
+		$nameparts = pnp_split_full_name( $order->billing->name );
+
 		$data = array(
 			'merchant_id'   => $merchant_id,
 			'merchant_key'  => $merchant_key,
 			'return_url'    => pmpro_url( 'confirmation', '?level=' . $order->membership_level->id ),
 			'cancel_url'    => pmpro_url( 'levels' ),
 			'notify_url'    => admin_url( 'admin-ajax.php' ) . '?action=pmpro_payfast_itn_handler',
-			'name_first'    => $order->FirstName,
-			'name_last'     => $order->LastName,
-			'email_address' => $order->Email,
+			'name_first'    => empty( $nameparts['fname'] ) ? '' : $nameparts['fname'],
+			'name_last'     => empty( $nameparts['lname'] ) ? '' : $nameparts['lname'],
+			'email_address' => $user->user_email,
 			'm_payment_id'  => $order->code,
 			'amount'        => $initial_payment,
 			'item_name'     => html_entity_decode( substr( $order->membership_level->name . ' at ' . get_bloginfo( 'name' ), 0, 99 ) ),
@@ -366,10 +372,9 @@ class PMProGateway_PayFast extends PMProGateway {
 		);		
 
 		$cycles = $order->membership_level->billing_limit;
-
-		if( ! empty( $order->BillingFrequency ) ) {
+		if( ! empty( $level->cycle_number ) ) {
 			// convert PMPro cycle_number and period into a PayFast frequency
-			switch ( $order->BillingPeriod ) {
+			switch ( $level->cycle_period ) {
 				case 'Day':
 					$frequency = '1';
 					break;
@@ -387,10 +392,9 @@ class PMProGateway_PayFast extends PMProGateway {
 
 		// Add subscription data
 		if ( ! empty( $frequency ) ) {
-			// $data['m_subscription_id'] = /*$order->getRandomCode()*/$order->code;
-			$data['custom_str1']       = $order->ProfileStartDate;
+			$data['custom_str1']       = pmpro_calculate_profile_start_date( $order, 'Y-m-d' );
 			$data['subscription_type'] = 1;
-			$data['billing_date']      = apply_filters( 'pmpro_profile_start_date', $order->ProfileStartDate, $order );
+			$data['billing_date']      = apply_filters( 'pmpro_profile_start_date', $data['custom_str1'], $order );
 			$data['recurring_amount']  = $amount;
 			$data['frequency']         = $frequency;
 			$data['cycles']            = $cycles == 0 ? 0 : $cycles + 1;
@@ -407,7 +411,6 @@ class PMProGateway_PayFast extends PMProGateway {
 		$order->status                      = 'token';
 		$order->payment_transaction_id      = $order->code;
 		$order->subscription_transaction_id = $order->code;
-		$order->subtotal = $order->InitialPayment;
 		$order->tax = $initial_payment_tax;
 		$order->total = $initial_payment;		
 
