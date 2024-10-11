@@ -466,7 +466,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 	// Note: Leaving this method here, as it may be used by a large number of users that aren't on PMPro 3.0 yet.
 	function cancel( &$order ) {
-		return false;
+
 		// Check to see if the order has a token and try to cancel it at the gateway. Only recurring subscriptions should have a token.
 		if ( ! empty( $order->subscription_transaction_id ) ) {
 
