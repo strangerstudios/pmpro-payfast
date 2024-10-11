@@ -464,8 +464,9 @@ class PMProGateway_PayFast extends PMProGateway {
 		return true;
 	}
 
-	function cancel( &$order, $update_status = true ) {
-
+	// Note: Leaving this method here, as it may be used by a large number of users that aren't on PMPro 3.0 yet.
+	function cancel( &$order ) {
+		return false;
 		// Check to see if the order has a token and try to cancel it at the gateway. Only recurring subscriptions should have a token.
 		if ( ! empty( $order->subscription_transaction_id ) ) {
 
@@ -543,6 +544,95 @@ class PMProGateway_PayFast extends PMProGateway {
 	}
 
 	/**
+	 * Cancel subscription at the gateway.
+	 * Supports PMPro 3.2+
+	 *
+	 * @param Object $subscription
+	 * @return bool	$success Returns whether the subscription was successfully cancelled.
+	 * @since 1.5
+	 */
+	function cancel_subscription( $subscription ) {
+		
+		$subscription_id = $subscription->get_subscription_transaction_id();
+		$last_order = $subscription->get_orders( array( 'subscription_transaction_id' => $subscription_id, 'limit' => 1 ) );
+
+		// Get the last order, if it's empty then we can't cancel the subscription.
+		if ( empty( $last_order ) ) {
+			return false;
+		} else {
+			$order = $last_order[0];
+		}
+		
+		$payfast_token = isset( $order->paypal_token ) ? sanitize_text_field( $order->paypal_token ) : false;
+
+		// No payfast token found, let's bail.
+		if ( ! $payfast_token ) {
+			return false;
+		}
+		
+		// check if we are getting an ITN notification which means it's already cancelled within PayFast.
+		if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) {
+			return true;
+		}
+
+		$hashArray  = array();
+		$passphrase = get_option( 'pmpro_payfast_passphrase' );
+
+		$hashArray['version']     = 'v1';
+		$hashArray['merchant-id'] = get_option( 'pmpro_payfast_merchant_id' );
+		$hashArray['passphrase']  = $passphrase;
+		$hashArray['timestamp']   = date( 'Y-m-d' ) . 'T' . date( 'H:i:s' );
+
+		$orderedPrehash = $hashArray;
+
+		ksort( $orderedPrehash );
+
+		$signature = md5( http_build_query( $orderedPrehash ) );
+
+		$domain = 'https://api.payfast.co.za';
+
+		$url = $domain . '/subscriptions/' . $payfast_token . '/cancel';
+
+		$environment = get_option( 'pmpro_gateway_environment' );
+
+		if ( 'sandbox' === $environment || 'beta-sandbox' === $environment ) {
+			$url = $url . '?testing=true';
+		}
+
+		$response = wp_remote_post(
+			$url,
+			array(
+				'method' => 'PUT',
+				'timeout' => 60,
+				'headers' => array(
+					'version'     => 'v1',
+					'merchant-id' => $hashArray['merchant-id'],
+					'signature'   => $signature,
+					'timestamp'   => $hashArray['timestamp'],
+					'content-length' => 0
+				),
+			)
+		);
+
+		$response_code    = wp_remote_retrieve_response_code( $response );
+		$response_message = wp_remote_retrieve_response_message( $response );
+
+		if ( 200 == $response_code ) {
+			$this->update_subscription_info( $subscription );
+			return true;
+		} else {
+			$order->updateStatus( 'error' );
+			$order->errorcode  = $response_code;
+			$order->error      = $response_message;
+			$order->shorterror = $response_message;
+
+			return false;
+		}
+
+		return true; // If we made it here let's just return false for whatever reason. ///
+	}
+
+	/**
 	 * Function to handle cancellations of Subscriptions.
 	 *
 	 * @param object $subscription The PMPro Subscription Object
@@ -558,11 +648,10 @@ class PMProGateway_PayFast extends PMProGateway {
 		
 		$payfast_token = isset( $last_subscription_order[0]->paypal_token ) ? sanitize_text_field( $last_subscription_order[0]->paypal_token ) : false;
 
+		// No token found, let's bail.
 		if ( ! $payfast_token ) {
 			return false;
 		}
-
-		// Make an API call to PayFast to get the subscription details.
 
 		$hashArray  = array();
 		$passphrase = get_option( 'pmpro_payfast_passphrase' );
