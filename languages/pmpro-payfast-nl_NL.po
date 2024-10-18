@@ -1,0 +1,350 @@
+# Translation of Plugins - Paid Memberships Pro &#8211; Payfast Gateway Add On - Development (trunk) in Dutch
+# This file is distributed under the same license as the Plugins - Paid Memberships Pro &#8211; Payfast Gateway Add On - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2023-11-30 18:44:43+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: nl\n"
+"Project-Id-Version: Plugins - Paid Memberships Pro &#8211; Payfast Gateway Add On - Development (trunk)\n"
+
+#: classes/class.pmprogateway_payfast.php:278
+msgid "PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
+msgstr ""
+
+#: classes/class.pmprogateway_payfast.php:652
+msgid "There was an error connecting to Payfast. Please check your connectivity or API details and try again later."
+msgstr ""
+
+#: pmpro-payfast.php:83
+msgid "PayFast currently doesn't support custom trials. Please can you update your membership levels that may have these set."
+msgstr ""
+
+#: classes/class.pmprogateway_payfast.php:184
+msgid "A passphrase is now required for all transactions."
+msgstr "Een wachtwoordzin is nu vereist voor alle transacties."
+
+#: classes/class.pmprogateway_payfast.php:237
+msgid "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast."
+msgstr "Als je je factuurgegevens moet updaten, log dan in op je %s account om deze referenties te updaten. Als je de onderstaande update knop selecteert, wordt je automatisch omgeleid naar Payfast."
+
+#: services/payfast_itn_handler.php:503
+msgid "Params = "
+msgstr "Parameters = "
+
+#: services/payfast_itn_handler.php:502
+msgid "Host = "
+msgstr "Host = "
+
+#: services/payfast_itn_handler.php:489
+msgid "invalid"
+msgstr "ongeldig"
+
+#: services/payfast_itn_handler.php:489
+msgid "valid"
+msgstr "geldig"
+
+#: services/payfast_itn_handler.php:489
+msgid "Signature = "
+msgstr "Handtekening = "
+
+#: services/payfast_itn_handler.php:488
+msgid "Signature Sent: "
+msgstr "Handtekening verzonden: "
+
+#: services/payfast_itn_handler.php:427
+msgid "Duplicate Transaction ID: "
+msgstr "Dubbel transactie-ID: "
+
+#: services/payfast_itn_handler.php:424
+msgid ") created."
+msgstr ") aangemaakt."
+
+#: services/payfast_itn_handler.php:424
+msgid "New order ("
+msgstr "Nieuwe bestelling ("
+
+#: services/payfast_itn_handler.php:293
+msgid "Logged On: "
+msgstr "Ingelogd: "
+
+#: services/payfast_itn_handler.php:273
+msgid "Error occurred: "
+msgstr "Er is een fout opgetreden: "
+
+#: services/payfast_itn_handler.php:266
+msgid "ERROR: Unknown error for order ("
+msgstr "FOUT: onbekende fout bij bestelling ("
+
+#: services/payfast_itn_handler.php:260
+msgid ") Failed."
+msgstr ") mislukt."
+
+#: services/payfast_itn_handler.php:260 services/payfast_itn_handler.php:263
+msgid "ERROR: ITN from PayFast for order ("
+msgstr "FOUT: ITN van PayFast voor bestelling ("
+
+#: services/payfast_itn_handler.php:244
+msgid "check token"
+msgstr "controleer token"
+
+#: services/payfast_itn_handler.php:239
+msgid "Check status and update order"
+msgstr "Controleer status en werk bestelling bij"
+
+#: services/payfast_itn_handler.php:226
+msgid ". Subscription transaction id = "
+msgstr ". Abonnement transactie-id = "
+
+#: services/payfast_itn_handler.php:226
+msgid "Cancelled membership for user with id = "
+msgstr "Lidmaatschap geannuleerd voor gebruiker met id = "
+
+#: services/payfast_itn_handler.php:199
+msgid "This user has a different level than the one associated with this order. Their membership was probably changed by an admin or through an upgrade/downgrade. (Order #"
+msgstr "Deze gebruiker heeft een ander niveau dan het niveau dat aan deze bestelling is gekoppeld. Hun lidmaatschap is waarschijnlijk gewijzigd door een beheerder of door een upgrade / downgrade. (Bestel #"
+
+#: services/payfast_itn_handler.php:197 services/payfast_itn_handler.php:199
+msgid ")"
+msgstr ")"
+
+#: services/payfast_itn_handler.php:197 services/payfast_itn_handler.php:199
+msgid ", Subscription Transaction ID #"
+msgstr ", Abonnementstransactie-ID #"
+
+#: services/payfast_itn_handler.php:197
+msgid "We've already processed this cancellation. Probably originated from WP/PMPro. (Order #"
+msgstr "We hebben deze annulering al verwerkt. Waarschijnlijk afkomstig van WP/PMPro. (Bestel #"
+
+#: services/payfast_itn_handler.php:193 services/payfast_itn_handler.php:226
+msgid "."
+msgstr "."
+
+#: services/payfast_itn_handler.php:193
+msgid " with subscription transaction id = "
+msgstr " met abonnementstransactie id = "
+
+#: services/payfast_itn_handler.php:193
+msgid "ERROR: Could not cancel membership. No user attached to order #"
+msgstr "FOUT: kan lidmaatschap niet annuleren. Geen gebruiker gekoppeld aan bestelling #"
+
+#: services/payfast_itn_handler.php:187
+msgid "ERROR: Couldn't find this order to cancel (subscription_transaction_id="
+msgstr "FOUT: kon deze bestelling om te annuleren niet vinden (subscription_transaction_id ="
+
+#: services/payfast_itn_handler.php:170
+msgid "ERROR: Couldn't find last order for this recurring payment ("
+msgstr "FOUT: kan de laatste bestelling voor deze terugkerende betaling niet vinden ("
+
+#: services/payfast_itn_handler.php:159 services/payfast_itn_handler.php:170
+#: services/payfast_itn_handler.php:187
+msgid ")."
+msgstr ")."
+
+#: services/payfast_itn_handler.php:159 services/payfast_itn_handler.php:256
+msgid "ERROR: Couldn't change level for order ("
+msgstr "FOUT: kan niveau voor bestelling niet wijzigen ("
+
+#: services/payfast_itn_handler.php:130
+msgid "Amount Returned: "
+msgstr "Geretourneerd bedrag: "
+
+#: services/payfast_itn_handler.php:117
+msgid "Verify data received"
+msgstr "Controleer de ontvangen gegevens"
+
+#: services/payfast_itn_handler.php:109
+msgid "Verify source IP"
+msgstr "Controleer bron IP"
+
+#: services/payfast_itn_handler.php:98
+msgid "Verify security signature"
+msgstr "Controleer de beveiligingshandtekening"
+
+#: services/payfast_itn_handler.php:89
+msgid "PayFast Data: "
+msgstr "PayFast data: "
+
+#: services/payfast_itn_handler.php:82
+msgid "Get posted data"
+msgstr "Ontvang geposte gegevens"
+
+#: services/payfast_itn_handler.php:72
+msgid "PayFast ITN call received"
+msgstr "PayFast ITN oproep ontvangen"
+
+#: services/payfast_itn_handler.php:57
+msgid " \"Completed\", or \"Failed\""
+msgstr " \"Voltooid\", of \"mislukt\""
+
+#: services/payfast_itn_handler.php:56
+msgid " Transaction Notification when the payment status changes to"
+msgstr " Transactiemelding wanneer de betalingsstatus verandert in"
+
+#: services/payfast_itn_handler.php:55
+msgid "The payment is pending. Please note, you will receive another Instant"
+msgstr "De betaling is in behandeling. Let op, je ontvangt nog een Instant"
+
+#: services/payfast_itn_handler.php:52
+msgid "Payment has failed"
+msgstr "Betaling is mislukt"
+
+#: services/payfast_itn_handler.php:51
+msgid "Payment was successful"
+msgstr "De betaling is geslaagd"
+
+#: services/payfast_itn_handler.php:49
+msgid "Unkown error occurred"
+msgstr "Er is een onbekende fout opgetreden"
+
+#: services/payfast_itn_handler.php:48
+msgid "Session ID mismatch"
+msgstr "Sessie-ID komt niet overeen"
+
+#: services/payfast_itn_handler.php:47
+msgid "PDT token not present in URL"
+msgstr "PDT token niet aanwezig in URL"
+
+#: services/payfast_itn_handler.php:46
+msgid "PDT query failed"
+msgstr "PDT-zoekopdracht is mislukt"
+
+#: services/payfast_itn_handler.php:45
+msgid "This order has already been processed"
+msgstr "Deze bestelling is al verwerkt"
+
+#: services/payfast_itn_handler.php:44
+msgid "Order Number mismatch"
+msgstr "Bestelnummer komt niet overeen"
+
+#: services/payfast_itn_handler.php:43
+msgid "This order ID is invalid"
+msgstr "Deze bestellings-ID is ongeldig"
+
+#: services/payfast_itn_handler.php:42
+msgid "Order ID mismatch"
+msgstr "Bestellings-ID komt niet overeen"
+
+#: services/payfast_itn_handler.php:41
+msgid "Order ID not present in URL"
+msgstr "Bestellings-ID niet aanwezig in URL"
+
+#: services/payfast_itn_handler.php:40
+msgid "No saved session found for ITN transaction"
+msgstr "Geen opgeslagen sessie gevonden voor ITN transactie"
+
+#: services/payfast_itn_handler.php:39
+msgid "Merchant ID mismatch"
+msgstr "Merchant ID komt niet overeen"
+
+#: services/payfast_itn_handler.php:38
+msgid "Security signature mismatch"
+msgstr "Beveiligingshandtekening komt niet overeen"
+
+#: services/payfast_itn_handler.php:37
+msgid "Failed to connect to PayFast"
+msgstr "Kan geen verbinding maken met PayFast"
+
+#: services/payfast_itn_handler.php:36
+msgid "Bad source IP address"
+msgstr "Ongeldig bron IP adres"
+
+#: services/payfast_itn_handler.php:35
+msgid "Bad access of page"
+msgstr "Slechte toegang tot de pagina"
+
+#: services/payfast_itn_handler.php:34
+msgid "Amount mismatch"
+msgstr "Bedrag komt niet overeen"
+
+#: services/payfast_itn_handler.php:14
+msgid "Paid Memberships Pro and the PMPro PayFast Add On must be activated for the PMPro PayFast ITN handler to function."
+msgstr "Paid Memberships Pro en de PMPro PayFast add-on moeten zijn geactiveerd om de PMPro PayFast ITN-handler te laten werken."
+
+#: pmpro-payfast.php:227
+msgid "Support"
+msgstr "Ondersteuning"
+
+#: pmpro-payfast.php:227
+msgid "Visit Customer Support Forum"
+msgstr "Bezoek het klantondersteuningsforum"
+
+#: pmpro-payfast.php:226
+msgid "Docs"
+msgstr "Documentatie"
+
+#: pmpro-payfast.php:226
+msgid "View Documentation"
+msgstr "Bekijk documentatie"
+
+#: pmpro-payfast.php:210
+msgid "Configure Payfast"
+msgstr "Configureer Payfast"
+
+#: pmpro-payfast.php:50
+msgid "Thank you for activating. <a href=\"%s\">Visit the payment settings page</a> to configure the Payfast Gateway."
+msgstr "Bedankt voor het activeren. <a href=\"%s\">Ga naar de betalingsinstellingenpagina</a> om de Payfast Gateway te configureren."
+
+#: classes/class.pmprogateway_payfast.php:279
+msgid "if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
+msgstr "Als je een abonnement wijzigt, kan het een minuut of twee duren eer bijgewerkt. Log ook in op je PayFast account om ervoor te zorgen dat het oude abonnement wordt opgezegd."
+
+#: classes/class.pmprogateway_payfast.php:279
+msgid "NOTE:"
+msgstr "NOTITIE:"
+
+#: classes/class.pmprogateway_payfast.php:181
+msgid "PayFast PassPhrase"
+msgstr "PayFast wachtwoordzin"
+
+#: classes/class.pmprogateway_payfast.php:170
+msgid "Off"
+msgstr "Uit"
+
+#: classes/class.pmprogateway_payfast.php:164
+msgid "On"
+msgstr "Aan"
+
+#: classes/class.pmprogateway_payfast.php:156
+msgid "PayFast Debug Mode"
+msgstr "PayFast debug modus"
+
+#: classes/class.pmprogateway_payfast.php:144
+msgid "PayFast Merchant Key"
+msgstr "PayFast Merchant sleutel"
+
+#: classes/class.pmprogateway_payfast.php:132
+msgid "PayFast Merchant ID"
+msgstr "PayFast Merchant ID"
+
+#: classes/class.pmprogateway_payfast.php:62
+msgid "PayFast"
+msgstr "PayFast"
+
+#. Author URI of the plugin
+#: pmpro-payfast.php
+msgid "https://www.paidmembershipspro.com"
+msgstr "https://www.paidmembershipspro.com"
+
+#. Author of the plugin
+#: pmpro-payfast.php
+msgid "Paid Memberships Pro"
+msgstr "Paid Memberships Pro"
+
+#. Description of the plugin
+#: pmpro-payfast.php
+msgid "Adds PayFast as a gateway option for Paid Memberships Pro."
+msgstr "Voegt PayFast toe als gateway-optie voor Paid Memberships Pro."
+
+#. Plugin URI of the plugin
+#: pmpro-payfast.php
+msgid "https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/"
+msgstr "https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/"
+
+#. Plugin Name of the plugin
+#: pmpro-payfast.php
+msgid "Paid Memberships Pro - PayFast Gateway"
+msgstr "Paid Memberships Pro - PayFast Gateway"
