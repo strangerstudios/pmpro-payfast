@@ -82,16 +82,19 @@ if ( ! $pfError && ! $pfDone ) {
 	pmpro_payfast_itnlog( __( 'Get posted data', 'pmpro-payfast' ) );
 	// Posted variables from ITN
 	$pfData = pmpro_pfGetData();
-	$morder = new MemberOrder( $pfData['m_payment_id'] );
-	$morder->getMembershipLevel();
-	$morder->getUser();
-
 	pmpro_payfast_itnlog( __( 'PayFast Data: ', 'pmpro-payfast' ) . print_r( $pfData, true ) );
+
+	// No data found, lets create an error.
 	if ( $pfData === false ) {
 		$pfError = true;
 		$pfErrMsg = PMPROPF_ERR_BAD_ACCESS;
+	} else {
+		$morder = new MemberOrder( $pfData['m_payment_id'] );
+		$morder->getMembershipLevel();
+		$morder->getUser();
 	}
 }
+
 
 // Verify security signature
 if ( ! $pfError && ! $pfDone ) {
@@ -125,7 +128,7 @@ if ( ! $pfError ) {
 // Check data against internal order - Temporarily disabling this as it doesn't work with levels with different amounts.
 if ( ! $pfError && ! $pfDone && $pfData['payment_status'] == 'COMPLETE' ) {
 	// Only check initial orders.
-	if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ) . '- 2 days' ) ) {
+	if ( empty( $pfData['token'] ) || strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ) . '- 1 day' ) ) {
 		if ( ! pmpro_pfAmountsEqual( $pfData['amount_gross'], $morder->total ) ) {
 			pmpro_payfast_itnlog( __( 'Amount Returned: ', 'pmpro-payfast' ) . $pfData['amount_gross'] );
 			$pfError = true;
@@ -134,17 +137,21 @@ if ( ! $pfError && ! $pfDone && $pfData['payment_status'] == 'COMPLETE' ) {
 	}
 }
 
+// Bail if there are errors, no need to try do anything further if we have errors.
+if ( $pfError ) {
+	pmpro_payfast_itnlog( __( 'Error occurred: ', 'pmpro-payfast' ) . $pfErrMsg );
+	pmpro_payfast_ipnExit();
+}
+
 // Check status and update order
 if ( ! $pfError && ! $pfDone ) {
 	if ( $pfData['payment_status'] == 'COMPLETE' && ! empty( $pfData['token'] ) ) {
 		$txn_id = $pfData['m_payment_id'];
 		$subscr_id = $pfData['token'];
 		// custom_str1 is the date of the initial order in gmt
-		if ( strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d', current_time( 'timestamp' ) ) . '- 2 days' ) ) {
-			// Initial payment.
-			// If there is no amount1, this membership has a trial, and we need to update membership/etc
+		if ( strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) . '- 1 day' ) ) {
+			
 			$amount = $pfData['amount_gross'];
-
 			// trial, get the order
 			$morder = new MemberOrder( $pfData['m_payment_id'] );
 			$morder->paypal_token = $pfData['token'];
@@ -268,10 +275,6 @@ switch ( $pfData['payment_status'] ) {
 }
 	// }
 	// If an error occurred
-if ( $pfError ) {
-
-	pmpro_payfast_itnlog( __( 'Error occurred: ', 'pmpro-payfast' ) . $pfErrMsg );
-}
 
 pmpro_payfast_ipnExit();
 
@@ -359,9 +362,6 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		)
 	);
 	if ( empty( $old_txn ) ) {
-		// hook for successful subscription payments
-		// do_action("pmpro_subscription_payment_completed");
-		// save order
 		$morder = new MemberOrder();
 		$morder->user_id = $last_order->user_id;
 		$morder->membership_id = $last_order->membership_id;
@@ -370,50 +370,43 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		$morder->gateway = $last_order->gateway;
 		$morder->gateway_environment = $last_order->gateway_environment;
 		$morder->paypal_token = $last_order->paypal_token;
-		// Payment Status
-		$morder->status = 'success'; // We have confirmed that and thats the reason we are here.
-		// Payment Type.
+		$morder->status = 'success'; 
 		$morder->payment_type = $last_order->payment_type;
-		// set amount based on which PayPal type
+
+		pmpro_payfast_itnlog( "ORDER GATEWAY:" . $last_order->gateway );
 		if ( $last_order->gateway == 'payfast' ) {
-			$morder->InitialPayment = sanitize_text_field( $_POST['amount_gross'] );    // not the initial payment, but the class is expecting that
-			$morder->PaymentAmount = sanitize_text_field( $_POST['amount_gross'] );
+			$morder->subtotal = sanitize_text_field( $_REQUEST['amount_gross'] );    // not the initial payment, but the class is expecting that
+			$morder->total = sanitize_text_field( $_REQUEST['amount_gross'] );
 		}
-		$morder->FirstName = sanitize_text_field( $_POST['name_first'] );
-		$morder->LastName = sanitize_text_field( $_POST['name_last'] );
-		$morder->Email = sanitize_email( $_POST['email_address'] );
-		// get address info if appropriate
+
+		$morder->FirstName = sanitize_text_field( $_REQUEST['name_first'] );
+		$morder->LastName = sanitize_text_field( $_REQUEST['name_last'] );
+		$morder->Email = sanitize_email( $_REQUEST['email_address'] );
+		
+		
+		/// Maybe just get it from the last order as well.
+		/// get address info if appropriate
 		if ( $last_order->gateway == 'payfast' ) {
 			$morder->Address1 = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
 			$morder->City = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
 			$morder->State = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
 			$morder->CountryCode = 'ZA';
-			$morder->Zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
-			$morder->PhoneNumber = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
+			$morder->zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
+			$morder->phone = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
 
 			if ( ! isset( $morder->billing ) ) {
 				$morder->billing = new stdClass();
 			}
 
-			$morder->billing->name = sanitize_text_field( $_POST['name_first'] ) . ' ' . sanitize_text_field( $_POST['name_last'] );
+			$morder->billing->name = sanitize_text_field( $_REQUEST['name_first'] ) . ' ' . sanitize_text_field( $_REQUEST['name_last'] );
 			$morder->billing->street = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
 			$morder->billing->city = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
 			$morder->billing->state = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
 			$morder->billing->zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
 			$morder->billing->country = get_user_meta( $last_order->user_id, 'pmpro_bcountry', true );
 			$morder->billing->phone = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
-			// get CC info that is on file
-			$morder->cardtype = get_user_meta( $last_order->user_id, 'pmpro_CardType', true );
-			$morder->accountnumber = hideCardNumber( get_user_meta( $last_order->user_id, 'pmpro_AccountNumber', true ), false );
-			$morder->expirationmonth = get_user_meta( $last_order->user_id, 'pmpro_ExpirationMonth', true );
-			$morder->expirationyear = get_user_meta( $last_order->user_id, 'pmpro_ExpirationYear', true );
-			$morder->ExpirationDate = $morder->expirationmonth . $morder->expirationyear;
-			$morder->ExpirationDate_YdashM = $morder->expirationyear . '-' . $morder->expirationmonth;
 		}
-		// figure out timestamp or default to none (today)
-		// if(!empty($_POST['payment_date']))
-		// $morder->timestamp = strtotime($_POST['payment_date']);
-		// save
+
 		$morder->saveOrder();
 		$morder->getMemberOrderByID( $morder->id );
 		// email the user their invoice
@@ -441,14 +434,14 @@ function pmpro_pfGetData() {
 	
 	$pfData = array();
     // Ensure that all posted data is used at the ITN stage
-	$postedData = array_keys($_POST);
+	$postedData = array_keys($_REQUEST);
 
     // Sanitize all posted data
     foreach ( $postedData as $key ) {
 		if ( $key != 'email_address' ) {
-			$pfData[$key] = pmpro_getParam( $key, 'POST' );
+			$pfData[$key] = pmpro_getParam( $key, 'REQUEST' );
 		} else {
-			$pfData[$key] = pmpro_getParam( $key, 'POST', '', 'sanitize_email' );
+			$pfData[$key] = pmpro_getParam( $key, 'REQUEST', '', 'sanitize_email' );
 		}
 	}
 
