@@ -434,14 +434,14 @@ function pmpro_pfGetData() {
 	
 	$pfData = array();
     // Ensure that all posted data is used at the ITN stage
-	$postedData = array_keys($_REQUEST);
+	$postedData = array_keys( $_POST );
 
     // Sanitize all posted data
     foreach ( $postedData as $key ) {
 		if ( $key != 'email_address' ) {
-			$pfData[$key] = pmpro_getParam( $key, 'REQUEST' );
+			$pfData[$key] = pmpro_getParam( $key, 'POST' );
 		} else {
-			$pfData[$key] = pmpro_getParam( $key, 'REQUEST', '', 'sanitize_email' );
+			$pfData[$key] = pmpro_getParam( $key, 'POST', '', 'sanitize_email' );
 		}
 	}
 
@@ -458,8 +458,11 @@ function pmpro_pfGetData() {
  *
  * @author Jonathan Smit (PayFast.co.za)
  */
-function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPhrase = null ) {
-	 // Dump the submitted variables and calculate security signature
+function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPhrase = null ) {	
+	
+	// Unset the 'action' in case we get it in the request - useful for testing.
+	unset( $pfData['action'] );
+
 	foreach ( $pfData as $key => $val ) {
 		if ( $key != 'signature' ) {
 			$pfParamString .= $key . '=' . urlencode( $val ) . '&';
