@@ -416,10 +416,8 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		do_action( 'pmpro_subscription_payment_completed', $morder );
 
 		pmpro_payfast_itnlog( __( 'New order (', 'pmpro-payfast' ) . $morder->code . __( ') created.', 'pmpro-payfast' ) );
-		return true;
 	} else {
 		pmpro_payfast_itnlog( __( 'Duplicate Transaction ID: ', 'pmpro-payfast' ) . $txn_id );
-		return true;
 	}
 }
 
