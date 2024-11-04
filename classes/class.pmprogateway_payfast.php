@@ -709,7 +709,8 @@ class PMProGateway_PayFast extends PMProGateway {
 		$update_array = array();
 		
 		// Get the subscription status and update it accordingly.
-		if ( $sub_info->status !== 1 ) {
+		// Status 1 = COMPLETED, Status 7 = UPSTREAM. We assume that status 7 is pending approval and okay and assume we're good.
+		if ( ! in_array( $sub_info->status, array( 1, 7 ) ) ) {
 			$update_array['status'] = 'cancelled';
 		} else {
 			$update_array['status'] = 'active';
