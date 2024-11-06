@@ -438,7 +438,7 @@ function pmpro_pfGetData() {
     // Sanitize all posted data
     foreach ( $postedData as $key ) {
 		if ( $key != 'email_address' ) {
-			$pfData[$key] = pmpro_getParam( $key, 'POST' );
+			$pfData[$key] = stripslashes( pmpro_getParam( $key, 'POST' ) );
 		} else {
 			$pfData[$key] = pmpro_getParam( $key, 'POST', '', 'sanitize_email' );
 		}
