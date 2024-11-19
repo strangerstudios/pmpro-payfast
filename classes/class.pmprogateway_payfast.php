@@ -336,10 +336,9 @@ class PMProGateway_PayFast extends PMProGateway {
 		$initial_payment     = round( (float) $initial_payment + (float) $initial_payment_tax, 2 );
 
 		// taxes on the amount
-		$amount          = empty( $level->billing_amount ) ? 0 : $level->billing_amount;
-		$amount_tax      = $order->getTaxForPrice( $amount );
-		$order->subtotal = $amount;
-		$amount          = round( (float) $amount + (float) $amount_tax, 2 );
+		$billing_amount          = empty( $level->billing_amount ) ? 0 : $level->billing_amount;
+		$billing_amount_tax      = $order->getTaxForPrice( $billing_amount );
+		$billing_amount          = round( (float) $billing_amount + (float) $billing_amount_tax, 2 );
 
 		// merchant details
 		$merchant_id  = get_option( 'pmpro_payfast_merchant_id' );
@@ -395,7 +394,7 @@ class PMProGateway_PayFast extends PMProGateway {
 			$data['custom_str1']       = date( 'Y-m-d', current_time( 'timestamp' ) ); // This is used to store the date of the initial payment for referencing in the ITN.
 			$data['subscription_type'] = 1;
 			$data['billing_date']      = apply_filters( 'pmpro_profile_start_date', $data['custom_str1'], $order );
-			$data['recurring_amount']  = $amount;
+			$data['recurring_amount']  = $billing_amount;
 			$data['frequency']         = $frequency;
 			$data['cycles']            = $cycles == 0 ? 0 : $cycles + 1;
 
