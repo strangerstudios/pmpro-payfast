@@ -3,7 +3,7 @@ Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.6.1 - 2024-12-03 =
+* BUG FIX: Fixed an issue where the initial order's subtotal and total amount would not match when recurring membership levels had a different initial payment.
+
 = 1.6 - 2024-11-05 =
 * FEATURE: Now updating the plugin from paidmembershipspro.com
 * ENHANCEMENT: Added local language files under the /languages folder.
