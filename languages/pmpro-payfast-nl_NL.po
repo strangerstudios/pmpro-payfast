@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Paid Memberships Pro - PayFast Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.6\n"
+"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.6.1\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-05T09:56:47+00:00\n"
+"POT-Creation-Date: 2024-12-03T08:56:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pmpro-payfast\n"
@@ -20,6 +20,7 @@ msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:652
 #: classes/class.pmprogateway_payfast.php:742
+#: classes/class.pmprogateway_payfast.php:741
 msgid "There was an error connecting to Payfast. Please check your connectivity or API details and try again later."
 msgstr ""
 
