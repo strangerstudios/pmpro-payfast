@@ -390,7 +390,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 
 		// Add subscription data
-		if ( ! empty( $frequency ) ) {
+		if ( pmpro_isLevelRecurring( $level ) && ! empty( $frequency ) ) {
 			$data['custom_str1']       = date( 'Y-m-d', current_time( 'timestamp' ) ); // This is used to store the date of the initial payment for referencing in the ITN.
 			$data['subscription_type'] = 1;
 			$data['billing_date']      = apply_filters( 'pmpro_profile_start_date', $data['custom_str1'], $order );
