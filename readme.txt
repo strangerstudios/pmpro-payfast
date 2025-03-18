@@ -3,7 +3,7 @@ Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.6.1
+Stable tag: 1.7
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,10 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 
 == Changelog ==
+= 1.7 - 2025-03-18 =
+* ENHANCEMENT: Added support for `pmpro_calculate_profile_start_date` to better handle subscription delays or code that may tweak the subscription start date.
+* BUG FIX: Fixed a specific issue where PayFast would try to create a subscription when the $level object would be tweaked but no frequency was set for recurring amounts.
+
 = 1.6.1 - 2024-12-03 =
 * BUG FIX: Fixed an issue where the initial order's subtotal and total amount would not match when recurring membership levels had a different initial payment.
 
