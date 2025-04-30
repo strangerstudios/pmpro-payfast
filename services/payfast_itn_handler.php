@@ -150,10 +150,16 @@ if ( ! $pfError && ! $pfDone ) {
 		$subscr_id = $pfData['token'];
 		// custom_str1 is the date of the initial order in gmt
 		if ( strtotime( $pfData['custom_str1'] ) > strtotime( gmdate( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) . '- 1 day' ) ) {
-			
 			$amount = $pfData['amount_gross'];
-			// trial, get the order
-			$morder = new MemberOrder( $pfData['m_payment_id'] );
+			
+			$morder = new MemberOrder( $txn_id );
+
+			// If order is already processed, do nothing.
+			if ( $morder->status == 'success' ) {
+				pmpro_payfast_itnlog( __( 'Order already processed. Order ID: ', 'pmpro-payfast' ) . $morder->code );
+				pmpro_payfast_ipnExit();
+			}
+
 			$morder->paypal_token = $pfData['token'];
 			$morder->getMembershipLevel();
 			$morder->getUser();
