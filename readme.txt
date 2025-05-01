@@ -2,8 +2,8 @@
 Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
-Tested up to: 6.7
-Stable tag: 1.7
+Tested up to: 6.8
+Stable tag: 1.7.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,8 +50,10 @@ Please visit our premium support site at https://www.paidmembershipspro.com for 
 
 To test Payfast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
 
-
 == Changelog ==
+= 1.7.1 - 2025-05-01 =
+* BUG FIX: Fixed an issue where multiple ITN requests received in a single day would cancel a subscription. #105 (@andrewlimaza)
+
 = 1.7 - 2025-03-18 =
 * ENHANCEMENT: Added support for `pmpro_calculate_profile_start_date` to better handle subscription delays or code that may tweak the subscription start date.
 * BUG FIX: Fixed a specific issue where PayFast would try to create a subscription when the $level object would be tweaked but no frequency was set for recurring amounts.
