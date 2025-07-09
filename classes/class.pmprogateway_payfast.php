@@ -820,4 +820,15 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 	}
 
+	/**
+	 * Get a description for this gateway.
+	 *
+	 * @since 3.5
+	 *
+	 * @return string
+	 */
+	public static function get_description_for_gateway_settings() {
+		return esc_html__( 'PayFast is a popular South African payment gateway. It allows members to pay using various methods including Instant EFT, credit/debit cards, Zapper, SnapScan, and more. Please note this only accepts amounts charged in South African Rands (ZAR).', 'pmpro-payfast' );
+	}
 } //end of class
+
