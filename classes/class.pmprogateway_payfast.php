@@ -33,8 +33,8 @@ class PMProGateway_PayFast extends PMProGateway {
 
 		// add fields to payment settings
 		add_filter( 'pmpro_payment_options', array( 'PMProGateway_PayFast', 'pmpro_payment_options' ) );
-
-		add_filter( 'pmpro_payment_option_fields', array( 'PMProGateway_PayFast', 'pmpro_payment_option_fields' ), 10, 2 );
+        
+        add_action( 'admin_init', array( 'PMProGateway_PayFast', 'pmpro_backwards_compatibility' ) );	
 
 		if ( get_option( 'pmpro_gateway' ) == 'payfast' ) {
 			add_filter( 'pmpro_include_billing_address_fields', '__return_false' );
@@ -117,80 +117,151 @@ class PMProGateway_PayFast extends PMProGateway {
 		return $options;
 	}
 
+    /**
+     * Includes backwards compatibility for PMPro versions < 3.5.
+     * 
+     * @since TBD
+     */
+    static function pmpro_backwards_compatibility() {
+        
+        if ( version_compare( PMPRO_VERSION, '3.5', '<' ) ) {
+            /**
+             * The previous version of loading the setting has been adjusted. 
+             * Keeping this function for any custom code (such as function exist checks etc.)
+             */            
+            add_action( 'pmpro_payment_option_fields', array( 'PMProGateway_PayFast', 'pmpro_payment_option_fields' ), 10, 2 );
+        }
+        
+    }
+
+    static function pmpro_payment_option_fields( $values, $gateway ) {
+        _deprecated_function( __METHOD__, '3.5' );
+        ?>
+        <tr class="gateway gateway_payfast">
+            <th scope="row" valign="top">
+                <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
+            </th>
+            <td>                                
+                <input type="text" id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_id' ) ); ?>" class="regular-text code"/>
+            </td>
+        </tr>
+        <tr class="gateway gateway_payfast">
+            <th scope="row" valign="top">
+                <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
+            </th>
+            <td>
+                <input type="text" id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_key' ) ); ?>" class="regular-text code"/>
+            </td>
+        </tr>
+        <tr class="gateway gateway_payfast">
+            <th scope="row" valign="top">
+                <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
+            </th>
+            <td>
+                <select name="payfast_debug">
+                    <option value="1" 
+                <?php
+                    $payfast_debug = get_option( 'pmpro_payfast_debug' );
+                    if ( $payfast_debug ) {
+                        ?>
+                            selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
+                    </option>
+                    <option value="0" 
+                        <?php
+                        if ( ! $payfast_debug ) {
+                            ?>
+                            selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr class="gateway gateway_payfast">
+            <th scope="row" valign="top">
+                <label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
+            </th>
+            <td>
+                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
+            </td>
+        </tr>
+        <?php
+    }
+
 	/**
 	 * Display fields for this gateway's options.
 	 *
-	 * @since 1.8
+	 * @since TBD
 	 */
-	static function pmpro_payment_option_fields( $values, $gateway ) {      ?>
-		<tr class="gateway gateway_payfast" 
-			<?php
-			if ( $gateway != 'payfast' ) {
-				?>
-			style="display: none;"<?php } ?>>
-			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
-			 </th>
-			 <td>
-				 <input id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( $values['payfast_merchant_id'] ); ?>" />
-			 </td>
-		 </tr>
-		 <tr class="gateway gateway_payfast" 
-			 <?php
-				if ( $gateway != 'payfast' ) {
-					?>
-				style="display: none;"<?php } ?>>
-			 <th scope="row" valign="top">
-				 <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
-			 </th>
-			 <td>
-				 <input id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( $values['payfast_merchant_key'] ); ?>" />
-			 </td>
-		 </tr>
-		 <tr class="gateway gateway_payfast" 
-			 <?php
-				if ( $gateway != 'payfast' ) {
-					?>
-				style="display: none;"<?php } ?>>
-			 <th scope="row" valign="top">
-				 <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
-			 </th>
-			 <td>
-				 <select name="payfast_debug">
-					 <option value="1" 
-				 <?php
-					if ( isset( $values['payfast_debug'] ) && $values['payfast_debug'] ) {
-						?>
-							selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
-					</option>
-					<option value="0" 
-						<?php
-						if ( isset( $values['payfast_debug'] ) && ! $values['payfast_debug'] ) {
-							?>
-							selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
-					</option>
-				 </select>
-			 </td>
-		 </tr>
-		<tr class="gateway gateway_payfast" 
-			<?php
-			if ( $gateway != 'payfast' ) {
-				?>
-			style="display: none;"<?php } ?>>
-			<th scope="row" valign="top">
-				<label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
-			</th>
-			<td>
-				<input id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( $values['payfast_passphrase'] ); ?>" /> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
-			</td>
-		</tr>
-		<script>
-			//trigger the payment gateway dropdown to make sure fields show up correctly
-			jQuery(document).ready(function() {
-				pmpro_changeGateway(jQuery('#gateway').val());
-			});
-		</script>
-			<?php
+	static function show_settings_fields() { ?>	
+        <p>
+            <?php
+                printf(
+                    /* translators: %s: URL to the PayPal Express gateway documentation. */
+                    esc_html__( 'For detailed setup instructions, please visit our %s.', 'paid-memberships-pro' ),
+                    '<a href="https://www.paidmembershipspro.com/add-ons/payfast-payment-gateway/?utm_source=plugin&utm_medium=pmpro-paymentsettings&utm_campaign=documentation&utm_content=pmpro-payfast-documentation" target="_blank">' . esc_html__( 'Payfast documentation', 'paid-memberships-pro' ) . '</a>'
+                );
+            ?>
+        </p>
+        <div id="pmpro_payfast" class="pmpro_section" data-visibility="shown" data-activated="true">
+            <div class="pmpro_section_toggle">
+                <button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+                    <span class="dashicons dashicons-arrow-up-alt2"></span>
+                    <?php esc_html_e( 'Settings', 'paid-memberships-pro' ); ?>
+                </button>
+            </div>
+            <div class="pmpro_section_inside">
+                <table class='form-table'>
+                    <tbody>                        
+                        <tr class="gateway gateway_payfast">
+                            <th scope="row" valign="top">
+                                <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
+                            </th>
+                            <td>                                
+                                <input type="text" id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_id' ) ); ?>" class="regular-text code"/>
+                            </td>
+                        </tr>
+                        <tr class="gateway gateway_payfast">
+                            <th scope="row" valign="top">
+                                <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
+                            </th>
+                            <td>
+                                <input type="text" id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_key' ) ); ?>" class="regular-text code"/>
+                            </td>
+                        </tr>
+                        <tr class="gateway gateway_payfast">
+                            <th scope="row" valign="top">
+                                <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
+                            </th>
+                            <td>
+                                <select name="payfast_debug">
+                                    <option value="1" 
+                                <?php
+                                    $payfast_debug = get_option( 'pmpro_payfast_debug' );
+                                    if ( $payfast_debug ) {
+                                        ?>
+                                            selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
+                                    </option>
+                                    <option value="0" 
+                                        <?php
+                                        if ( ! $payfast_debug ) {
+                                            ?>
+                                            selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="gateway gateway_payfast">
+                            <th scope="row" valign="top">
+                                <label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
+                            </th>
+                            <td>
+                                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>                
+            </div>
+        </div>
+        <?php
 	}
 
 	/**
@@ -749,4 +820,15 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 	}
 
+	/**
+	 * Get a description for this gateway.
+	 *
+	 * @since 3.5
+	 *
+	 * @return string
+	 */
+	public static function get_description_for_gateway_settings() {
+		return esc_html__( 'PayFast is a popular South African payment gateway. It allows members to pay using various methods including Instant EFT, credit/debit cards, Zapper, SnapScan, and more. Please note this only accepts amounts charged in South African Rands (ZAR).', 'pmpro-payfast' );
+	}
 } //end of class
+
