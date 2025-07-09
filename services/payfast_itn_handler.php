@@ -544,6 +544,12 @@ function pmpro_pfValidIP( $sourceIP ) {
 		'sandbox.payfast.co.za',
 		'w1w.payfast.co.za',
 		'w2w.payfast.co.za',
+                'payment.payfast.io',
+                'adm.payfast.io',
+                'api.payfast.io',
+                'comms.payfast.io',
+                'devdocs.payfast.io',
+                'api.payfast.co.za'
 	);
 	$validIps = array();
 	foreach ( $validHosts as $pfHostname ) {
