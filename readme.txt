@@ -52,7 +52,8 @@ To test Payfast payments without being billed in sandbox mode requires a sandbox
 
 == Changelog ==
 = 1.7.2 - 2025-07-10 =
-* ENHANCEMENT: Added improved support for Paid Memberships Pro V3.5+ (@JarrydLong)
+* ENHANCEMENT: Improved support for Paid Memberships Pro V3.5+ (@JarrydLong)
+* ENHANCEMENT: Safe listed new PayFast hostnames for ITN requests. (@JarrydLong)
 
 = 1.7.1 - 2025-05-01 =
 * BUG FIX: Fixed an issue where multiple ITN requests received in a single day would cancel a subscription. #105 (@andrewlimaza)

@@ -67,7 +67,7 @@ class PMProGateway_PayFast extends PMProGateway {
 
 	/* What features does Payfast support
 	 * 
-	 * @since TBD
+	 * @since 1.7.2
 	 * 
 	 * @return array
 	 */
@@ -120,7 +120,7 @@ class PMProGateway_PayFast extends PMProGateway {
     /**
      * Includes backwards compatibility for PMPro versions < 3.5.
      * 
-     * @since TBD
+     * @since 1.7.2
      */
     static function pmpro_backwards_compatibility() {
         
@@ -189,7 +189,7 @@ class PMProGateway_PayFast extends PMProGateway {
 	/**
 	 * Display fields for this gateway's options.
 	 *
-	 * @since TBD
+	 * @since 1.7.2
 	 */
 	static function show_settings_fields() { ?>	
         <p>
