@@ -3,7 +3,7 @@ Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,9 @@ Please visit our premium support site at https://www.paidmembershipspro.com for 
 To test Payfast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
 
 == Changelog ==
+= 1.7.2 - 2025-07-10 =
+* ENHANCEMENT: Added improved support for Paid Memberships Pro V3.5+ (@JarrydLong)
+
 = 1.7.1 - 2025-05-01 =
 * BUG FIX: Fixed an issue where multiple ITN requests received in a single day would cancel a subscription. #105 (@andrewlimaza)
 
