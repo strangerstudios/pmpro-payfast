@@ -2,19 +2,20 @@
 # This file is distributed under the same license as the Paid Memberships Pro - PayFast Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.7.1\n"
+"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.7.2\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-01T07:47:07+00:00\n"
+"POT-Creation-Date: 2025-07-10T09:06:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pmpro-payfast\n"
 
 #: classes/class.pmprogateway_payfast.php:278
+#: classes/class.pmprogateway_payfast.php:349
 msgid "PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
 msgstr ""
 
@@ -22,6 +23,7 @@ msgstr ""
 #: classes/class.pmprogateway_payfast.php:742
 #: classes/class.pmprogateway_payfast.php:741
 #: classes/class.pmprogateway_payfast.php:748
+#: classes/class.pmprogateway_payfast.php:819
 msgid "There was an error connecting to Payfast. Please check your connectivity or API details and try again later."
 msgstr ""
 
@@ -30,10 +32,14 @@ msgid "PayFast currently doesn't support custom trials. Please can you update yo
 msgstr ""
 
 #: classes/class.pmprogateway_payfast.php:184
+#: classes/class.pmprogateway_payfast.php:183
+#: classes/class.pmprogateway_payfast.php:257
 msgid "A passphrase is now required for all transactions."
 msgstr "Een wachtwoordzin is nu vereist voor alle transacties."
 
 #: classes/class.pmprogateway_payfast.php:237
+#: classes/class.pmprogateway_payfast.php:308
+#, php-format
 msgid "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast."
 msgstr "Als je je factuurgegevens moet updaten, log dan in op je %s account om deze referenties te updaten. Als je de onderstaande update knop selecteert, wordt je automatisch omgeleid naar Payfast."
 
@@ -371,38 +377,53 @@ msgid "Configure Payfast"
 msgstr "Configureer Payfast"
 
 #: pmpro-payfast.php:50
+#, php-format
 msgid "Thank you for activating. <a href=\"%s\">Visit the payment settings page</a> to configure the Payfast Gateway."
 msgstr "Bedankt voor het activeren. <a href=\"%s\">Ga naar de betalingsinstellingenpagina</a> om de Payfast Gateway te configureren."
 
 #: classes/class.pmprogateway_payfast.php:279
+#: classes/class.pmprogateway_payfast.php:350
 msgid "if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled."
 msgstr "Als je een abonnement wijzigt, kan het een minuut of twee duren eer bijgewerkt. Log ook in op je PayFast account om ervoor te zorgen dat het oude abonnement wordt opgezegd."
 
 #: classes/class.pmprogateway_payfast.php:279
+#: classes/class.pmprogateway_payfast.php:350
 msgid "NOTE:"
 msgstr "NOTITIE:"
 
 #: classes/class.pmprogateway_payfast.php:181
+#: classes/class.pmprogateway_payfast.php:180
+#: classes/class.pmprogateway_payfast.php:254
 msgid "PayFast PassPhrase"
 msgstr "PayFast wachtwoordzin"
 
 #: classes/class.pmprogateway_payfast.php:170
+#: classes/class.pmprogateway_payfast.php:173
+#: classes/class.pmprogateway_payfast.php:247
 msgid "Off"
 msgstr "Uit"
 
 #: classes/class.pmprogateway_payfast.php:164
+#: classes/class.pmprogateway_payfast.php:167
+#: classes/class.pmprogateway_payfast.php:241
 msgid "On"
 msgstr "Aan"
 
 #: classes/class.pmprogateway_payfast.php:156
+#: classes/class.pmprogateway_payfast.php:158
+#: classes/class.pmprogateway_payfast.php:232
 msgid "PayFast Debug Mode"
 msgstr "PayFast debug modus"
 
 #: classes/class.pmprogateway_payfast.php:144
+#: classes/class.pmprogateway_payfast.php:150
+#: classes/class.pmprogateway_payfast.php:224
 msgid "PayFast Merchant Key"
 msgstr "PayFast Merchant sleutel"
 
 #: classes/class.pmprogateway_payfast.php:132
+#: classes/class.pmprogateway_payfast.php:142
+#: classes/class.pmprogateway_payfast.php:216
 msgid "PayFast Merchant ID"
 msgstr "PayFast Merchant ID"
 
@@ -437,4 +458,8 @@ msgstr "Paid Memberships Pro - PayFast Gateway"
 
 #: services/payfast_itn_handler.php:159
 msgid "Order already processed. Order ID: "
+msgstr ""
+
+#: classes/class.pmprogateway_payfast.php:831
+msgid "PayFast is a popular South African payment gateway. It allows members to pay using various methods including Instant EFT, credit/debit cards, Zapper, SnapScan, and more. Please note this only accepts amounts charged in South African Rands (ZAR)."
 msgstr ""
