@@ -110,7 +110,8 @@ if ( ! $pfError && ! $pfDone ) {
 // Verify source IP (If not in debug mode)
 if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
-	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
+	$pfSourceIP = function_exists( 'pmpro_get_ip' ) ? pmpro_get_ip() : $_SERVER['REMOTE_ADDR'];
+	if ( ! pmpro_pfValidIP( $pfSourceIP ) ) {
 		$pfError = true;
 		$pfErrMsg = PMPROPF_ERR_BAD_SOURCE_IP;
 	}
