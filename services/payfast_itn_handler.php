@@ -111,8 +111,13 @@ if ( ! $pfError && ! $pfDone ) {
 if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
 	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
-		$pfError = true;
-		$pfErrMsg = PMPROPF_ERR_BAD_SOURCE_IP;
+		// Behind a proxy or CDN, REMOTE_ADDR is the proxy's IP. Fall back to the forwarded IP,
+		// but only when a PassPhrase is set. Forwarded headers can be spoofed, and without a
+		// PassPhrase the IP check is the only thing tying the ITN to this merchant account.
+		if ( empty( $pfPassPhrase ) || ! pmpro_pfValidIP( pmpro_get_ip() ) ) {
+			$pfError = true;
+			$pfErrMsg = PMPROPF_ERR_BAD_SOURCE_IP;
+		}
 	}
 }
 // Verify data received
