@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Paid Memberships Pro - PayFast Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.7.2\n"
+"Project-Id-Version: Paid Memberships Pro - PayFast Gateway 1.7.3\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-12T11:55:18+00:00\n"
+"POT-Creation-Date: 2026-09-23T18:25:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pmpro-payfast\n"
@@ -46,75 +46,88 @@ msgstr "Als je je factuurgegevens moet updaten, log dan in op je %s account om d
 #: services/payfast_itn_handler.php:503
 #: services/payfast_itn_handler.php:498
 #: services/payfast_itn_handler.php:504
+#: services/payfast_itn_handler.php:509
 msgid "Params = "
 msgstr "Parameters = "
 
 #: services/payfast_itn_handler.php:502
 #: services/payfast_itn_handler.php:497
 #: services/payfast_itn_handler.php:503
+#: services/payfast_itn_handler.php:508
 msgid "Host = "
 msgstr "Host = "
 
 #: services/payfast_itn_handler.php:489
 #: services/payfast_itn_handler.php:484
 #: services/payfast_itn_handler.php:490
+#: services/payfast_itn_handler.php:495
 msgid "invalid"
 msgstr "ongeldig"
 
 #: services/payfast_itn_handler.php:489
 #: services/payfast_itn_handler.php:484
 #: services/payfast_itn_handler.php:490
+#: services/payfast_itn_handler.php:495
 msgid "valid"
 msgstr "geldig"
 
 #: services/payfast_itn_handler.php:489
 #: services/payfast_itn_handler.php:484
 #: services/payfast_itn_handler.php:490
+#: services/payfast_itn_handler.php:495
 msgid "Signature = "
 msgstr "Handtekening = "
 
 #: services/payfast_itn_handler.php:488
 #: services/payfast_itn_handler.php:483
 #: services/payfast_itn_handler.php:489
+#: services/payfast_itn_handler.php:494
 msgid "Signature Sent: "
 msgstr "Handtekening verzonden: "
 
 #: services/payfast_itn_handler.php:427
 #: services/payfast_itn_handler.php:420
 #: services/payfast_itn_handler.php:426
+#: services/payfast_itn_handler.php:431
 msgid "Duplicate Transaction ID: "
 msgstr "Dubbel transactie-ID: "
 
 #: services/payfast_itn_handler.php:424
 #: services/payfast_itn_handler.php:418
+#: services/payfast_itn_handler.php:429
 msgid ") created."
 msgstr ") aangemaakt."
 
 #: services/payfast_itn_handler.php:424
 #: services/payfast_itn_handler.php:418
+#: services/payfast_itn_handler.php:429
 msgid "New order ("
 msgstr "Nieuwe bestelling ("
 
 #: services/payfast_itn_handler.php:293
 #: services/payfast_itn_handler.php:297
 #: services/payfast_itn_handler.php:303
+#: services/payfast_itn_handler.php:308
 msgid "Logged On: "
 msgstr "Ingelogd: "
 
 #: services/payfast_itn_handler.php:273
 #: services/payfast_itn_handler.php:142
+#: services/payfast_itn_handler.php:147
 msgid "Error occurred: "
 msgstr "Er is een fout opgetreden: "
 
 #: services/payfast_itn_handler.php:266
 #: services/payfast_itn_handler.php:274
 #: services/payfast_itn_handler.php:280
+#: services/payfast_itn_handler.php:285
 msgid "ERROR: Unknown error for order ("
 msgstr "FOUT: onbekende fout bij bestelling ("
 
 #: services/payfast_itn_handler.php:260
 #: services/payfast_itn_handler.php:268
 #: services/payfast_itn_handler.php:274
+#: services/payfast_itn_handler.php:279
 msgid ") Failed."
 msgstr ") mislukt."
 
@@ -124,36 +137,43 @@ msgstr ") mislukt."
 #: services/payfast_itn_handler.php:271
 #: services/payfast_itn_handler.php:274
 #: services/payfast_itn_handler.php:277
+#: services/payfast_itn_handler.php:279
+#: services/payfast_itn_handler.php:282
 msgid "ERROR: ITN from PayFast for order ("
 msgstr "FOUT: ITN van PayFast voor bestelling ("
 
 #: services/payfast_itn_handler.php:244
 #: services/payfast_itn_handler.php:252
 #: services/payfast_itn_handler.php:258
+#: services/payfast_itn_handler.php:263
 msgid "check token"
 msgstr "controleer token"
 
 #: services/payfast_itn_handler.php:239
 #: services/payfast_itn_handler.php:247
 #: services/payfast_itn_handler.php:253
+#: services/payfast_itn_handler.php:258
 msgid "Check status and update order"
 msgstr "Controleer status en werk bestelling bij"
 
 #: services/payfast_itn_handler.php:226
 #: services/payfast_itn_handler.php:234
 #: services/payfast_itn_handler.php:240
+#: services/payfast_itn_handler.php:245
 msgid ". Subscription transaction id = "
 msgstr ". Abonnement transactie-id = "
 
 #: services/payfast_itn_handler.php:226
 #: services/payfast_itn_handler.php:234
 #: services/payfast_itn_handler.php:240
+#: services/payfast_itn_handler.php:245
 msgid "Cancelled membership for user with id = "
 msgstr "Lidmaatschap geannuleerd voor gebruiker met id = "
 
 #: services/payfast_itn_handler.php:199
 #: services/payfast_itn_handler.php:207
 #: services/payfast_itn_handler.php:213
+#: services/payfast_itn_handler.php:218
 msgid "This user has a different level than the one associated with this order. Their membership was probably changed by an admin or through an upgrade/downgrade. (Order #"
 msgstr "Deze gebruiker heeft een ander niveau dan het niveau dat aan deze bestelling is gekoppeld. Hun lidmaatschap is waarschijnlijk gewijzigd door een beheerder of door een upgrade / downgrade. (Bestel #"
 
@@ -163,6 +183,8 @@ msgstr "Deze gebruiker heeft een ander niveau dan het niveau dat aan deze bestel
 #: services/payfast_itn_handler.php:207
 #: services/payfast_itn_handler.php:211
 #: services/payfast_itn_handler.php:213
+#: services/payfast_itn_handler.php:216
+#: services/payfast_itn_handler.php:218
 msgid ")"
 msgstr ")"
 
@@ -172,12 +194,15 @@ msgstr ")"
 #: services/payfast_itn_handler.php:207
 #: services/payfast_itn_handler.php:211
 #: services/payfast_itn_handler.php:213
+#: services/payfast_itn_handler.php:216
+#: services/payfast_itn_handler.php:218
 msgid ", Subscription Transaction ID #"
 msgstr ", Abonnementstransactie-ID #"
 
 #: services/payfast_itn_handler.php:197
 #: services/payfast_itn_handler.php:205
 #: services/payfast_itn_handler.php:211
+#: services/payfast_itn_handler.php:216
 msgid "We've already processed this cancellation. Probably originated from WP/PMPro. (Order #"
 msgstr "We hebben deze annulering al verwerkt. Waarschijnlijk afkomstig van WP/PMPro. (Bestel #"
 
@@ -187,30 +212,36 @@ msgstr "We hebben deze annulering al verwerkt. Waarschijnlijk afkomstig van WP/P
 #: services/payfast_itn_handler.php:234
 #: services/payfast_itn_handler.php:207
 #: services/payfast_itn_handler.php:240
+#: services/payfast_itn_handler.php:212
+#: services/payfast_itn_handler.php:245
 msgid "."
 msgstr "."
 
 #: services/payfast_itn_handler.php:193
 #: services/payfast_itn_handler.php:201
 #: services/payfast_itn_handler.php:207
+#: services/payfast_itn_handler.php:212
 msgid " with subscription transaction id = "
 msgstr " met abonnementstransactie id = "
 
 #: services/payfast_itn_handler.php:193
 #: services/payfast_itn_handler.php:201
 #: services/payfast_itn_handler.php:207
+#: services/payfast_itn_handler.php:212
 msgid "ERROR: Could not cancel membership. No user attached to order #"
 msgstr "FOUT: kan lidmaatschap niet annuleren. Geen gebruiker gekoppeld aan bestelling #"
 
 #: services/payfast_itn_handler.php:187
 #: services/payfast_itn_handler.php:195
 #: services/payfast_itn_handler.php:201
+#: services/payfast_itn_handler.php:206
 msgid "ERROR: Couldn't find this order to cancel (subscription_transaction_id="
 msgstr "FOUT: kon deze bestelling om te annuleren niet vinden (subscription_transaction_id ="
 
 #: services/payfast_itn_handler.php:170
 #: services/payfast_itn_handler.php:177
 #: services/payfast_itn_handler.php:183
+#: services/payfast_itn_handler.php:188
 msgid "ERROR: Couldn't find last order for this recurring payment ("
 msgstr "FOUT: kan de laatste bestelling voor deze terugkerende betaling niet vinden ("
 
@@ -223,6 +254,8 @@ msgstr "FOUT: kan de laatste bestelling voor deze terugkerende betaling niet vin
 #: services/payfast_itn_handler.php:172
 #: services/payfast_itn_handler.php:183
 #: services/payfast_itn_handler.php:201
+#: services/payfast_itn_handler.php:188
+#: services/payfast_itn_handler.php:206
 msgid ")."
 msgstr ")."
 
@@ -232,16 +265,20 @@ msgstr ")."
 #: services/payfast_itn_handler.php:264
 #: services/payfast_itn_handler.php:172
 #: services/payfast_itn_handler.php:270
+#: services/payfast_itn_handler.php:177
+#: services/payfast_itn_handler.php:275
 msgid "ERROR: Couldn't change level for order ("
 msgstr "FOUT: kan niveau voor bestelling niet wijzigen ("
 
 #: services/payfast_itn_handler.php:130
 #: services/payfast_itn_handler.php:133
+#: services/payfast_itn_handler.php:138
 msgid "Amount Returned: "
 msgstr "Geretourneerd bedrag: "
 
 #: services/payfast_itn_handler.php:117
 #: services/payfast_itn_handler.php:120
+#: services/payfast_itn_handler.php:125
 msgid "Verify data received"
 msgstr "Controleer de ontvangen gegevens"
 
@@ -457,6 +494,7 @@ msgid "Paid Memberships Pro - PayFast Gateway"
 msgstr "Paid Memberships Pro - PayFast Gateway"
 
 #: services/payfast_itn_handler.php:159
+#: services/payfast_itn_handler.php:164
 msgid "Order already processed. Order ID: "
 msgstr ""
 
