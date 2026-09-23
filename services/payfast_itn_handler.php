@@ -507,7 +507,6 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	
 	$response = wp_remote_post( $url, array(
 			'method' => 'POST',
-			'sslverify' => false,
 			'body' => $pfParamString,
 			'timeout' => PMPROPF_TIMEOUT
 		)
