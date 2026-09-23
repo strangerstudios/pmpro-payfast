@@ -2,8 +2,8 @@
 Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 1.7.2
+Tested up to: 7.1
+Stable tag: 1.7.3
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,10 @@ Please visit our premium support site at https://www.paidmembershipspro.com for 
 To test Payfast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
 
 == Changelog ==
+= 1.7.3 - 2026-09-23 =
+* SECURITY: The ITN validation request to PayFast now verifies PayFast's SSL certificate. Thanks to @kta1kri for reporting this issue. #110 (@dparker1005)
+* BUG FIX: ITN source IP validation now works for sites behind a proxy or CDN when a PassPhrase is configured. #109 (@dwanjuki)
+
 = 1.7.2 - 2025-07-10 =
 * ENHANCEMENT: Improved support for Paid Memberships Pro V3.5+ (@JarrydLong)
 * ENHANCEMENT: Safe listed new PayFast hostnames for ITN requests. (@JarrydLong)
