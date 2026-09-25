@@ -8,6 +8,9 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 // Bail if PMPro or the PayFast add on is not active
 if ( ! defined( 'PMPRO_DIR' ) || ! defined( 'PMPRO_PAYFAST_DIR' ) ) {
@@ -110,7 +113,7 @@ if ( ! $pfError && ! $pfDone ) {
 // Verify source IP (If not in debug mode)
 if ( ! $pfError && ! $pfDone && ( ! defined( 'PMPROPF_DEBUG' ) || ! get_option( 'pmpro_payfast_debug' ) ) ) {
 	pmpro_payfast_itnlog( __( 'Verify source IP', 'pmpro-payfast' ) );
-	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
+	if ( ! pmpro_pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Set by the web server; only compared against PayFast's IP list.
 		// Behind a proxy or CDN, REMOTE_ADDR is the proxy's IP. Fall back to the forwarded IP,
 		// but only when a PassPhrase is set. Forwarded headers can be spoofed, and without a
 		// PassPhrase the IP check is the only thing tying the ITN to this merchant account.
@@ -230,7 +233,7 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 						WHERE subscription_transaction_id = %d",
 						$pfData['m_payment_id']
 					);
-					$wpdb->query( $query );
+					$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above; PMPro custom table.
 					$sqlQuery = $wpdb->prepare(
 						"UPDATE $wpdb->pmpro_memberships_users 
 						SET status = 'cancelled' 
@@ -240,7 +243,7 @@ if ( $pfData['payment_status'] == 'CANCELLED' ) {
 						$last_subscr_order->user_id,
 						$last_subscr_order->membership_id
 					);
-					$wpdb->query( $sqlQuery );
+					$wpdb->query( $sqlQuery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above; PMPro custom table.
 				}
 				pmpro_payfast_itnlog( __( 'Cancelled membership for user with id = ', 'pmpro-payfast' ) . $last_subscr_order->user_id . __( '. Subscription transaction id = ', 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( '.', 'pmpro-payfast' ) );
 				// send an email to the member
@@ -348,8 +351,8 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 	// update order status and transaction ids
 	$morder->payment_transaction_id = $txn_id;
 
-	if ( ! empty( $_POST['token'] ) ) {
-		$morder->subscription_transaction_id = sanitize_text_field( $_POST['m_payment_id'] );
+	if ( ! empty( $_POST['token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Signature-verified PayFast ITN webhook; no nonce possible.
+		$morder->subscription_transaction_id = sanitize_text_field( wp_unslash( $_POST['m_payment_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
 	} else {
 		$morder->subscription_transaction_id = '';
 	}
@@ -364,7 +367,7 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 	global $wpdb;
 	// check that txn_id has not been previously processed
-	$old_txn = $wpdb->get_var(
+	$old_txn = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared query on a PMPro custom table.
 		$wpdb->prepare(
 			"SELECT payment_transaction_id 
 			FROM $wpdb->pmpro_membership_orders 
@@ -387,13 +390,13 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 
 		pmpro_payfast_itnlog( "ORDER GATEWAY:" . $last_order->gateway );
 		if ( $last_order->gateway == 'payfast' ) {
-			$morder->subtotal = sanitize_text_field( $_REQUEST['amount_gross'] );    // not the initial payment, but the class is expecting that
-			$morder->total = sanitize_text_field( $_REQUEST['amount_gross'] );
+			$morder->subtotal = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) );    // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible. Not the initial payment, but the class is expecting that.
+			$morder->total = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
 		}
 
-		$morder->FirstName = sanitize_text_field( $_REQUEST['name_first'] );
-		$morder->LastName = sanitize_text_field( $_REQUEST['name_last'] );
-		$morder->Email = sanitize_email( $_REQUEST['email_address'] );
+		$morder->FirstName = sanitize_text_field( wp_unslash( $_REQUEST['name_first'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
+		$morder->LastName = sanitize_text_field( wp_unslash( $_REQUEST['name_last'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
+		$morder->Email = sanitize_email( wp_unslash( $_REQUEST['email_address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
 		
 		
 		/// Maybe just get it from the last order as well.
@@ -410,7 +413,7 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 				$morder->billing = new stdClass();
 			}
 
-			$morder->billing->name = sanitize_text_field( $_REQUEST['name_first'] ) . ' ' . sanitize_text_field( $_REQUEST['name_last'] );
+			$morder->billing->name = sanitize_text_field( wp_unslash( $_REQUEST['name_first'] ) ) . ' ' . sanitize_text_field( wp_unslash( $_REQUEST['name_last'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
 			$morder->billing->street = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
 			$morder->billing->city = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
 			$morder->billing->state = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
@@ -444,7 +447,7 @@ function pmpro_pfGetData() {
 	
 	$pfData = array();
     // Ensure that all posted data is used at the ITN stage
-	$postedData = array_keys( $_POST );
+	$postedData = array_keys( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Signature-verified PayFast ITN webhook; no nonce possible.
 
     // Sanitize all posted data
     foreach ( $postedData as $key ) {
@@ -521,7 +524,7 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	if ( is_wp_error( $response ) ) {
 		$error_message = $response->get_error_message();
 		pmpro_payfast_itnlog( 'Error validating data: ' . $error_message );
-		die( 'Error validating data: ' . $error_message );
+		die( 'Error validating data: ' . esc_html( $error_message ) );
 	}
 
 	$body = wp_remote_retrieve_body( $response );
