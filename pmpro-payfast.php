@@ -10,6 +10,10 @@ Text Domain: pmpro-payfast
 Domain Path: /languages
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 define( 'PMPRO_PAYFAST_DIR', plugin_dir_path( __FILE__ ) );
 
 // load payment gateway class after all plugins are loaded to make sure PMPro stuff is available
@@ -47,7 +51,7 @@ function pmpro_payfast_admin_notice() {
 	// Check transient, if available display notice.
 	if ( get_transient( 'pmpro-payfast-admin-notice' ) ) { ?>
 		<div class="updated notice is-dismissible">
-			<p><?php printf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the Payfast Gateway.', 'pmpro-payfast' ), esc_url( get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ) ); ?></p>
+			<p><?php echo wp_kses_post( sprintf( __( 'Thank you for activating. <a href="%s">Visit the payment settings page</a> to configure the Payfast Gateway.', 'pmpro-payfast' ), esc_url( get_admin_url( null, 'admin.php?page=pmpro-paymentsettings' ) ) ) ); ?></p>
 		</div>
 		<?php
 		// Delete transient, only display this notice once.
@@ -63,11 +67,11 @@ add_action( 'admin_notices', 'pmpro_payfast_admin_notice' );
  function pmpro_payfast_check_level_compat(){
 
 	// Only show the notice on either the levels page or payment settings page.
-	if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'pmpro-membershiplevels' ) {
+	if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'pmpro-membershiplevels' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page check for displaying a notice.
 		return;
 	}
 
-	$level = isset( $_REQUEST['edit'] ) ? intval( $_REQUEST['edit'] ) : '';
+	$level = isset( $_REQUEST['edit'] ) ? intval( $_REQUEST['edit'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only level ID used to display a notice.
 
 	// Don't check if level is not set.
 	if ( empty( $level ) ) {
@@ -126,7 +130,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
 		//check ALL the levels
 		if( empty( $level ) ){
 			$sqlQuery = "SELECT * FROM $wpdb->pmpro_membership_levels ORDER BY id ASC";
-			$levels = $wpdb->get_results($sqlQuery, OBJECT);
+			$levels = $wpdb->get_results($sqlQuery, OBJECT); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Static query on a PMPro custom table.
 			
 			if( !empty( $levels ) ){
 				foreach( $levels as $level ){
@@ -141,7 +145,7 @@ add_filter( 'pmpro_is_ready', 'pmpro_payfast_pmpro_is_ready' );
 
 			if( is_numeric( $level ) && $level > 0 ){
 
-				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) );
+				$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1" , $level ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared query on a PMPro custom table.
 				
 				if( pmpro_isLevelTrial( $level ) ){
 					return false;
@@ -170,7 +174,7 @@ function pmpro_payfast_custom_trial_js_check() {
 	$custom_trial_warning = __( sprintf( 'PayFast does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-payfast' ); ?>
 		<script>
 			jQuery(document).ready(function(){
-				var message = "<?php echo $custom_trial_warning; ?>";
+				var message = "<?php echo $custom_trial_warning; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static translatable string with an intended hardcoded link. ?>";
 				jQuery( '<tr id="payfast-trial-warning" style="display:none"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
 
 				// Show for existing levels.
@@ -237,13 +241,13 @@ function pmpro_payfast_discount_code_result( $discount_code, $discount_code_id, 
 		global $wpdb;
 
 		//okay, send back new price info
-		$sqlQuery = "SELECT l.id, cl.*, l.name, l.description, l.allow_signups FROM $wpdb->pmpro_discount_codes_levels cl LEFT JOIN $wpdb->pmpro_membership_levels l ON cl.level_id = l.id LEFT JOIN $wpdb->pmpro_discount_codes dc ON dc.id = cl.code_id WHERE dc.code = '" . $discount_code . "' AND cl.level_id = '" . $level_id . "' LIMIT 1";
+		$sqlQuery = $wpdb->prepare( "SELECT l.id, cl.*, l.name, l.description, l.allow_signups FROM $wpdb->pmpro_discount_codes_levels cl LEFT JOIN $wpdb->pmpro_membership_levels l ON cl.level_id = l.id LEFT JOIN $wpdb->pmpro_discount_codes dc ON dc.id = cl.code_id WHERE dc.code = %s AND cl.level_id = %d LIMIT 1", $discount_code, $level_id );
 		
-		$code_level = $wpdb->get_row($sqlQuery);
+		$code_level = $wpdb->get_row($sqlQuery); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above; PMPro custom tables.
 
 		//if the discount code doesn't adjust the level, let's just get the straight level
 		if(empty($code_level)){
-			$code_level = $wpdb->get_row("SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = '" . $level_id . "' LIMIT 1");
+			$code_level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->pmpro_membership_levels WHERE id = %d LIMIT 1", $level_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared query on a PMPro custom table.
 		}
 
 		if( pmpro_isLevelFree( $code_level ) ){ //A valid discount code was returned
