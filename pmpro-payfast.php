@@ -174,7 +174,7 @@ function pmpro_payfast_custom_trial_js_check() {
 	$custom_trial_warning = __( sprintf( 'PayFast does not support custom trials. Please use the %s instead.', "<a href='https://www.paidmembershipspro.com/add-ons/subscription-delays' target='_blank'>Subscription Delay Add On</a>" ), 'pmpro-payfast' ); ?>
 		<script>
 			jQuery(document).ready(function(){
-				var message = "<?php echo $custom_trial_warning; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static translatable string with an intended hardcoded link. ?>";
+				var message = "<?php echo $custom_trial_warning; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string with an intended link; sprintf() runs before __(), so no translation is ever applied. ?>";
 				jQuery( '<tr id="payfast-trial-warning" style="display:none"><th></th><td><em><strong>' + message + '</strong></em></td></tr>' ).insertAfter( '.trial_info' );
 
 				// Show for existing levels.
