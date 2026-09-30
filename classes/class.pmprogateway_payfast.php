@@ -8,6 +8,10 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Require the default PMPro Gateway Class.
 require_once PMPRO_DIR . '/classes/gateways/class.pmprogateway.php';
 
@@ -139,7 +143,7 @@ class PMProGateway_PayFast extends PMProGateway {
         ?>
         <tr class="gateway gateway_payfast">
             <th scope="row" valign="top">
-                <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
+                <label for="payfast_merchant_id"><?php esc_html_e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
             </th>
             <td>                                
                 <input type="text" id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_id' ) ); ?>" class="regular-text code"/>
@@ -147,7 +151,7 @@ class PMProGateway_PayFast extends PMProGateway {
         </tr>
         <tr class="gateway gateway_payfast">
             <th scope="row" valign="top">
-                <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
+                <label for="payfast_merchant_key"><?php esc_html_e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
             </th>
             <td>
                 <input type="text" id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_key' ) ); ?>" class="regular-text code"/>
@@ -155,7 +159,7 @@ class PMProGateway_PayFast extends PMProGateway {
         </tr>
         <tr class="gateway gateway_payfast">
             <th scope="row" valign="top">
-                <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
+                <label for="payfast_debug"><?php esc_html_e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
             </th>
             <td>
                 <select name="payfast_debug">
@@ -164,23 +168,23 @@ class PMProGateway_PayFast extends PMProGateway {
                     $payfast_debug = get_option( 'pmpro_payfast_debug' );
                     if ( $payfast_debug ) {
                         ?>
-                            selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
+                            selected="selected"<?php } ?>><?php esc_html_e( 'On', 'pmpro-payfast' ); ?>
                     </option>
                     <option value="0" 
                         <?php
                         if ( ! $payfast_debug ) {
                             ?>
-                            selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
+                            selected="selected"<?php } ?>><?php esc_html_e( 'Off', 'pmpro-payfast' ); ?>
                     </option>
                 </select>
             </td>
         </tr>
         <tr class="gateway gateway_payfast">
             <th scope="row" valign="top">
-                <label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
+                <label for="payfast_passphrase"><?php esc_html_e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
             </th>
             <td>
-                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
+                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php esc_html_e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
             </td>
         </tr>
         <?php
@@ -213,7 +217,7 @@ class PMProGateway_PayFast extends PMProGateway {
                     <tbody>                        
                         <tr class="gateway gateway_payfast">
                             <th scope="row" valign="top">
-                                <label for="payfast_merchant_id"><?php _e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
+                                <label for="payfast_merchant_id"><?php esc_html_e( 'PayFast Merchant ID', 'pmpro-payfast' ); ?>:</label>
                             </th>
                             <td>                                
                                 <input type="text" id="payfast_merchant_id" name="payfast_merchant_id" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_id' ) ); ?>" class="regular-text code"/>
@@ -221,7 +225,7 @@ class PMProGateway_PayFast extends PMProGateway {
                         </tr>
                         <tr class="gateway gateway_payfast">
                             <th scope="row" valign="top">
-                                <label for="payfast_merchant_key"><?php _e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
+                                <label for="payfast_merchant_key"><?php esc_html_e( 'PayFast Merchant Key', 'pmpro-payfast' ); ?>:</label>
                             </th>
                             <td>
                                 <input type="text" id="payfast_merchant_key" name="payfast_merchant_key" value="<?php echo esc_attr( get_option( 'pmpro_payfast_merchant_key' ) ); ?>" class="regular-text code"/>
@@ -229,7 +233,7 @@ class PMProGateway_PayFast extends PMProGateway {
                         </tr>
                         <tr class="gateway gateway_payfast">
                             <th scope="row" valign="top">
-                                <label for="payfast_debug"><?php _e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
+                                <label for="payfast_debug"><?php esc_html_e( 'PayFast Debug Mode', 'pmpro-payfast' ); ?>:</label>
                             </th>
                             <td>
                                 <select name="payfast_debug">
@@ -238,23 +242,23 @@ class PMProGateway_PayFast extends PMProGateway {
                                     $payfast_debug = get_option( 'pmpro_payfast_debug' );
                                     if ( $payfast_debug ) {
                                         ?>
-                                            selected="selected"<?php } ?>><?php _e( 'On', 'pmpro-payfast' ); ?>
+                                            selected="selected"<?php } ?>><?php esc_html_e( 'On', 'pmpro-payfast' ); ?>
                                     </option>
                                     <option value="0" 
                                         <?php
                                         if ( ! $payfast_debug ) {
                                             ?>
-                                            selected="selected"<?php } ?>><?php _e( 'Off', 'pmpro-payfast' ); ?>
+                                            selected="selected"<?php } ?>><?php esc_html_e( 'Off', 'pmpro-payfast' ); ?>
                                     </option>
                                 </select>
                             </td>
                         </tr>
                         <tr class="gateway gateway_payfast">
                             <th scope="row" valign="top">
-                                <label for="payfast_passphrase"><?php _e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
+                                <label for="payfast_passphrase"><?php esc_html_e( 'PayFast PassPhrase', 'pmpro-payfast' ); ?>:</label>
                             </th>
                             <td>
-                                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php _e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
+                                <input type="text" id="payfast_passphrase" name="payfast_passphrase" value="<?php echo esc_attr( get_option( 'pmpro_payfast_passphrase' ) ); ?>" class="regular-text code"/> &nbsp;<small><?php esc_html_e( 'A passphrase is now required for all transactions.', 'pmpro-payfast' ); ?></small>
                             </td>
                         </tr>
                     </tbody>
@@ -305,7 +309,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		</script>
 		<?php
 		}
-		echo sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast.", 'pmpro-payfast'), "<a href='https://payfast.io' target='_blank'>Payfast</a>" );
+		echo wp_kses_post( sprintf( __( "If you need to update your billing details, please login to your %s account to update these credentials. Selecting the update button below will automatically redirect you to Payfast.", 'pmpro-payfast'), "<a href='https://payfast.io' target='_blank'>Payfast</a>" ) );
 	}
 
 	/**
@@ -348,7 +352,7 @@ class PMProGateway_PayFast extends PMProGateway {
 				<input type="hidden" name="submit-checkout" value="1" />
 				<span class="screen-reader-text"><?php esc_html_e( 'PayFast Checkout description text. Please note that if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?></span>
 				<p><?php echo '<strong>' . esc_html__( 'NOTE:', 'pmpro-payfast' ) . '</strong> ' . esc_html__( 'if changing a subscription it may take a minute or two to reflect. Please also login to your PayFast account to ensure the old subscription is cancelled.', 'pmpro-payfast' ); ?> </p>
-				<p><img src="<?php echo plugins_url( 'img/payfast_logo.png', __DIR__ ); ?>" alt="Payfast logo" width="100px" /></p>
+				<p><img src="<?php echo esc_url( plugins_url( 'img/payfast_logo.png', __DIR__ ) ); ?>" alt="Payfast logo" width="100px" /></p>
 			</span>
 		</div>
 			<?php
@@ -519,7 +523,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		 */
 		$payfast_url .= '?' . $pffOutput . '&signature=' . $signature . '&user_agent=Paid Memberships Pro ' . PMPRO_VERSION;
 
-		wp_redirect( $payfast_url );
+		wp_redirect( $payfast_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Intentional offsite redirect to the PayFast payment page.
 		exit;
 	}
 
@@ -559,7 +563,7 @@ class PMProGateway_PayFast extends PMProGateway {
 			}
 
 			// check if we are getting an ITN notification which means it's already cancelled within PayFast.
-			if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) {
+			if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Comparison only; this value is not verified here. A spoofed value only skips the remote PayFast cancel for the requester's own subscription (cancel page is nonce-checked in core).
 				return true;
 			}
 
@@ -648,7 +652,7 @@ class PMProGateway_PayFast extends PMProGateway {
 		}
 		
 		// check if we are getting an ITN notification which means it's already cancelled within PayFast.
-		if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) {
+		if ( ! empty( $_POST['payment_status'] ) && $_POST['payment_status'] == 'CANCELLED' ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Comparison only; this value is not verified here. A spoofed value only skips the remote PayFast cancel for the requester's own subscription (cancel page is nonce-checked in core).
 			return true;
 		}
 
