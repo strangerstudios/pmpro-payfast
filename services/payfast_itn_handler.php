@@ -183,15 +183,23 @@ if ( ! $pfError && ! $pfDone ) {
 			pmpro_payfast_ipnExit();
 		} else {
 			// Subscription Payment
-			$last_subscr_order = new MemberOrder();
-			if ( $last_subscr_order->getLastMemberOrderBySubscriptionTransactionID( $pfData['m_payment_id'] ) ) {
-				$last_subscr_order->paypal_token = $pfData['token'];
-				pmpro_ipnSaveOrder( $pfData['pf_payment_id'], $last_subscr_order );
+			if ( function_exists( 'pmpro_handle_recurring_payment_succeeded_at_gateway' ) ) {
+				pmpro_payfast_itnlog( pmpro_handle_recurring_payment_succeeded_at_gateway( pmpro_payfast_get_recurring_order_data( $pfData ) ) );
 			} else {
-				pmpro_payfast_itnlog( __( "ERROR: Couldn't find last order for this recurring payment (", 'pmpro-payfast' ) . $pfData['m_payment_id'] . __( ').', 'pmpro-payfast' ) );
+				pmpro_payfast_itnlog( __( 'ERROR: Paid Memberships Pro v3.6 or higher is required to process recurring payments.', 'pmpro-payfast' ) );
 			}
 			pmpro_payfast_ipnExit();
 		}
+	}
+
+	// Recurring payment failed. Initial payment failures are logged below.
+	if ( $pfData['payment_status'] == 'FAILED' && ! empty( $pfData['token'] ) && strtotime( $pfData['custom_str1'] ) <= strtotime( gmdate( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) . '- 1 day' ) ) {
+		if ( function_exists( 'pmpro_handle_recurring_payment_failure_at_gateway' ) ) {
+			pmpro_payfast_itnlog( pmpro_handle_recurring_payment_failure_at_gateway( pmpro_payfast_get_recurring_order_data( $pfData ) ) );
+		} else {
+			pmpro_payfast_itnlog( __( 'ERROR: Paid Memberships Pro v3.6 or higher is required to process recurring payments.', 'pmpro-payfast' ) );
+		}
+		pmpro_payfast_ipnExit();
 	}
 }
 
@@ -364,75 +372,25 @@ function pmpro_itnChangeMembershipLevel( $txn_id, &$morder ) {
 	
 }
 
-function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
-	global $wpdb;
-	// check that txn_id has not been previously processed
-	$old_txn = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared query on a PMPro custom table.
-		$wpdb->prepare(
-			"SELECT payment_transaction_id 
-			FROM $wpdb->pmpro_membership_orders 
-			WHERE payment_transaction_id = %d 
-			LIMIT 1",
-			$txn_id
-		)
+/**
+ * Build the order data for a recurring payment ITN to pass to the PMPro core helpers.
+ *
+ * @param array $pfData The validated ITN data.
+ * @return array
+ */
+function pmpro_payfast_get_recurring_order_data( $pfData ) {
+	global $gateway_environment;
+
+	return array(
+		'subscription_transaction_id' => $pfData['m_payment_id'],
+		'payment_transaction_id'      => $pfData['pf_payment_id'],
+		'gateway'                     => 'payfast',
+		'gateway_environment'         => $gateway_environment,
+		'payment_type'                => 'PayFast',
+		'paypal_token'              => $pfData['token'],
+		'subtotal'                    => $pfData['amount_gross'],
+		'total'                       => $pfData['amount_gross'],
 	);
-	if ( empty( $old_txn ) ) {
-		$morder = new MemberOrder();
-		$morder->user_id = $last_order->user_id;
-		$morder->membership_id = $last_order->membership_id;
-		$morder->payment_transaction_id = $txn_id;
-		$morder->subscription_transaction_id = $last_order->subscription_transaction_id;
-		$morder->gateway = $last_order->gateway;
-		$morder->gateway_environment = $last_order->gateway_environment;
-		$morder->paypal_token = $last_order->paypal_token;
-		$morder->status = 'success'; 
-		$morder->payment_type = $last_order->payment_type;
-
-		pmpro_payfast_itnlog( "ORDER GATEWAY:" . $last_order->gateway );
-		if ( $last_order->gateway == 'payfast' ) {
-			$morder->subtotal = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) );    // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible. Not the initial payment, but the class is expecting that.
-			$morder->total = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-		}
-
-		$morder->FirstName = sanitize_text_field( wp_unslash( $_REQUEST['name_first'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-		$morder->LastName = sanitize_text_field( wp_unslash( $_REQUEST['name_last'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-		$morder->Email = sanitize_email( wp_unslash( $_REQUEST['email_address'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-		
-		
-		/// Maybe just get it from the last order as well.
-		/// get address info if appropriate
-		if ( $last_order->gateway == 'payfast' ) {
-			$morder->Address1 = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
-			$morder->City = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
-			$morder->State = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
-			$morder->CountryCode = 'ZA';
-			$morder->zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
-			$morder->phone = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
-
-			if ( ! isset( $morder->billing ) ) {
-				$morder->billing = new stdClass();
-			}
-
-			$morder->billing->name = sanitize_text_field( wp_unslash( $_REQUEST['name_first'] ) ) . ' ' . sanitize_text_field( wp_unslash( $_REQUEST['name_last'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-			$morder->billing->street = get_user_meta( $last_order->user_id, 'pmpro_baddress1', true );
-			$morder->billing->city = get_user_meta( $last_order->user_id, 'pmpro_bcity', true );
-			$morder->billing->state = get_user_meta( $last_order->user_id, 'pmpro_bstate', true );
-			$morder->billing->zip = get_user_meta( $last_order->user_id, 'pmpro_bzip', true );
-			$morder->billing->country = get_user_meta( $last_order->user_id, 'pmpro_bcountry', true );
-			$morder->billing->phone = get_user_meta( $last_order->user_id, 'pmpro_bphone', true );
-		}
-
-		$morder->saveOrder();
-		$morder->getMemberOrderByID( $morder->id );
-		// email the user their invoice
-		$pmproemail = new PMProEmail();
-		$pmproemail->sendInvoiceEmail( get_userdata( $last_order->user_id ), $morder );
-		do_action( 'pmpro_subscription_payment_completed', $morder );
-
-		pmpro_payfast_itnlog( __( 'New order (', 'pmpro-payfast' ) . $morder->code . __( ') created.', 'pmpro-payfast' ) );
-	} else {
-		pmpro_payfast_itnlog( __( 'Duplicate Transaction ID: ', 'pmpro-payfast' ) . $txn_id );
-	}
 }
 
 /**
