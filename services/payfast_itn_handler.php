@@ -74,12 +74,6 @@ $pfParamString = '';
 $initial_payment_status = '';
 pmpro_payfast_itnlog( __( 'PayFast ITN call received', 'pmpro-payfast' ) );
 
-// Notify PayFast that information has been received
-if ( ! $pfError && ! $pfDone ) {
-	header( 'HTTP/1.0 200 OK' );
-	flush();
-}
-
 // Get data sent by PayFast
 if ( ! $pfError && ! $pfDone ) {
 	pmpro_payfast_itnlog( __( 'Get posted data', 'pmpro-payfast' ) );
@@ -269,6 +263,13 @@ pmpro_payfast_itnlog( __( 'check token', 'pmpro-payfast' ) );
 switch ( $pfData['payment_status'] ) {
 	case 'COMPLETE':
 		$morder = new MemberOrder( $pfData['m_payment_id'] );
+
+		// If order is already processed, do nothing.
+		if ( $morder->status == 'success' ) {
+			pmpro_payfast_itnlog( __( 'Order already processed. Order ID: ', 'pmpro-payfast' ) . $morder->code );
+			pmpro_payfast_ipnExit();
+		}
+
 		$morder->getMembershipLevel();
 		$morder->getUser();
 		// update membership
@@ -524,6 +525,7 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	if ( is_wp_error( $response ) ) {
 		$error_message = $response->get_error_message();
 		pmpro_payfast_itnlog( 'Error validating data: ' . $error_message );
+		status_header( 503 );
 		die( 'Error validating data: ' . esc_html( $error_message ) );
 	}
 
@@ -533,9 +535,13 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 
 	if ( $body === 'VALID' ) {
 		return( true );
-	} else {
-		return( false );
 	}
+
+	if ( 200 !== wp_remote_retrieve_response_code( $response ) || 'INVALID' !== trim( $body ) ) {
+		status_header( 503 );
+	}
+
+	return( false );
 }
 
 /**
