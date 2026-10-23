@@ -532,18 +532,19 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 		$error_message = $response->get_error_message();
 		pmpro_payfast_itnlog( 'Error validating data: ' . $error_message );
 		status_header( 503 );
-		die( 'Error validating data: ' . esc_html( $error_message ) );
+		pmpro_payfast_ipnExit();
 	}
 
-	$body = wp_remote_retrieve_body( $response );
+	$code = wp_remote_retrieve_response_code( $response );
+	$body = trim( wp_remote_retrieve_body( $response ) );
 
 	pmpro_payfast_itnlog( $body );
 
-	if ( $body === 'VALID' ) {
+	if ( 200 === $code && 'VALID' === $body ) {
 		return( true );
 	}
 
-	if ( 200 !== wp_remote_retrieve_response_code( $response ) || 'INVALID' !== trim( $body ) ) {
+	if ( 200 !== $code || 'INVALID' !== $body ) {
 		status_header( 503 );
 	}
 
