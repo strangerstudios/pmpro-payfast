@@ -307,6 +307,12 @@ function pmpro_payfast_itnlog( $s ) {
 */
 function pmpro_payfast_ipnExit() {
 	global $logstr;
+
+	// Tell Payfast the ITN was received, unless an error status was already set (e.g. 503 so Payfast re-sends it).
+	if ( ! headers_sent() && http_response_code() < 400 ) {
+		status_header( 200 );
+	}
+
 	// for log
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
