@@ -3,7 +3,7 @@ Contributors: strangerstudios, andrewza, paidmembershipspro
 Tags: paid memberships pro, pmpro, payfast, gateway, credit card
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 1.7.4
+Stable tag: 1.8
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,12 @@ Please visit our premium support site at https://www.paidmembershipspro.com for 
 To test Payfast payments without being billed in sandbox mode requires a sandbox account from PayFast. For more information in creating a sandbox account - https://developers.payfast.co.za/documentation/#the-sandbox
 
 == Changelog ==
+= 1.8 - 2026-10-27 =
+* SECURITY: The ITN debug log now uses a random file name, and the logs folder is blocked from web access on Apache and LiteSpeed servers. #116 (@andrewlimaza)
+* SECURITY: The ITN log is no longer output in the response to PayFast. It's still written to the log file or emailed when debugging is on. #115 (@andrewlimaza)
+* ENHANCEMENT: Added an admin notice when PayFast is the active gateway and no PassPhrase is set. #117 (@andrewlimaza)
+* BUG FIX: Fixed an issue where paid orders could stay in token status if the ITN validation request to PayFast failed. The site now responds with a 503 so PayFast re-sends the ITN. #114 (@terminalstate)
+
 = 1.7.4 - 2026-09-30 =
 * SECURITY: Improved sanitization and escaping throughout the plugin to resolve Plugin Check security findings. #111 (@dparker1005)
 * BUG FIX: Fixed renewal orders saving names with apostrophes with a stray backslash. #111 (@dparker1005)
