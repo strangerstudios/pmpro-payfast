@@ -466,7 +466,7 @@ function pmpro_payfast_check_renewal_amount( $morder, $last_order ) {
 
 	// Checkout adds tax to the recurring amount, so do the same here.
 	$expected_amount = round( (float) $level->billing_amount + (float) $last_order->getTaxForPrice( $level->billing_amount ), 2 );
-	if ( (float) $morder->total >= $expected_amount - PMPROPF_EPSILON ) {
+	if ( pmpro_pfAmountsEqual( $morder->total, $expected_amount ) || (float) $morder->total > $expected_amount ) {
 		return;
 	}
 
