@@ -524,7 +524,7 @@ function pmpro_pfValidSignature( $pfData = null, &$pfParamString = null, $passPh
 	}
 	
 	$signature = md5( $tempParamString );
-	$result = ( $pfData['signature'] == $signature );
+	$result = isset( $pfData['signature'] ) && hash_equals( $signature, (string) $pfData['signature'] );
 	pmpro_payfast_itnlog( __( 'Signature Sent: ', 'pmpro-payfast' ) . $signature );
 	pmpro_payfast_itnlog( __( 'Signature = ', 'pmpro-payfast' ) . ( $result ? __( 'valid', 'pmpro-payfast' ) : __( 'invalid', 'pmpro-payfast' ) ) );
 	return( $result );
