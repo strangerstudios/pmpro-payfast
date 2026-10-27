@@ -93,6 +93,11 @@ add_action( 'admin_notices', 'pmpro_payfast_check_level_compat' );
  * Payfast requires a passphrase for checkouts and subscriptions.
  */
 function pmpro_payfast_check_passphrase() {
+	// Only show the notice to users who can edit the payment settings.
+	if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'pmpro_paymentsettings' ) ) {
+		return;
+	}
+
 	// Only show the notice on PMPro admin pages.
 	if ( ! isset( $_REQUEST['page'] ) || strpos( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ), 'pmpro' ) !== 0 ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page check for displaying a notice.
 		return;
