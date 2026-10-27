@@ -471,7 +471,7 @@ function pmpro_payfast_check_renewal_amount( $morder, $last_order ) {
 	}
 
 	/* translators: 1: amount Payfast charged, 2: the member's billing amount, 3: subscription transaction ID. */
-	$message = sprintf( __( 'Payfast renewal of %1$s is less than the member\'s billing amount of %2$s (subscription %3$s).', 'pmpro-payfast' ), pmpro_formatPrice( $morder->total ), pmpro_formatPrice( $expected_amount ), $last_order->subscription_transaction_id );
+	$message = sprintf( __( "Payfast renewal of %1\$s is less than the member's billing amount of %2\$s (subscription %3\$s).", 'pmpro-payfast' ), pmpro_formatPrice( $morder->total ), pmpro_formatPrice( $expected_amount ), $last_order->subscription_transaction_id );
 	pmpro_payfast_itnlog( $message );
 
 	if ( method_exists( $morder, 'add_order_note' ) ) {
@@ -480,7 +480,7 @@ function pmpro_payfast_check_renewal_amount( $morder, $last_order ) {
 
 	$user = get_userdata( $last_order->user_id );
 	/* translators: %s: site name. */
-	$subject = sprintf( __( '[%s] Payfast renewal below the member\'s billing amount', 'pmpro-payfast' ), get_option( 'blogname' ) );
+	$subject = sprintf( __( "[%s] Payfast renewal below the member's billing amount", 'pmpro-payfast' ), get_option( 'blogname' ) );
 	/* translators: %s: member's username. */
 	$body = $message . "\n\n" . sprintf( __( 'Member: %s', 'pmpro-payfast' ), empty( $user ) ? $last_order->user_id : $user->user_login );
 	wp_mail( get_option( 'admin_email' ), $subject, wp_strip_all_tags( $body ) );
