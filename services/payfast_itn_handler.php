@@ -74,12 +74,6 @@ $pfParamString = '';
 $initial_payment_status = '';
 pmpro_payfast_itnlog( __( 'PayFast ITN call received', 'pmpro-payfast' ) );
 
-// Notify PayFast that information has been received
-if ( ! $pfError && ! $pfDone ) {
-	header( 'HTTP/1.0 200 OK' );
-	flush();
-}
-
 // Get data sent by PayFast
 if ( ! $pfError && ! $pfDone ) {
 	pmpro_payfast_itnlog( __( 'Get posted data', 'pmpro-payfast' ) );
@@ -269,6 +263,13 @@ pmpro_payfast_itnlog( __( 'check token', 'pmpro-payfast' ) );
 switch ( $pfData['payment_status'] ) {
 	case 'COMPLETE':
 		$morder = new MemberOrder( $pfData['m_payment_id'] );
+
+		// If order is already processed, do nothing.
+		if ( $morder->status == 'success' ) {
+			pmpro_payfast_itnlog( __( 'Order already processed. Order ID: ', 'pmpro-payfast' ) . $morder->code );
+			pmpro_payfast_ipnExit();
+		}
+
 		$morder->getMembershipLevel();
 		$morder->getUser();
 		// update membership
@@ -306,6 +307,12 @@ function pmpro_payfast_itnlog( $s ) {
 */
 function pmpro_payfast_ipnExit() {
 	global $logstr;
+
+	// Tell Payfast the ITN was received, unless an error status was already set (e.g. 503 so Payfast re-sends it).
+	if ( ! headers_sent() && http_response_code() < 400 ) {
+		status_header( 200 );
+	}
+
 	// for log
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
@@ -524,18 +531,24 @@ function pmpro_pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', 
 	if ( is_wp_error( $response ) ) {
 		$error_message = $response->get_error_message();
 		pmpro_payfast_itnlog( 'Error validating data: ' . $error_message );
-		die( 'Error validating data: ' . esc_html( $error_message ) );
+		status_header( 503 );
+		pmpro_payfast_ipnExit();
 	}
 
-	$body = wp_remote_retrieve_body( $response );
+	$code = wp_remote_retrieve_response_code( $response );
+	$body = trim( wp_remote_retrieve_body( $response ) );
 
 	pmpro_payfast_itnlog( $body );
 
-	if ( $body === 'VALID' ) {
+	if ( 200 === $code && 'VALID' === $body ) {
 		return( true );
-	} else {
-		return( false );
 	}
+
+	if ( 200 !== $code || 'INVALID' !== $body ) {
+		status_header( 503 );
+	}
+
+	return( false );
 }
 
 /**
