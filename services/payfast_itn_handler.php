@@ -400,7 +400,6 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		if ( $last_order->gateway == 'payfast' ) {
 			$morder->subtotal = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) );    // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible. Not the initial payment, but the class is expecting that.
 			$morder->total = sanitize_text_field( wp_unslash( $_REQUEST['amount_gross'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
-			pmpro_payfast_check_renewal_amount( $morder, $last_order );
 		}
 
 		$morder->FirstName = sanitize_text_field( wp_unslash( $_REQUEST['name_first'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Signature-verified PayFast ITN webhook; no nonce possible.
@@ -441,41 +440,6 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 		pmpro_payfast_itnlog( __( 'New order (', 'pmpro-payfast' ) . $morder->code . __( ') created.', 'pmpro-payfast' ) );
 	} else {
 		pmpro_payfast_itnlog( __( 'Duplicate Transaction ID: ', 'pmpro-payfast' ) . $txn_id );
-	}
-}
-
-/**
- * Flag a renewal paid for less than the member's billing amount.
- *
- * The payment was still taken, so the order is saved as normal; this logs the shortfall
- * and adds an order note.
- *
- * @param MemberOrder $morder     The renewal order being created.
- * @param MemberOrder $last_order The last order for this subscription.
- */
-function pmpro_payfast_check_renewal_amount( $morder, $last_order ) {
-	if ( ! function_exists( 'pmpro_getSpecificMembershipLevelForUser' ) ) {
-		return;
-	}
-
-	// Use the member's level, not the PMPro subscription. The subscription's billing amount is synced from Payfast.
-	$level = pmpro_getSpecificMembershipLevelForUser( $last_order->user_id, $last_order->membership_id );
-	if ( empty( $level ) || empty( $level->billing_amount ) ) {
-		return;
-	}
-
-	// Checkout adds tax to the recurring amount, so do the same here.
-	$expected_amount = round( (float) $level->billing_amount + (float) $last_order->getTaxForPrice( $level->billing_amount ), 2 );
-	if ( pmpro_pfAmountsEqual( $morder->total, $expected_amount ) || (float) $morder->total > $expected_amount ) {
-		return;
-	}
-
-	/* translators: 1: amount Payfast charged, 2: the member's billing amount, 3: subscription transaction ID. */
-	$message = sprintf( __( "Payfast renewal of %1\$s is less than the member's billing amount of %2\$s (subscription %3\$s).", 'pmpro-payfast' ), pmpro_formatPrice( $morder->total ), pmpro_formatPrice( $expected_amount ), $last_order->subscription_transaction_id );
-	pmpro_payfast_itnlog( $message );
-
-	if ( method_exists( $morder, 'add_order_note' ) ) {
-		$morder->add_order_note( $message );
 	}
 }
 
