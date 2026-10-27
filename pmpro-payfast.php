@@ -114,7 +114,7 @@ function pmpro_payfast_check_passphrase() {
 				sprintf(
 					/* translators: %s: URL of the payment settings page. */
 					__( "Payfast requires a passphrase for checkouts and subscriptions, but one isn't set. <a href=\"%s\">Add your Payfast passphrase</a> in the payment settings.", 'pmpro-payfast' ),
-					esc_url( admin_url( 'admin.php?page=pmpro-paymentsettings' ) )
+					esc_url( admin_url( 'admin.php?page=pmpro-paymentsettings&edit_gateway=payfast' ) )
 				)
 			);
 			?>
