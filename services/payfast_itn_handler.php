@@ -316,7 +316,8 @@ function pmpro_payfast_ipnExit() {
 	// for log
 	if ( $logstr ) {
 		$logstr = __( 'Logged On: ', 'pmpro-payfast' ) . date( 'm/d/Y H:i:s' ) . "\n" . $logstr . "\n-------------\n";
-		echo esc_html( $logstr );
+
+		// The log is for debugging only, so it goes to the log file or email below rather than the response.
 
 		//Log to file or email, 
 		if ( get_option( 'pmpro_payfast_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
