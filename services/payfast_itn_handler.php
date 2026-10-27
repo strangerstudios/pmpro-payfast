@@ -321,14 +321,37 @@ function pmpro_payfast_ipnExit() {
 
 		//Log to file or email, 
 		if ( get_option( 'pmpro_payfast_debug' ) || ( defined( 'PMPROPF_DEBUG' ) && PMPROPF_DEBUG === 'log' ) ) {
-			// Let's create the file and add a random suffix to it, to tighten up security.
-			$file_suffix = substr( md5( get_option( 'pmpro_payfast_merchant_id', true ) ), 0, 10 );
+			$logdir = PMPRO_PAYFAST_DIR . '/logs';
+
+			// Let's create the file and add a random suffix to it, generated once and stored, to tighten up security.
+			$file_suffix = get_option( 'pmpro_payfast_log_suffix' );
+			$new_suffix = empty( $file_suffix );
+			if ( $new_suffix ) {
+				$file_suffix = wp_generate_password( 20, false );
+				update_option( 'pmpro_payfast_log_suffix', $file_suffix, false );
+			}
 			$filename = 'payfast_itn_' . $file_suffix . '.txt';
-			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', PMPRO_PAYFAST_DIR . '/logs/'. $filename );
+			$logfile = apply_filters( 'pmpro_payfast_itn_logfile', $logdir . '/' . $filename );
 
 			// Make the /logs directory if it doesn't exist
-			if ( ! file_exists( PMPRO_PAYFAST_DIR . '/logs' ) ) {
-				mkdir( PMPRO_PAYFAST_DIR . '/logs', 0700 );
+			if ( ! file_exists( $logdir ) ) {
+				mkdir( $logdir, 0700 );
+			}
+
+			// Block web access to the /logs directory on Apache and LiteSpeed, and stop it being listed.
+			if ( ! file_exists( $logdir . '/.htaccess' ) ) {
+				file_put_contents( $logdir . '/.htaccess', "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n\tDeny from all\n</IfModule>\n" );
+			}
+			if ( ! file_exists( $logdir . '/index.php' ) ) {
+				file_put_contents( $logdir . '/index.php', "<?php\n// Silence is golden.\n" );
+			}
+
+			// Move a log from the old file name, which was based on the merchant ID, to the new one.
+			if ( $new_suffix ) {
+				$old_logfile = $logdir . '/payfast_itn_' . substr( md5( get_option( 'pmpro_payfast_merchant_id', true ) ), 0, 10 ) . '.txt';
+				if ( file_exists( $old_logfile ) && ! file_exists( $logfile ) ) {
+					rename( $old_logfile, $logfile );
+				}
 			}
 
 			// If the log file doesn't exist let's create it.
