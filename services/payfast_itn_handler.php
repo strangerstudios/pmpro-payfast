@@ -447,8 +447,8 @@ function pmpro_ipnSaveOrder( $txn_id, $last_order ) {
 /**
  * Flag a renewal paid for less than the member's billing amount.
  *
- * The payment was still taken, so the order is saved as normal; this logs the shortfall,
- * adds an order note and emails the site admin.
+ * The payment was still taken, so the order is saved as normal; this logs the shortfall
+ * and adds an order note.
  *
  * @param MemberOrder $morder     The renewal order being created.
  * @param MemberOrder $last_order The last order for this subscription.
@@ -477,13 +477,6 @@ function pmpro_payfast_check_renewal_amount( $morder, $last_order ) {
 	if ( method_exists( $morder, 'add_order_note' ) ) {
 		$morder->add_order_note( $message );
 	}
-
-	$user = get_userdata( $last_order->user_id );
-	/* translators: %s: site name. */
-	$subject = sprintf( __( "[%s] Payfast renewal below the member's billing amount", 'pmpro-payfast' ), get_option( 'blogname' ) );
-	/* translators: %s: member's username. */
-	$body = $message . "\n\n" . sprintf( __( 'Member: %s', 'pmpro-payfast' ), empty( $user ) ? $last_order->user_id : $user->user_login );
-	wp_mail( get_option( 'admin_email' ), $subject, wp_strip_all_tags( $body ) );
 }
 
 /**
